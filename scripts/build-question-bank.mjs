@@ -11,7 +11,7 @@ for(let i=0;i<lines.length;i++){
  if(!Number.isInteger(q.answer)||q.answer<0||q.answer>=4)throw new Error('Invalid answer '+q.id);
  if(typeof q.explanation!=='string'||q.explanation.length<15)throw new Error('Missing explanation '+q.id);
  if(typeof q.reference!=='string'||!q.reference.startsWith('https://docs.aws.amazon.com/'))throw new Error('Missing official reference '+q.id);
- const normalizedStem=q.question.normalize('NFKC').replace(/\\s+/g,'');
+ const normalizedStem=q.question.normalize('NFKC').replace(/\s+/g,'');
  if(stems.has(normalizedStem))throw new Error('Duplicate question stem '+q.id);
  if(q.difficulty!==undefined&&(!Number.isInteger(q.difficulty)||q.difficulty<1||q.difficulty>3))throw new Error('Invalid difficulty '+q.id);
  if(q.tags!==undefined&&(!Array.isArray(q.tags)||q.tags.some(t=>typeof t!=='string'||!t.trim())))throw new Error('Invalid tags '+q.id);
