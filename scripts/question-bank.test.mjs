@@ -24,5 +24,5 @@ test('exam domain quotas can be fulfilled',()=>{
  for(const [domain,min] of Object.entries(quotas))assert.ok(questions.filter(q=>q.domain===domain).length>=min,domain);
 });
 test('multiple-response questions cover every exam domain',()=>{
- for(const domain of Object.keys(quotas))assert.ok(questions.some(q=>q.domain===domain&&Array.isArray(q.answers)),domain);
+ for(const domain of Object.keys(quotas))assert.ok(questions.filter(q=>q.domain===domain&&Array.isArray(q.answers)&&q.choices.length>=5).length>=2,domain);
 });
