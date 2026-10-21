@@ -203,3 +203,28 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 @media(max-width:700px){.sound-settings{top:60px;padding:16px}.impact-layer .impact-word{font-size:clamp(30px,10vw,48px)}.impact-layer>i{width:8px;height:13px}}
 @media(prefers-reduced-motion:reduce){.impact-layer{display:none!important}.app .boss-health{animation:none!important}}
 .app.reduced .impact-layer{display:none!important}
+
+/* Contextual explanation footer: readable, collapsed by default, and separated from answer controls. */
+.study-terms-panel{margin:22px 0 18px;padding:0!important;background:linear-gradient(120deg,#112b43,#17233e)!important;border:2px solid #69cadb!important;overflow:hidden;box-shadow:0 0 22px #58bfda1c}
+.study-terms-panel>summary.term-panel-heading{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0;padding:17px 16px;min-height:60px;font-size:16px;letter-spacing:.02em}
+.study-terms-panel>summary.term-panel-heading strong{font-size:17px;color:#e9fdff;font-weight:900}
+.study-terms-panel>summary.term-panel-heading span{margin-left:auto;margin-right:14px;font-size:12px;color:#b7dfed;letter-spacing:0;white-space:nowrap}
+.study-terms-panel .term-guide-intro{margin:0!important;padding:0 16px 13px;font-size:13px!important;line-height:1.8!important;color:#c5e2ef!important}
+.study-terms-panel .term-items{grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));padding:0 13px;gap:12px;margin-bottom:16px}
+.study-terms-panel .term-entry{border:1px solid #649fc1;border-left:4px solid #85e2e6;border-radius:9px;background:#19364f;padding:15px}
+.study-terms-panel .term-entry-title{align-items:center}
+.study-terms-panel .term-entry-title strong{font-size:19px;color:#fff;line-height:1.5}
+.study-terms-panel .term-kind{display:inline-flex;align-items:center;font-size:11px!important;color:#b8f8ee!important;border:1px solid #4eaea7;padding:3px 7px;border-radius:4px;background:#174343}
+.study-terms-panel .term-english{display:block;color:#b9ddf8;font-size:12px;overflow-wrap:anywhere;line-height:1.6;margin-bottom:8px}
+.study-terms-panel .term-entry>b{display:block;color:#ffe8ac;font-size:14px;line-height:1.55}
+.study-terms-panel .term-entry>p{color:#edf4fc!important;font-size:14px!important;line-height:1.75!important}
+.study-terms-panel .term-compare{margin:0 13px 15px}
+.study-terms-panel:focus-within{border-color:#a9fff4!important}
+@media(max-width:700px){
+ .study-terms-panel>summary.term-panel-heading{padding:12px 10px;gap:8px}
+ .study-terms-panel>summary.term-panel-heading strong{font-size:15px}
+ .study-terms-panel>summary.term-panel-heading span{margin-right:14px;font-size:11px}
+ .study-terms-panel .term-items{grid-template-columns:1fr;padding:0 9px}
+ .study-terms-panel .term-entry{padding:12px}
+ .study-terms-panel .term-entry-title strong{font-size:18px}
+}
