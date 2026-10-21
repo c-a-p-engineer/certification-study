@@ -10,13 +10,13 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
-- 146 original AWS SAA practice questions with explanations and official reference links
+- 200 original AWS SAA practice questions with explanations and official reference links
 - Local progress persistence, weak-topic review, evidence-informed spaced retrieval (RECALL RAID), optional active recall before options, reduced-motion support
 - Extensible certification content format
 
 ## Current scope
 
-The current prototype includes 146 original AWS SAA practice questions across four domains, a neon skill-tree overview, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown and at least one multi-select question per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+The current prototype includes 200 original AWS SAA practice questions across four domains, a neon skill-tree overview, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown and at least one multi-select question per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
 ## Development
 ```sh
@@ -36,7 +36,7 @@ MIT.
 
 ## Question bank maintenance
 
-Canonical new questions live in `certifications/aws-saa/questions/bank.jsonl` (one JSON object per line). Run `npm run validate:questions` to validate unique IDs, domains, four distinct options, answer indexes, explanations and official AWS references, and regenerate `src/generated/questions.json`. All 146 questions now use the JSONL source, including the eight original prototype questions. Do not edit generated JSON manually. New questions should be original and reviewed for factual accuracy before release.
+Canonical new questions live in `certifications/aws-saa/questions/bank.jsonl` (one JSON object per line). Run `npm run validate:questions` to validate unique IDs, domains, four distinct options, answer indexes, explanations and official AWS references, and regenerate `src/generated/questions.json`. All 200 questions now use the JSONL source, including the eight original prototype questions. Do not edit generated JSON manually. New questions should be original and reviewed for factual accuracy before release.
 
 ## SAA-C03 readiness plan
 
@@ -56,3 +56,9 @@ Official reference: https://docs.aws.amazon.com/aws-certification/latest/solutio
 ## Remember more with structured practice
 
 Research rationale and limitations: [Learning Science](docs/LEARNING_SCIENCE.md). RECALL RAID stores per-question spaced-review dates in browser localStorage. Optional ACTIVE RECALL FIRST hides the answer options until you first try to retrieve the solution and explain why. Review intervals are configurable heuristics, not guaranteed optimal for every learner. No learner responses are uploaded.
+
+## Coverage and exam-format caveats
+
+The question bank currently contains 200 original items, including 22 multiple-response items; eight of those have five answer choices. The game now supports different numbers of options per question. The dashboard tracks **unique attempted questions by domain**, separately from repeated-attempt accuracy, to make unpractised knowledge visible. A 65-question trial is a study simulation; it is not an AWS passing-score prediction.
+
+The official SAA-C03 exam guide specifies that multiple-response questions offer **five or more options**. Earlier four-choice practice multi-select items remain for general drills and should be converted or separated from strictly format-faithful trials. Questions, explanations and official reference links still require human editorial accuracy review before being called exam-ready.
