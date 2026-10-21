@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Zap, Trophy, Target, RotateCcw, Volume2, VolumeX, Sparkles, BookOpen, Shield, ArrowRight, Flame, Settings2 } from 'lucide-react';
 import './style.css';
