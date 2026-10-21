@@ -25,13 +25,14 @@ function App(){
  const [mode,setMode]=useState<'home'|'quiz'|'result'>('home');
  const [session,setSession]=useState({correct:0,total:0});
  const [review,setReview]=useState(false);
+ const [domain,setDomain]=useState('ALL');
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [muted,setMuted]=useState(true);
  const [burst,setBurst]=useState(0);
  const [pool,setPool]=useState<Question[]>(questions);
  const q=pool[index];
  useEffect(()=>{localStorage.setItem(key,JSON.stringify(progress))},[progress]);
- function start(weak=false){const subset=weak?questions.filter(x=>progress.mistakes.includes(x.id)):questions;setPool([...(subset.length?subset:questions)].sort(()=>Math.random()-.5));setReview(weak);setIndex(0);setSelected(null);setCombo(0);setSession({correct:0,total:0});setMode('quiz')}
+ function start(weak=false){const eligible=domain==='ALL'?questions:questions.filter(x=>x.domain===domain);const subset=weak?eligible.filter(x=>progress.mistakes.includes(x.id)):eligible;setPool([...(subset.length?subset:eligible)].sort(()=>Math.random()-.5));setReview(weak);setIndex(0);setSelected(null);setCombo(0);setSession({correct:0,total:0});setMode('quiz')}
  function answer(choice:number){if(selected!==null)return;setSelected(choice);const ok=choice===q.answer;const nextCombo=ok?combo+1:0;setCombo(nextCombo);setSession(s=>({correct:s.correct+(ok?1:0),total:s.total+1}));setProgress(p=>({...p,xp:p.xp+(ok?100+Math.min(nextCombo,10)*20:15),best:Math.max(p.best,nextCombo),answered:p.answered+1,correct:p.correct+(ok?1:0),mistakes:ok?p.mistakes.filter(id=>id!==q.id):Array.from(new Set([...p.mistakes,q.id]))}));if(ok&&!reduced)setBurst(b=>b+1);if(!muted){try{const ctx=new AudioContext();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=ok?880:220;gain.gain.setValueAtTime(.06,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.16);osc.start();osc.stop(ctx.currentTime+.17)}catch{}}}
  function next(){if(index+1>=pool.length){setMode('result')}else{setIndex(i=>i+1);setSelected(null)}}
  const rank=progress.xp>=5000?'LEGEND':progress.xp>=2500?'DIAMOND':progress.xp>=1000?'PLATINUM':progress.xp>=400?'GOLD':'ROOKIE';
