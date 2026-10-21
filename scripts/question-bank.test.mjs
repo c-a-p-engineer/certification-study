@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const questions=readFileSync('certifications/aws-saa/questions/bank.jsonl','utf8').trim().split(/\r?\n/).map(JSON.parse);
 const quotas={'セキュリティ':20,'耐障害性':17,'パフォーマンス':15,'コスト最適化':13};
-test('SAA question bank contains at least 65 original questions',()=>{assert.ok(questions.length>=65)});
+test('SAA question bank contains at least 300 original questions',()=>{assert.ok(questions.length>=300)});
 test('question IDs and normalized question text are unique',()=>{
  assert.equal(new Set(questions.map(q=>q.id)).size,questions.length);
  assert.equal(new Set(questions.map(q=>q.question.normalize('NFKC').replace(/\s+/g,''))).size,questions.length);
@@ -24,5 +24,12 @@ test('exam domain quotas can be fulfilled',()=>{
  for(const [domain,min] of Object.entries(quotas))assert.ok(questions.filter(q=>q.domain===domain).length>=min,domain);
 });
 test('multiple-response questions cover every exam domain',()=>{
+ for(const domain of Object.keys(quotas))assert.ok(questions.filter(q=>q.domain===domain&&Array.isArray(q.answers)&&q.choices.length>=5).length>=2,domain);
+});
+
+test('boss rush has at least 10 hard questions in every domain',()=>{
+ for(const domain of Object.keys(quotas))assert.ok(questions.filter(q=>q.domain===domain&&q.difficulty===3).length>=10,domain);
+});
+test('exam-trial multiple-response options match SAA format',()=>{
  for(const domain of Object.keys(quotas))assert.ok(questions.filter(q=>q.domain===domain&&Array.isArray(q.answers)&&q.choices.length>=5).length>=2,domain);
 });
