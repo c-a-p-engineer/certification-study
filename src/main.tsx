@@ -9,9 +9,9 @@ type Question = { id: string; domain: string; question: string; choices: string[
 const questions: Question[] = questionBank;
 const correctAnswers=(question:Question):number[]=>question.answers??[question.answer!];
 const makeChatGPTPrompt=(question:Question,selectedAnswers?:number[]):string=>{
- const options=question.choices.map((choice,i)=>`${'ABCD'[i]}. ${choice}`).join('\n');
- const right=correctAnswers(question).map(i=>`${'ABCD'[i]}. ${question.choices[i]}`).join(' / ');
- const mine=selectedAnswers?.length?selectedAnswers.map(i=>`${'ABCD'[i]}. ${question.choices[i]}`).join(' / '):'未回答・指定なし';
+ const options=question.choices.map((choice,i)=>`${'ABCDEFGH'[i]}. ${choice}`).join('\n');
+ const right=correctAnswers(question).map(i=>`${'ABCDEFGH'[i]}. ${question.choices[i]}`).join(' / ');
+ const mine=selectedAnswers?.length?selectedAnswers.map(i=>`${'ABCDEFGH'[i]}. ${question.choices[i]}`).join(' / '):'未回答・指定なし';
  return ['AWS Certified Solutions Architect - Associate（SAA-C03）の学習を手伝ってください。以下は非公式の練習問題です。','まずAWS公式ドキュメントを優先して正確性を検証し、古い情報や曖昧な前提があれば明示してください。正解の根拠に加え、各不正解選択肢がなぜ要件を満たさないか、比較して説明してください。最後に類題を1問作り、私が答えるまで正解を伏せてください。','','分野: '+question.domain,'問題ID: '+question.id,'問題: '+question.question,'選択肢:\n'+options,'私の回答: '+mine,'教材の正答: '+right,'教材の解説: '+question.explanation,'参照: '+question.reference].join('\n');
 };
 
