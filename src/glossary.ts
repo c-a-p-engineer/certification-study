@@ -21,7 +21,7 @@ export const GLOSSARY:readonly Term[]=[
  {abbr:'DLQ',full:'Dead-Letter Queue',meaning:'デッドレターキュー',note:'処理に失敗したメッセージを隔離・調査するためのキュー。'},
  {abbr:'IOPS',full:'Input/Output Operations Per Second',meaning:'1秒あたりの入出力操作数',note:'ストレージが1秒間に処理できるI/O操作の数。'},
  {abbr:'DAX',full:'DynamoDB Accelerator',meaning:'DynamoDB向けキャッシュ',note:'DynamoDB互換のインメモリキャッシュサービス。'},
- {abbr:'OAC',full:'Origin Access Control',meaning:'オリジンアクセスコントロール',note:'CloudFrontからS3などのオリジンへのアクセスを制限する仕組み。'}
+ {abbr:'OAC',full:'Origin Access Control',meaning:'オリジンアクセスコントロール',note:'CloudFrontからS3などのオリジンへのアクセスを制限する仕組み。'},
  {abbr:'MFA',full:'Multi-Factor Authentication',meaning:'多要素認証',note:'パスワードとは異なる追加の認証要素を組み合わせて本人確認を強化する方法。'},
  {abbr:'SSO',full:'Single Sign-On',meaning:'シングルサインオン',note:'一度のサインインで複数の対象アプリやサービスへアクセスする方式。'},
  {abbr:'CDN',full:'Content Delivery Network',meaning:'コンテンツ配信ネットワーク',note:'利用者に近い拠点からキャッシュしたコンテンツを提供して配信遅延を減らす。'},
