@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Zap, Trophy, Target, RotateCcw, Volume2, VolumeX, Sparkles, BookOpen, Shield, ArrowRight, Flame, Settings2 } from 'lucide-react';
 import './style.css';
+import { additionalQuestions } from './additionalQuestions';
 
 type Question = { id: string; domain: string; question: string; choices: string[]; answer: number; explanation: string; reference: string };
 const questions: Question[] = [
@@ -12,9 +13,7 @@ const questions: Question[] = [
  {id:'saa-005',domain:'耐障害性',question:'RDSでプライマリDBの障害時に自動フェイルオーバーを実現したい。何を選ぶ？',choices:['リードレプリカだけを作成','RDS Multi-AZ配置','DBインスタンスのストレージのみ増強','スナップショットを手動取得'],answer:1,explanation:'RDS Multi-AZは高可用性のためにスタンバイを維持し、対象の構成では障害時に自動フェイルオーバーします。',reference:'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html'},
  {id:'saa-006',domain:'セキュリティ',question:'AWSリソースへのAPI操作履歴を記録して監査したい。どのサービスを使う？',choices:['AWS CloudTrail','Amazon Route 53','Amazon ElastiCache','AWS Direct Connect'],answer:0,explanation:'CloudTrailはAWSアカウントのAPIアクティビティやイベント履歴の記録・監査に使用します。',reference:'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html'},
  {id:'saa-007',domain:'パフォーマンス',question:'読み取り負荷が高いRDSデータベースの読み取り処理をスケールさせるには？',choices:['Multi-AZだけで読み取り性能を倍増','リードレプリカを使用','DBを単一AZに限定','バックアップ頻度を減らす'],answer:1,explanation:'RDSリードレプリカは読み取りトラフィックを分散する用途に適しています。高可用性を目的とするMulti-AZとは役割が異なります。',reference:'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html'},
- {id:'saa-008',domain:'コスト最適化',question:'アクセス頻度が低いが即時取り出しが必要なS3オブジェクトの保存コストを下げたい。候補は？',choices:['S3 Standardのみ','S3 Standard-IA','EC2インスタンスストア','Amazon EFSのみ'],answer:1,explanation:'S3 Standard-IAはアクセス頻度が低く、必要時にミリ秒単位で取得したいデータ向けです。取り出し料金などの条件を確認します。',reference:'https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html'}
-];
-const key='certification-overdrive-progress-v1';
+ {id:'saa-008',domain:'コスト最適化',question:'アクセス頻度が低いが即時取り出しが必要なS3オブジェクトの保存コストを下げたい。候補は？',choices:['S3 Standardのみ','S3 Standard-IA','EC2インスタンスストア','Amazon EFSのみ'],answer:1,explanation:'S3 Standard-IAはアクセス頻度が低く、必要時にミリ秒単位で取得したいデータ向けです。取り出し料金などの条件を確認します。',reference:'https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html'}\n, ...additionalQuestions];\nconst key='certification-overdrive-progress-v1';
 type Progress={xp:number;best:number;answered:number;correct:number;mistakes:string[]};
 const initial:Progress={xp:0,best:0,answered:0,correct:0,mistakes:[]};
 function load():Progress{try{return {...initial,...JSON.parse(localStorage.getItem(key)||'{}')}}catch{return initial}}
