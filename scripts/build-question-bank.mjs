@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 const source='certifications/aws-saa/questions/bank.jsonl';
 const lines=readFileSync(source,'utf8').split(/\r?\n/).filter(x=>x.trim());
-const ids=new Set(); const questions=[];
+const ids=new Set(); const stems=new Set(); const questions=[];
 for(let i=0;i<lines.length;i++){
  let q; try{q=JSON.parse(lines[i])}catch(e){throw new Error('Invalid JSONL at line '+(i+1)+': '+e.message)}
  if(typeof q.id!=='string'||ids.has(q.id))throw new Error('Missing or duplicate ID at line '+(i+1));
@@ -11,7 +11,11 @@ for(let i=0;i<lines.length;i++){
  if(!Number.isInteger(q.answer)||q.answer<0||q.answer>=4)throw new Error('Invalid answer '+q.id);
  if(typeof q.explanation!=='string'||q.explanation.length<15)throw new Error('Missing explanation '+q.id);
  if(typeof q.reference!=='string'||!q.reference.startsWith('https://docs.aws.amazon.com/'))throw new Error('Missing official reference '+q.id);
- ids.add(q.id);questions.push(q);
+ const normalizedStem=q.question.normalize('NFKC').replace(/\\s+/g,'');
+ if(stems.has(normalizedStem))throw new Error('Duplicate question stem '+q.id);
+ if(q.difficulty!==undefined&&(!Number.isInteger(q.difficulty)||q.difficulty<1||q.difficulty>3))throw new Error('Invalid difficulty '+q.id);
+ if(q.tags!==undefined&&(!Array.isArray(q.tags)||q.tags.some(t=>typeof t!=='string'||!t.trim())))throw new Error('Invalid tags '+q.id);
+ ids.add(q.id);stems.add(normalizedStem);questions.push(q);
 }
 mkdirSync('src/generated',{recursive:true});
 writeFileSync('src/generated/questions.json',JSON.stringify(questions,null,2)+'\n');
