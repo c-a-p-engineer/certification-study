@@ -158,3 +158,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .rank-overlay strong{font:900 clamp(40px,9vw,68px) 'Barlow Condensed',sans-serif;letter-spacing:2px;color:#ffe4a1}
 .rank-overlay span{font-size:25px;font-weight:900;letter-spacing:3px;color:#fff}
 .rank-overlay button{font-size:15px;font-weight:900;border:0;border-radius:8px;background:#f8c873;color:#251d24;min-height:50px;padding:12px 24px}
+
+/* Mobile-first quick-start: the principal action must be visible without scrolling. */
+.quick-start{margin:14px 0 22px;padding:17px;border:2px solid #7de9f8;border-radius:13px;background:linear-gradient(120deg,#123746,#162743);box-shadow:0 0 30px #51dffa22}
+.quick-start-label{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.06em;font-weight:900;color:#b1f4ff}
+.quick-start .hero-actions{display:flex;gap:10px;margin:14px 0 9px;align-items:stretch}
+.quick-start .hero-actions .primary-btn{flex:2;min-height:66px;font-size:20px;letter-spacing:.03em;box-shadow:0 0 20px #77eaff38}
+.quick-start .hero-actions .secondary-btn{flex:1;min-height:66px}
+.quick-start>small{font-size:12px;line-height:1.6;color:#cee5f3}
+@media(max-width:700px){.quick-start{padding:12px;margin:8px 0 18px}.quick-start .hero-actions{flex-direction:column}.quick-start .hero-actions .primary-btn{width:100%;min-height:68px;font-size:19px}.quick-start .hero-actions .secondary-btn{width:100%;min-height:49px}.quick-start-label{font-size:12px}}
