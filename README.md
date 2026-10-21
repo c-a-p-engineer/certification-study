@@ -78,3 +78,7 @@ A **DAILY QUEST** card tracks today's 5-question goal and correct answers, using
 ## Boss Rush
 
 **BOSS RUSH** is a 10-question hard-mode session that draws from `difficulty: 3` items in the selected domain (or all domains). It uses the normal immediate-feedback learning flow. Difficulty values are editorial labels, not calibrated item-response difficulty estimates. There are 300 original practice items including 42 multi-response items. Game progress cannot guarantee passing the SAA-C03 exam; the question bank still requires a rigorous factual, conceptual-duplication and distractor-quality review.
+
+## AWS abbreviation explanations
+
+After answering a practice question, the explanation now includes an automatic **略語を覚えよう** panel when the question, choices or explanation contain known technical acronyms. Each entry shows the original English full name, Japanese translation and a practical definition. The same glossary appears in the post-exam review, never during a timed exam. Examples: RTO (Recovery Time Objective / 目標復旧時間) versus RPO (Recovery Point Objective / 目標復旧時点), MTBF, SLO, IAM, VPC and other common AWS abbreviations. Canonical glossary: `src/glossary.ts`; verified matching rules: `npm run test:glossary`.
