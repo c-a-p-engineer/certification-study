@@ -10,9 +10,13 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
-- AWS SAA practice questions with explanations and official reference links
+- 32 original AWS SAA practice questions with explanations and official reference links
 - Local progress persistence, weak-topic review, reduced-motion support
 - Extensible certification content format
+
+## Current scope
+
+The current prototype includes 32 original AWS SAA practice questions across four domains, a neon skill-tree overview, combo/XP progression, and local mistake review. The skill-tree nodes currently indicate available domains, not measured mastery. Learning progress is stored in browser localStorage; cloud sync is not available.
 
 ## Development
 ```sh
