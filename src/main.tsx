@@ -6,6 +6,7 @@ import questionBank from './generated/questions.json';
 import {scheduleReview,rateReview,dueQuestionIds,reviewCounts,type ReviewMap} from './studyScheduler';
 import {findTerms,expandTerms,type Term} from './glossary';
 import {TOPICS,topicFor,masteryByTopic} from './mastery';
+import {AudioDirector,readAudioSettings,saveAudioSettings,type AudioSettings,type MusicScene,type SoundEffect} from './audioDirector';
 
 type Question = { id: string; domain: string; question: string; choices: string[]; answer?: number; answers?: number[]; difficulty?:number; distractorReasons?:string[]; explanation: string; reference: string };
 const questions: Question[] = questionBank;
@@ -52,14 +53,28 @@ function App(){
  const [examDeadline,setExamDeadline]=useState(0);
  const [examSave,setExamSave]=useState<ExamSave|null>(getExamSave);
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
- const [muted,setMuted]=useState(true);
+ const [audioSettings,setAudioSettings]=useState<AudioSettings>(readAudioSettings);
+ const [audioOpen,setAudioOpen]=useState(false);
+ const audioRef=useRef<AudioDirector|null>(null);
+ const [sceneEffect,setSceneEffect]=useState<{type:string;id:number}|null>(null);
+ const effectCounter=useRef(0);
  const [burst,setBurst]=useState(0);
  const [rankNotice,setRankNotice]=useState('');
  const previousRank=useRef(rankFor(progress.xp));
  const [pool,setPool]=useState<Question[]>(questions);
  const q=pool[index];
+ const musicScene=():MusicScene=>mode==='result'?'result':mode==='home'?'home':bossMode?'boss':examMode?'exam':studyMode==='due'?'recall':'mission';
+ function getAudio():AudioDirector{if(!audioRef.current)audioRef.current=new AudioDirector();return audioRef.current}
+ function playCue(effect:SoundEffect,scene?:MusicScene){if(!audioSettings.sfxEnabled&&!audioSettings.bgmEnabled)return;const engine=getAudio();engine.configure(audioSettings);void engine.unlock().then(()=>{engine.setScene(scene??musicScene());engine.play(effect)})}
+ function setAudio(patch:Partial<AudioSettings>){const updated={...audioSettings,...patch};setAudioSettings(updated);const engine=getAudio();engine.configure(updated);if(updated.bgmEnabled||updated.sfxEnabled){void engine.unlock().then(()=>engine.setScene(musicScene()))}}
+ function toggleAudio(){const enabled=!audioSettings.bgmEnabled&&!audioSettings.sfxEnabled;setAudio({bgmEnabled:enabled,sfxEnabled:enabled})}
+ function pulse(type:string){if(reduced)return;effectCounter.current++;setSceneEffect({type,id:effectCounter.current})}
+ useEffect(()=>{saveAudioSettings(audioSettings);audioRef.current?.configure(audioSettings)},[audioSettings]);
+ useEffect(()=>{audioRef.current?.setScene(musicScene())},[mode,bossMode,examMode,studyMode]);
+ useEffect(()=>()=>{audioRef.current?.dispose();audioRef.current=null},[]);
+ useEffect(()=>{if(!sceneEffect)return;const id=window.setTimeout(()=>setSceneEffect(null),1450);return()=>window.clearTimeout(id)},[sceneEffect]);
  useEffect(()=>{localStorage.setItem(key,JSON.stringify(progress))},[progress]);
- useEffect(()=>{const current=rankFor(progress.xp);if(previousRank.current!==current)setRankNotice(current);previousRank.current=current},[progress.xp]);
+ useEffect(()=>{const current=rankFor(progress.xp);if(previousRank.current!==current){setRankNotice(current);audioRef.current?.play('rank');pulse('rank')}previousRank.current=current},[progress.xp]);
  useEffect(()=>{if(!examMode||mode!=='quiz')return;const tick=()=>setTimeLeft(Math.max(0,Math.ceil((examDeadline-Date.now())/1000)));tick();const id=window.setInterval(tick,1000);return()=>window.clearInterval(id)},[examMode,mode,examDeadline]);
  useEffect(()=>{if(!examMode||mode!=='quiz')return;const save:ExamSave={ids:pool.map(q=>q.id),index,selected,multiChoices,choiceOrder,answers:sessionAnswers,session,deadline:examDeadline};localStorage.setItem(examSaveKey,JSON.stringify(save));setExamSave(save)},[examMode,mode,pool,index,selected,multiChoices,choiceOrder,sessionAnswers,session,examDeadline]);
  useEffect(()=>{if(mode==='result'&&examMode){localStorage.removeItem(examSaveKey);setExamSave(null)}},[mode,examMode]);
