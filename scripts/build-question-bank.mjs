@@ -17,6 +17,7 @@ for(let i=0;i<lines.length;i++){
  if(q.tags!==undefined&&(!Array.isArray(q.tags)||q.tags.some(t=>typeof t!=='string'||!t.trim())))throw new Error('Invalid tags '+q.id);
  ids.add(q.id);stems.add(normalizedStem);questions.push(q);
 }
+for(const [domain,min] of Object.entries({'セキュリティ':20,'耐障害性':17,'パフォーマンス':15,'コスト最適化':13})){if(questions.filter(q=>q.domain===domain).length<min)throw new Error('Too few questions in '+domain)}
 mkdirSync('src/generated',{recursive:true});
 writeFileSync('src/generated/questions.json',JSON.stringify(questions,null,2)+'\n');
 console.log('Validated '+questions.length+' questions; generated src/generated/questions.json');
