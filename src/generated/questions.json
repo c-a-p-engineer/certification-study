@@ -1,5 +1,117 @@
 [
   {
+    "id": "saa-001",
+    "domain": "耐障害性",
+    "question": "単一AZ障害が発生してもWebサービスを継続するための最も適切な構成は？",
+    "choices": [
+      "1つのAZにEC2を2台配置",
+      "複数AZのEC2をALBで分散",
+      "単一EC2のEBS容量を拡張",
+      "EC2インスタンスのサイズを大きくする"
+    ],
+    "answer": 1,
+    "explanation": "複数のAZへワークロードを分散し、ALBのヘルスチェックで正常なターゲットへルーティングすることで、単一AZ障害に対する可用性を高めます。",
+    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html"
+  },
+  {
+    "id": "saa-002",
+    "domain": "セキュリティ",
+    "question": "EC2からS3へアクセスキーを埋め込まず安全にアクセスするには？",
+    "choices": [
+      "IAMロールをEC2にアタッチ",
+      "アクセスキーをAMIに保存",
+      "ルートユーザーの認証情報を使用",
+      "S3バケットを公開する"
+    ],
+    "answer": 0,
+    "explanation": "EC2インスタンスプロファイルにIAMロールを設定すると、一時的な認証情報を利用でき、長期アクセスキーの埋め込みを避けられます。",
+    "reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html"
+  },
+  {
+    "id": "saa-003",
+    "domain": "パフォーマンス",
+    "question": "静的コンテンツを世界中の利用者へ低レイテンシーで配信するサービスは？",
+    "choices": [
+      "AWS CloudTrail",
+      "Amazon CloudFront",
+      "AWS Config",
+      "Amazon SQS"
+    ],
+    "answer": 1,
+    "explanation": "CloudFrontはエッジロケーションを使ってコンテンツをキャッシュし、グローバルな配信遅延を減らします。",
+    "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
+  },
+  {
+    "id": "saa-004",
+    "domain": "コスト最適化",
+    "question": "中断に耐えられるバッチ処理でEC2コストを削減したい。最も適切な購入オプションは？",
+    "choices": [
+      "オンデマンドインスタンスのみ",
+      "Dedicated Hosts",
+      "スポットインスタンス",
+      "常に最大サイズのインスタンス"
+    ],
+    "answer": 2,
+    "explanation": "スポットインスタンスは中断される可能性があるため、中断許容型のバッチワークロードで費用削減に適しています。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html"
+  },
+  {
+    "id": "saa-005",
+    "domain": "耐障害性",
+    "question": "RDSでプライマリDBの障害時に自動フェイルオーバーを実現したい。何を選ぶ？",
+    "choices": [
+      "リードレプリカだけを作成",
+      "RDS Multi-AZ配置",
+      "DBインスタンスのストレージのみ増強",
+      "スナップショットを手動取得"
+    ],
+    "answer": 1,
+    "explanation": "RDS Multi-AZは高可用性のためにスタンバイを維持し、対象の構成では障害時に自動フェイルオーバーします。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+  },
+  {
+    "id": "saa-006",
+    "domain": "セキュリティ",
+    "question": "AWSリソースへのAPI操作履歴を記録して監査したい。どのサービスを使う？",
+    "choices": [
+      "AWS CloudTrail",
+      "Amazon Route 53",
+      "Amazon ElastiCache",
+      "AWS Direct Connect"
+    ],
+    "answer": 0,
+    "explanation": "CloudTrailはAWSアカウントのAPIアクティビティやイベント履歴の記録・監査に使用します。",
+    "reference": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+  },
+  {
+    "id": "saa-007",
+    "domain": "パフォーマンス",
+    "question": "読み取り負荷が高いRDSデータベースの読み取り処理をスケールさせるには？",
+    "choices": [
+      "Multi-AZだけで読み取り性能を倍増",
+      "リードレプリカを使用",
+      "DBを単一AZに限定",
+      "バックアップ頻度を減らす"
+    ],
+    "answer": 1,
+    "explanation": "RDSリードレプリカは読み取りトラフィックを分散する用途に適しています。高可用性を目的とするMulti-AZとは役割が異なります。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html"
+  },
+  {
+    "id": "saa-008",
+    "domain": "コスト最適化",
+    "question": "アクセス頻度が低いが即時取り出しが必要なS3オブジェクトの保存コストを下げたい。候補は？",
+    "choices": [
+      "S3 Standardのみ",
+      "S3 Standard-IA",
+      "EC2インスタンスストア",
+      "Amazon EFSのみ"
+    ],
+    "answer": 1,
+    "explanation": "S3 Standard-IAはアクセス頻度が低く、必要時にミリ秒単位で取得したいデータ向けです。取り出し料金などの条件を確認します。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+  },
+  {
     "id": "saa-009",
     "domain": "セキュリティ",
     "question": "S3バケット内の機密オブジェクトをKMSキーで暗号化したい。適切な方式は？",
@@ -558,5 +670,437 @@
     "answer": 3,
     "explanation": "AWS Organizationsの一括請求で複数アカウントの請求を統合できます。",
     "reference": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html"
+  },
+  {
+    "id": "saa-049",
+    "domain": "セキュリティ",
+    "question": "複数アカウントでIAMアクセスを一元管理し、従業員にSSOでログインさせる仕組みは？",
+    "choices": [
+      "IAM Identity Center",
+      "Amazon Inspector",
+      "AWS Certificate Manager",
+      "AWS Config"
+    ],
+    "answer": 0,
+    "explanation": "IAM Identity Centerは複数AWSアカウントなどへの従業員アクセスを一元管理します。",
+    "reference": "https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html",
+    "difficulty": 2,
+    "tags": [
+      "セキュリティ"
+    ]
+  },
+  {
+    "id": "saa-050",
+    "domain": "セキュリティ",
+    "question": "AWSリソースの構成変更を記録し、設定ルールへの準拠を評価したい。最適なサービスは？",
+    "choices": [
+      "CloudTrail Lake",
+      "AWS Config",
+      "Amazon GuardDuty",
+      "AWS Shield"
+    ],
+    "answer": 1,
+    "explanation": "AWS Configはリソース設定の変更履歴と構成ルール評価を提供します。",
+    "reference": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html",
+    "difficulty": 2,
+    "tags": [
+      "セキュリティ"
+    ]
+  },
+  {
+    "id": "saa-051",
+    "domain": "セキュリティ",
+    "question": "DDoS攻撃に対する標準の保護をAWSサービスで受ける仕組みは？",
+    "choices": [
+      "AWS Artifact",
+      "Amazon Macie",
+      "AWS Shield Standard",
+      "Amazon Detective"
+    ],
+    "answer": 2,
+    "explanation": "Shield Standardは対象となるAWSリソースに標準的なDDoS対策を提供します。",
+    "reference": "https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html",
+    "difficulty": 2,
+    "tags": [
+      "セキュリティ"
+    ]
+  },
+  {
+    "id": "saa-052",
+    "domain": "セキュリティ",
+    "question": "ALBでHTTPSを提供するとき、証明書の発行・管理に使えるサービスは？",
+    "choices": [
+      "AWS KMS",
+      "AWS CloudHSM",
+      "AWS Secrets Manager",
+      "AWS Certificate Manager"
+    ],
+    "answer": 3,
+    "explanation": "ACMは対応サービス向けTLS証明書のプロビジョニングと管理を支援します。",
+    "reference": "https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html",
+    "difficulty": 2,
+    "tags": [
+      "セキュリティ"
+    ]
+  },
+  {
+    "id": "saa-053",
+    "domain": "耐障害性",
+    "question": "複数のサービスをイベントで疎結合に結び、ルールでイベントを振り分けたい。適切なのは？",
+    "choices": [
+      "Amazon EventBridge",
+      "Amazon EBS",
+      "AWS Direct Connect",
+      "Amazon FSx"
+    ],
+    "answer": 0,
+    "explanation": "EventBridgeはイベントバスとルールを使うイベント駆動アーキテクチャを支援します。",
+    "reference": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
+  },
+  {
+    "id": "saa-054",
+    "domain": "耐障害性",
+    "question": "分散アプリケーションの処理順序とリトライを状態機械で管理したい。適切なのは？",
+    "choices": [
+      "AWS Batch",
+      "AWS Step Functions",
+      "AWS CloudTrail",
+      "Amazon CloudFront"
+    ],
+    "answer": 1,
+    "explanation": "Step Functionsはワークフローの状態管理、分岐、リトライなどを提供します。",
+    "reference": "https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
+  },
+  {
+    "id": "saa-055",
+    "domain": "耐障害性",
+    "question": "災害復旧で許容できるデータ損失時間を表す指標は？",
+    "choices": [
+      "RTO",
+      "SLA",
+      "RPO",
+      "MTTR"
+    ],
+    "answer": 2,
+    "explanation": "RPOは障害発生時に許容するデータ損失を時間で表した目標です。",
+    "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
+  },
+  {
+    "id": "saa-056",
+    "domain": "耐障害性",
+    "question": "災害復旧で業務再開までの許容時間を表す指標は？",
+    "choices": [
+      "RPO",
+      "SLO",
+      "MTBF",
+      "RTO"
+    ],
+    "answer": 3,
+    "explanation": "RTOは障害から復旧してサービスを再開するまでの目標時間です。",
+    "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
+  },
+  {
+    "id": "saa-057",
+    "domain": "パフォーマンス",
+    "question": "Auroraのリーダーエンドポイントを使用する主な目的は？",
+    "choices": [
+      "読み取り接続をレプリカへ分散する",
+      "書き込みを全レプリカへ直接分散する",
+      "S3をマウントする",
+      "DNSゾーンを管理する"
+    ],
+    "answer": 0,
+    "explanation": "Auroraのリーダーエンドポイントは読み取り専用接続をレプリカへ負荷分散します。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html",
+    "difficulty": 2,
+    "tags": [
+      "パフォーマンス"
+    ]
+  },
+  {
+    "id": "saa-058",
+    "domain": "パフォーマンス",
+    "question": "DynamoDBでプライマリキー以外の属性によるクエリを効率化する仕組みは？",
+    "choices": [
+      "DynamoDB Streams",
+      "グローバルセカンダリインデックス",
+      "TTL",
+      "Point-in-Time Recovery"
+    ],
+    "answer": 1,
+    "explanation": "グローバルセカンダリインデックスは別のキー構成でクエリするための仕組みです。",
+    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GSI.html",
+    "difficulty": 2,
+    "tags": [
+      "パフォーマンス"
+    ]
+  },
+  {
+    "id": "saa-059",
+    "domain": "パフォーマンス",
+    "question": "インターネットを経由しない専用ネットワーク接続でオンプレミスとAWSを接続したい。候補は？",
+    "choices": [
+      "Site-to-Site VPNのみ",
+      "AWS PrivateLinkのみ",
+      "AWS Direct Connect",
+      "Amazon CloudFront"
+    ],
+    "answer": 2,
+    "explanation": "Direct Connectは専用接続を利用してオンプレミスとAWSを結びます。",
+    "reference": "https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html",
+    "difficulty": 2,
+    "tags": [
+      "パフォーマンス"
+    ]
+  },
+  {
+    "id": "saa-060",
+    "domain": "パフォーマンス",
+    "question": "コンテナ化したアプリケーションをサーバーレスで動かすECSの起動方式は？",
+    "choices": [
+      "EC2起動タイプのみ",
+      "AWS Lambda Layers",
+      "EKS Anywhere",
+      "AWS Fargate"
+    ],
+    "answer": 3,
+    "explanation": "Fargateはコンテナ実行のためのサーバー管理を不要にします。",
+    "reference": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html",
+    "difficulty": 2,
+    "tags": [
+      "パフォーマンス"
+    ]
+  },
+  {
+    "id": "saa-061",
+    "domain": "コスト最適化",
+    "question": "EC2の稼働が短時間で終了する実験環境の柔軟な購入オプションは？",
+    "choices": [
+      "オンデマンドインスタンス",
+      "3年の長期コミットのみ",
+      "Dedicated Hostsの長期占有",
+      "固定のリザーブドインスタンスのみ"
+    ],
+    "answer": 0,
+    "explanation": "短期で予測しにくい利用では事前コミット不要のオンデマンドが選択肢になります。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html",
+    "difficulty": 2,
+    "tags": [
+      "コスト最適化"
+    ]
+  },
+  {
+    "id": "saa-062",
+    "domain": "コスト最適化",
+    "question": "S3ストレージのアクセスパターンを分析して最適化機会を見つける機能は？",
+    "choices": [
+      "Amazon Inspector",
+      "S3 Storage Lens",
+      "AWS Shield",
+      "CloudFront Functions"
+    ],
+    "answer": 1,
+    "explanation": "S3 Storage Lensはストレージ使用状況やアクティビティの可視化を支援します。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html",
+    "difficulty": 2,
+    "tags": [
+      "コスト最適化"
+    ]
+  },
+  {
+    "id": "saa-063",
+    "domain": "コスト最適化",
+    "question": "AWS利用量の予測と費用の把握に用いる請求分析画面は？",
+    "choices": [
+      "AWS Certificate Manager",
+      "AWS CloudTrail",
+      "AWS Cost Explorer",
+      "Amazon Route 53"
+    ],
+    "answer": 2,
+    "explanation": "Cost Explorerは過去のコスト分析に加えて費用予測機能も備えます。",
+    "reference": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+    "difficulty": 2,
+    "tags": [
+      "コスト最適化"
+    ]
+  },
+  {
+    "id": "saa-064",
+    "domain": "コスト最適化",
+    "question": "断続的な開発環境のEC2料金を下げる直接的な施策は？",
+    "choices": [
+      "EBS容量を増やす",
+      "Elastic IPを増やす",
+      "インスタンスタイプを常に大きくする",
+      "不要時間帯にEC2を停止する"
+    ],
+    "answer": 3,
+    "explanation": "EC2インスタンスを停止するとインスタンスのコンピューティング料金は止まりますがEBSなどの料金は残ります。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Stop_Start.html",
+    "difficulty": 2,
+    "tags": [
+      "コスト最適化"
+    ]
+  },
+  {
+    "id": "saa-065",
+    "domain": "セキュリティ",
+    "question": "S3内の機密データを検出・分類するサービスは？",
+    "choices": [
+      "Amazon Macie",
+      "AWS CloudFormation",
+      "Amazon Route 53",
+      "AWS Budgets"
+    ],
+    "answer": 0,
+    "explanation": "Amazon MacieはS3に格納された機密データの検出と可視化に利用できます。",
+    "reference": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html",
+    "difficulty": 2,
+    "tags": [
+      "セキュリティ"
+    ]
+  },
+  {
+    "id": "saa-066",
+    "domain": "セキュリティ",
+    "question": "コンプライアンス報告書などAWSの監査文書を取得できるサービスは？",
+    "choices": [
+      "AWS Secrets Manager",
+      "AWS Artifact",
+      "Amazon CloudWatch",
+      "Amazon GuardDuty"
+    ],
+    "answer": 1,
+    "explanation": "AWS ArtifactはAWSのコンプライアンス関連のレポートと契約書を提供します。",
+    "reference": "https://docs.aws.amazon.com/artifact/latest/ug/what-is-aws-artifact.html",
+    "difficulty": 2,
+    "tags": [
+      "セキュリティ"
+    ]
+  },
+  {
+    "id": "saa-067",
+    "domain": "耐障害性",
+    "question": "異なるAZに配置したEC2から同じ共有ファイルへアクセスし可用性を高めたい。候補は？",
+    "choices": [
+      "単一EC2のインスタンスストア",
+      "単一AZのEBSのみ",
+      "複数AZマウントターゲットを持つEFS",
+      "EC2ユーザーデータ"
+    ],
+    "answer": 2,
+    "explanation": "EFSは複数AZからアクセス可能なファイルシステムを構成できます。",
+    "reference": "https://docs.aws.amazon.com/efs/latest/ug/manage-fs-access-create-delete-mount-targets.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
+  },
+  {
+    "id": "saa-068",
+    "domain": "耐障害性",
+    "question": "S3で保存後のオブジェクトの削除や上書きを所定期間禁止する機能は？",
+    "choices": [
+      "S3 Inventory",
+      "S3 Transfer Acceleration",
+      "S3 Select",
+      "S3 Object Lock"
+    ],
+    "answer": 3,
+    "explanation": "Object LockはWORMモデルで指定期間のオブジェクト変更・削除を防ぐ機能です。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
+  },
+  {
+    "id": "saa-069",
+    "domain": "パフォーマンス",
+    "question": "CloudFront配信のキャッシュ動作を制御する代表的な設定は？",
+    "choices": [
+      "キャッシュポリシー",
+      "IAMパスワードポリシー",
+      "SCP",
+      "EC2プレイスメントグループ"
+    ],
+    "answer": 0,
+    "explanation": "CloudFrontのキャッシュポリシーはキャッシュキーやTTLなどを指定します。",
+    "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html",
+    "difficulty": 2,
+    "tags": [
+      "パフォーマンス"
+    ]
+  },
+  {
+    "id": "saa-070",
+    "domain": "パフォーマンス",
+    "question": "EC2インスタンス間の低レイテンシー通信を重視する配置戦略は？",
+    "choices": [
+      "スプレッドプレイスメントグループ",
+      "クラスタープレイスメントグループ",
+      "パーティションプレイスメントグループ",
+      "デフォルトVPC"
+    ],
+    "answer": 1,
+    "explanation": "クラスタープレイスメントグループはインスタンスを近接配置し低レイテンシー通信に適しています。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html",
+    "difficulty": 2,
+    "tags": [
+      "パフォーマンス"
+    ]
+  },
+  {
+    "id": "saa-071",
+    "domain": "コスト最適化",
+    "question": "EC2 Spot Instancesの中断に備えた設計として適切なのは？",
+    "choices": [
+      "状態をローカルディスクにのみ保持する",
+      "常に単一インスタンスだけを利用する",
+      "処理をチェックポイント可能にする",
+      "中断は絶対に起きないと仮定する"
+    ],
+    "answer": 2,
+    "explanation": "スポットは中断されるため、処理再試行やチェックポイントで影響を小さくします。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html",
+    "difficulty": 2,
+    "tags": [
+      "コスト最適化"
+    ]
+  },
+  {
+    "id": "saa-072",
+    "domain": "耐障害性",
+    "question": "CloudWatchアラームで異常メトリクスを検知して通知したい。利用する通知サービスは？",
+    "choices": [
+      "Amazon EBS",
+      "Amazon FSx",
+      "Amazon ECR",
+      "Amazon SNS"
+    ],
+    "answer": 3,
+    "explanation": "CloudWatchアラームはSNSトピックへ通知を送れます。",
+    "reference": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html",
+    "difficulty": 2,
+    "tags": [
+      "耐障害性"
+    ]
   }
 ]
