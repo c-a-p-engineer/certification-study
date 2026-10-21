@@ -1,4 +1,4 @@
-import {GLOSSARY} from './glossary';
+import {GLOSSARY} from './glossary.ts';
 
 export type StudyTerm={id:string;title:string;english?:string;meaning:string;note:string;category:'略語'|'AWSサービス'|'技術用語'};
 type Concept=StudyTerm&{aliases:readonly string[]};
@@ -89,7 +89,7 @@ const score=(parts:readonly string[],aliases:readonly string[])=>{
 };
 export function findStudyTerms(question:{question:string;choices:string[];explanation:string;distractorReasons?:string[]},limit=8):StudyTerm[]{
  const segments=[question.question,question.explanation,question.choices.join(' ')+(question.distractorReasons||[]).join(' ')];
- const acronyms:GLOSSARY_TERM[]=GLOSSARY.map(t=>({...t}));
+ const acronyms=GLOSSARY;
  const found:{term:StudyTerm;weight:number}[]=[];
  for(const c of CONCEPTS){
   const weight=score(segments,c.aliases);
@@ -104,4 +104,3 @@ export function findStudyTerms(question:{question:string;choices:string[];explan
  }
  return found.sort((a,b)=>b.weight-a.weight||a.term.title.localeCompare(b.term.title,'ja')).slice(0,Math.max(0,limit)).map(x=>x.term);
 }
-type GLOSSARY_TERM=(typeof GLOSSARY)[number];
