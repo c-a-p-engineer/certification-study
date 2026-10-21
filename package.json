@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "npm run validate:questions && vite --host 0.0.0.0",
-    "build": "npm run validate:questions && npm run test:questions && npm run test:study && npm run test:glossary && tsc --noEmit && vite build",
+    "build": "npm run validate:questions && npm run test:questions && npm run test:study && npm run test:glossary && npm run test:mastery && npm run audit:questions && tsc --noEmit && vite build",
     "preview": "vite preview",
     "validate:questions": "node scripts/build-question-bank.mjs",
     "test:questions": "node --test scripts/question-bank.test.mjs",
     "test:study": "node --experimental-strip-types --test scripts/study-scheduler.test.mjs",
-    "test:glossary": "node --experimental-strip-types --test scripts/glossary.test.mjs"
+    "test:glossary": "node --experimental-strip-types --test scripts/glossary.test.mjs",
+    "audit:questions": "node scripts/audit-question-bank.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
