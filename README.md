@@ -11,7 +11,7 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
 - 146 original AWS SAA practice questions with explanations and official reference links
-- Local progress persistence, weak-topic review, reduced-motion support
+- Local progress persistence, weak-topic review, evidence-informed spaced retrieval (RECALL RAID), optional active recall before options, reduced-motion support
 - Extensible certification content format
 
 ## Current scope
@@ -52,3 +52,7 @@ Official reference: https://docs.aws.amazon.com/aws-certification/latest/solutio
 ## Quality gates
 
 `npm run test:questions` checks IDs, exact duplicate stems, valid single/multiple answer sets, AWS reference fields and 65-question domain coverage. `npm run build` runs the JSONL generator, this test suite, TypeScript and Vite. These checks verify structure, not the factual accuracy of the questions. AWS documentation links and answer rationales still require editorial review.
+
+## Remember more with structured practice
+
+Research rationale and limitations: [Learning Science](docs/LEARNING_SCIENCE.md). RECALL RAID stores per-question spaced-review dates in browser localStorage. Optional ACTIVE RECALL FIRST hides the answer options until you first try to retrieve the solution and explain why. Review intervals are configurable heuristics, not guaranteed optimal for every learner. No learner responses are uploaded.
