@@ -98,3 +98,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .boss-cta button{display:inline-flex;align-items:center;gap:8px;padding:14px 20px;border:0;border-radius:6px;background:linear-gradient(110deg,#ff91b0,#ffcf89);color:#311627;font-size:13px;font-weight:900;min-height:50px;cursor:pointer}
 .boss-cta button:focus-visible{outline:3px solid #ffffff;outline-offset:4px}
 @media(max-width:700px){.boss-cta button{width:100%;justify-content:center}.boss-cta strong{font-size:20px}}
+
+/* Readable full-name glossary shown after revealing the explanation. */
+.term-panel{margin:22px 0;padding:17px 17px 7px;border:2px solid #67bfe1;border-radius:12px;background:#102a40;color:#edf8ff;text-align:left}
+.term-panel-heading{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-weight:900;font-size:16px;color:#a2f0ff;margin-bottom:12px}
+.term-panel-heading span{margin-left:auto;font-size:10px;letter-spacing:1px;color:#a6c7de}
+.term-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:10px;margin-bottom:12px}
+.term-entry{padding:14px;border:1px solid #4e85a8;border-left:4px solid #81dcf8;border-radius:9px;background:#1b3752;min-width:0}
+.term-entry-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;line-height:1.35;margin-bottom:8px}
+.term-entry-title strong{font-size:21px;color:#ffffff;font-weight:900}
+.term-entry-title span{font-size:13px;color:#bdeaff;font-weight:700;overflow-wrap:anywhere}
+.term-entry>b{font-size:15px;color:#fff0b6}
+.term-entry>p{font-size:13px!important;line-height:1.65!important;color:#e1eefa!important;margin:6px 0 0!important}
+.exam-review-item .term-panel{margin-bottom:15px}
+@media(max-width:700px){.term-panel{padding:13px}.term-entry{padding:12px}.term-panel-heading span{margin-left:0}}
