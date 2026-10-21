@@ -37,3 +37,15 @@ export function findTerms(...texts:string[]):Term[]{
  const haystack=texts.join(' ');
  return GLOSSARY.filter(term=>new RegExp('(^|[^A-Za-z0-9])'+term.abbr+'(?=$|[^A-Za-z0-9])').test(haystack));
 }
+
+/** Expand the first occurrence of each acronym, preserving ordinary text. */
+export function expandTerms(text:string):string{
+ const mentioned=findTerms(text);
+ if(!mentioned.length)return text;
+ let result=text;
+ for(const term of mentioned){
+  const pattern=new RegExp('(^|[^A-Za-z0-9])('+term.abbr+')(?=$|[^A-Za-z0-9])');
+  result=result.replace(pattern,(_,prefix:string,abbr:string)=>prefix+abbr+'（'+term.full+'／'+term.meaning+'）');
+ }
+ return result;
+}
