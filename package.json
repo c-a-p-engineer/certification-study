@@ -11,7 +11,8 @@
     "test:questions": "node --test scripts/question-bank.test.mjs",
     "test:study": "node --experimental-strip-types --test scripts/study-scheduler.test.mjs",
     "test:glossary": "node --experimental-strip-types --test scripts/glossary.test.mjs",
-    "audit:questions": "node scripts/audit-question-bank.mjs"
+    "audit:questions": "node scripts/audit-question-bank.mjs",
+    "test:mastery": "node --experimental-strip-types --test scripts/mastery.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
