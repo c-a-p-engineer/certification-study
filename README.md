@@ -107,3 +107,7 @@ The game uses an **original, procedural Web Audio soundtrack**, with no external
 - `npm run test:audio` checks default mute, gain bounds and soundtrack scene characteristics; `npm run build` includes this check.
 
 The BGM is a synthesized looping melody rather than a streamed studio recording; if users need richer music later, integrate explicitly licensed audio assets and retain the same accessible controls.
+
+## Contextual study terms at the end of each explanation
+
+A collapsed **用語・サービス解説** disclosure appears at the **bottom** of the regular question explanation (after the official reference and Ask ChatGPT controls), and at the **bottom** of each expanded post-exam question review. Unlike the older abbreviation-only glossary, this covers curated AWS services, networking and architecture concepts (e.g. Amazon S3, Amazon RDS, SQS, failover, idempotency, cache and partition keys), along with expanded acronyms such as RTO and RPO. Terms are ranked by relevance to the question and explanation before weaker mentions in distractors, limited to eight per item to reduce scrolling. Explanations remain hidden during the timed exam. The guide is curated and offline, so it makes no per-question AI calls; definitions need ongoing editorial accuracy reviews. Run `npm run test:terms` for coverage and matching regression tests.
