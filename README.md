@@ -2,6 +2,12 @@
 
 A flashy, arcade-inspired open-source certification learning game. Starting with AWS Solutions Architect Associate.
 
+## Play online
+
+**[▶ Play CERTIFICATION // OVERDRIVE on GitHub Pages](https://c-a-p-engineer.github.io/certification-study/)**
+
+> Deployment status: GitHub Actions must complete successfully before the game is available.
+
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
 - AWS SAA practice questions with explanations and official reference links
