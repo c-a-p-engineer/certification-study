@@ -91,3 +91,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .daily-quest-track div{height:100%;background:linear-gradient(90deg,#ffb959,#fff2a5);border-radius:30px;box-shadow:0 0 16px #ffca75}
 .daily-quest p{font-size:13px;line-height:1.65;color:#e5d8d5;margin:13px 0}
 .daily-quest .secondary-btn{font-weight:900;border-color:#ffe4a0;color:#fff4be}
+
+.boss-cta{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:16px 0 0;padding:20px 22px;border:2px solid #ff6d91;border-radius:12px;background:radial-gradient(circle at 85% 20%,#9b355644,transparent 55%),linear-gradient(115deg,#431d33,#231833);box-shadow:0 0 30px #ff55752b}
+.boss-cta strong{display:flex;align-items:center;gap:10px;font:900 23px 'Barlow Condensed',sans-serif;letter-spacing:1px;color:#ffb9c6}
+.boss-cta small{display:block;font-size:12px;color:#f1c6d6;margin-top:8px;line-height:1.6}
+.boss-cta button{display:inline-flex;align-items:center;gap:8px;padding:14px 20px;border:0;border-radius:6px;background:linear-gradient(110deg,#ff91b0,#ffcf89);color:#311627;font-size:13px;font-weight:900;min-height:50px;cursor:pointer}
+.boss-cta button:focus-visible{outline:3px solid #ffffff;outline-offset:4px}
+@media(max-width:700px){.boss-cta button{width:100%;justify-content:center}.boss-cta strong{font-size:20px}}
