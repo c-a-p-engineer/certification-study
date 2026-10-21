@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "build": "npm run validate:questions && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "validate:questions": "node scripts/build-question-bank.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
