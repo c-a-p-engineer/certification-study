@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "npm run validate:questions && vite --host 0.0.0.0",
     "build": "npm run validate:questions && npm run test:questions && tsc --noEmit && vite build",
     "preview": "vite preview",
     "validate:questions": "node scripts/build-question-bank.mjs",
