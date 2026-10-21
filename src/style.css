@@ -144,3 +144,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .reflection small{display:block;color:#acffdc;font-size:12px;margin-top:10px}
 @media(max-width:680px){.mastery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mastery-tile{padding:12px}.reflection button{flex:1}}
 @media(prefers-reduced-motion:reduce){.boss-hp-track>div{transition:none}}
+
+.choice-reasons{border:1px solid #7790bd;background:#172940;border-radius:9px;margin:15px 0;padding:13px;color:#f4fbff}
+.choice-reasons summary{cursor:pointer;font-size:15px;font-weight:900;color:#b6ebff;min-height:30px}
+.choice-reasons>div{padding:13px 0;border-top:1px solid #ffffff26}
+.choice-reasons>div strong{font-size:14px;color:#fff}
+.choice-reasons>div p{font-size:13px!important;line-height:1.8!important;color:#d3e6fa}
