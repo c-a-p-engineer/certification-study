@@ -150,3 +150,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .choice-reasons>div{padding:13px 0;border-top:1px solid #ffffff26}
 .choice-reasons>div strong{font-size:14px;color:#fff}
 .choice-reasons>div p{font-size:13px!important;line-height:1.8!important;color:#d3e6fa}
+
+.daily-claim{border:2px solid #fff2ac;border-radius:8px;background:linear-gradient(110deg,#ffd781,#e7ac55);color:#281e1f;display:flex;align-items:center;gap:9px;justify-content:center;min-height:52px;padding:12px 20px;font-weight:900;font-size:14px;cursor:pointer}
+.daily-claimed{display:inline-flex;background:#244b44;border:1px solid #81ffd0;color:#d2ffec;border-radius:8px;padding:14px;font-size:14px}
+.rank-overlay{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#080c1dd9;padding:20px;backdrop-filter:blur(9px)}
+.rank-overlay>div{border:3px solid #ffe6a1;border-radius:16px;max-width:460px;width:100%;background:radial-gradient(circle at 50% 5%,#81572a,#291a35 70%);box-shadow:0 0 80px #ffd08266;padding:42px 30px;display:grid;justify-items:center;gap:16px;text-align:center;color:#fff}
+.rank-overlay strong{font:900 clamp(40px,9vw,68px) 'Barlow Condensed',sans-serif;letter-spacing:2px;color:#ffe4a1}
+.rank-overlay span{font-size:25px;font-weight:900;letter-spacing:3px;color:#fff}
+.rank-overlay button{font-size:15px;font-weight:900;border:0;border-radius:8px;background:#f8c873;color:#251d24;min-height:50px;padding:12px 24px}
