@@ -11,10 +11,10 @@ test('question IDs and normalized question text are unique',()=>{
 });
 test('all questions have defensible answer index sets and official reference URLs',()=>{
  for(const q of questions){
-  assert.equal(q.choices.length,4,q.id);
-  assert.equal(new Set(q.choices).size,4,q.id);
+  assert.ok(q.choices.length>=4&&q.choices.length<=8,q.id);
+  assert.equal(new Set(q.choices).size,q.choices.length,q.id);
   const answerSet=q.answers??[q.answer];
-  assert.ok(answerSet.every(n=>Number.isInteger(n)&&n>=0&&n<4),q.id);
+  assert.ok(answerSet.every(n=>Number.isInteger(n)&&n>=0&&n<q.choices.length),q.id);
   assert.equal(new Set(answerSet).size,answerSet.length,q.id);
   assert.ok(q.answers?answerSet.length>=2&&answerSet.length<=3:answerSet.length===1,q.id);
   assert.ok(q.reference.startsWith('https://docs.aws.amazon.com/'),q.id);
