@@ -18,6 +18,8 @@ for(let i=0;i<lines.length;i++){
  const normalizedStem=q.question.normalize('NFKC').replace(/\s+/g,'');
  if(stems.has(normalizedStem))throw new Error('Duplicate question stem '+q.id);
  if(q.difficulty!==undefined&&(!Number.isInteger(q.difficulty)||q.difficulty<1||q.difficulty>3))throw new Error('Invalid difficulty '+q.id);
+ if(q.distractorReasons!==undefined&&(!Array.isArray(q.distractorReasons)||q.distractorReasons.length!==q.choices.length||q.distractorReasons.some(x=>typeof x!=='string'||x.trim().length<15)))throw new Error('Invalid distractor reasoning '+q.id);
+ if(q.reviewedAt!==undefined&&(!/^\\d{4}-\\d{2}-\\d{2}$/.test(q.reviewedAt)))throw new Error('Invalid review date '+q.id);
  if(q.tags!==undefined&&(!Array.isArray(q.tags)||q.tags.some(t=>typeof t!=='string'||!t.trim())))throw new Error('Invalid tags '+q.id);
  ids.add(q.id);stems.add(normalizedStem);questions.push(q);
 }
