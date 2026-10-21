@@ -22,6 +22,16 @@ export const GLOSSARY:readonly Term[]=[
  {abbr:'IOPS',full:'Input/Output Operations Per Second',meaning:'1秒あたりの入出力操作数',note:'ストレージが1秒間に処理できるI/O操作の数。'},
  {abbr:'DAX',full:'DynamoDB Accelerator',meaning:'DynamoDB向けキャッシュ',note:'DynamoDB互換のインメモリキャッシュサービス。'},
  {abbr:'OAC',full:'Origin Access Control',meaning:'オリジンアクセスコントロール',note:'CloudFrontからS3などのオリジンへのアクセスを制限する仕組み。'}
+ {abbr:'MFA',full:'Multi-Factor Authentication',meaning:'多要素認証',note:'パスワードとは異なる追加の認証要素を組み合わせて本人確認を強化する方法。'},
+ {abbr:'SSO',full:'Single Sign-On',meaning:'シングルサインオン',note:'一度のサインインで複数の対象アプリやサービスへアクセスする方式。'},
+ {abbr:'CDN',full:'Content Delivery Network',meaning:'コンテンツ配信ネットワーク',note:'利用者に近い拠点からキャッシュしたコンテンツを提供して配信遅延を減らす。'},
+ {abbr:'DR',full:'Disaster Recovery',meaning:'災害復旧',note:'大規模障害後にシステムとデータを復旧するための計画・構成・手順。'},
+ {abbr:'PITR',full:'Point-In-Time Recovery',meaning:'特定時点への復元',note:'バックアップとログを利用して、指定時刻に近いデータ状態を復元する仕組み。'},
+ {abbr:'GSI',full:'Global Secondary Index',meaning:'グローバルセカンダリインデックス',note:'DynamoDBの基本キーとは異なるキーを使ってクエリを実行するためのインデックス。'},
+ {abbr:'KPI',full:'Key Performance Indicator',meaning:'重要業績評価指標',note:'目標の達成状況を継続的に確認するために使う主要な測定指標。'},
+ {abbr:'RDS',full:'Relational Database Service',meaning:'リレーショナルデータベースサービス',note:'AWSのマネージドリレーショナルデータベース。'},
+ {abbr:'API',full:'Application Programming Interface',meaning:'アプリケーションプログラミングインターフェイス',note:'ソフトウェア間で機能やデータをやり取りするための呼び出し規約。'},
+ {abbr:'CIDR',full:'Classless Inter-Domain Routing',meaning:'クラスレスアドレス指定',note:'IPアドレス範囲をプレフィックス長で表す方法。例：10.0.0.0/16。'}
 ];
 export function findTerms(...texts:string[]):Term[]{
  const haystack=texts.join(' ');
