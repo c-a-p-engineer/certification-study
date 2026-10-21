@@ -114,3 +114,5 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 @media(max-width:700px){.term-panel{padding:13px}.term-entry{padding:12px}.term-panel-heading span{margin-left:0}}
 
 .term-compare{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border:1px solid #79d2f0;background:#13354b;border-radius:8px;margin-top:14px;padding:12px 14px;color:#e5f8ff;font-size:13px;line-height:1.6}.term-compare>strong{color:#a5f1ff;font-size:14px}.term-compare>span{flex:1 1 210px}.term-compare b{color:#fff2a0}
+
+.expanded-explanation{line-height:1.95!important;font-size:16px!important;color:#f5f8ff!important;overflow-wrap:anywhere;white-space:normal}
