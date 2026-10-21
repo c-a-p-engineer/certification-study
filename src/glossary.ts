@@ -1,10 +1,10 @@
 export type Term = {abbr:string;full:string;meaning:string;note:string};
 export const GLOSSARY:readonly Term[]=[
- {abbr:'RTO',full:'Recovery Time Objective',meaning:'目標復旧時間',note:'障害発生後、業務・サービスを何時間以内に復旧させるかという目標。'},
- {abbr:'RPO',full:'Recovery Point Objective',meaning:'目標復旧時点',note:'障害時に何分・何時間前までのデータ損失を許容できるかという目標。'},
- {abbr:'MTBF',full:'Mean Time Between Failures',meaning:'平均故障間隔',note:'修理可能なシステムで、故障から次の故障までの平均稼働時間。'},
+ {abbr:'RTO',full:'Recovery Time Objective',meaning:'目標復旧時間',note:'障害発生からサービスを再開するまでの許容時間。例：RTO 2時間なら2時間以内の復旧を目指す。RPOはデータ損失の許容範囲。'},
+ {abbr:'RPO',full:'Recovery Point Objective',meaning:'目標復旧時点',note:'障害時に許容するデータ損失の時間幅。例：RPO 15分なら失うデータを最大15分相当に抑える設計目標。RTOは復旧までの時間。'},
+ {abbr:'MTBF',full:'Mean Time Between Failures',meaning:'平均故障間隔',note:'修理可能なシステムで、ある故障から次の故障までの平均稼働時間。復旧時間の目標であるRTOとは異なる。'},
  {abbr:'MTTR',full:'Mean Time To Repair',meaning:'平均修復時間',note:'故障発生後、修理して稼働状態に戻すまでの平均時間。'},
- {abbr:'SLO',full:'Service Level Objective',meaning:'サービスレベル目標',note:'可用性や応答時間などのサービス品質に関する具体的な目標。'},
+ {abbr:'SLO',full:'Service Level Objective',meaning:'サービスレベル目標',note:'可用性99.9%や応答時間など、サービス品質の測定可能な目標。障害復旧に限定したRTOとは用途が異なる。'},
  {abbr:'SLI',full:'Service Level Indicator',meaning:'サービスレベル指標',note:'可用性や応答時間など、SLOの達成度を計測する指標。'},
  {abbr:'SLA',full:'Service Level Agreement',meaning:'サービスレベル合意',note:'サービスの提供者と利用者の間で合意する品質・責任などの条件。'},
  {abbr:'AZ',full:'Availability Zone',meaning:'アベイラビリティーゾーン',note:'AWSリージョン内の独立した障害ドメイン。'},
