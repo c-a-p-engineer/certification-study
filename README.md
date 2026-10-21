@@ -66,3 +66,7 @@ The official SAA-C03 exam guide specifies that multiple-response questions offer
 ## Ask ChatGPT from explanations
 
 After answering an ordinary practice question, or opening any post-exam review item, choose **ChatGPTに聞く**. It opens ChatGPT with a prompt prefilled with the question, answer choices, your answer, correct response, explanation and AWS documentation link, asking for option-by-option reasoning and a new follow-up scenario. The adjacent copy control works when the browser supports clipboard access. The learner must review and submit the prompt; prompt URL behavior depends on ChatGPT/browser context. This does not require any OpenAI API key. No study history is uploaded automatically; opening the link shares only the selected question context in the URL.
+
+## Arcade UI accessibility update
+
+Question options use larger Japanese text, high-contrast borders, distinct selected/correct/incorrect labels, improved tap targets and a numeric mission-progress HUD. Multiple-response options show an explicit selected counter and the confirm action requires the requested number of choices. Color is accompanied by text and icons; reduced-motion and keyboard focus indicators remain available.
