@@ -1102,5 +1102,157 @@
     "tags": [
       "耐障害性"
     ]
+  },
+  {
+    "id": "saa-073",
+    "domain": "セキュリティ",
+    "question": "プライベートサブネットのEC2にシェル接続したい。踏み台やインバウンドSSHを使わず監査可能な手段として最も適切なのは？",
+    "choices": [
+      "EC2のパブリックIPを付けてSSH",
+      "Session Managerで接続",
+      "S3 Transfer Accelerationを有効化",
+      "CloudFrontのオリジンに登録"
+    ],
+    "answer": 1,
+    "explanation": "AWS Systems Manager Session ManagerはインバウンドSSHポートを開かずインスタンスにアクセスできます。必要なSSM権限や接続経路を設定します。",
+    "reference": "https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html",
+    "difficulty": 3,
+    "tags": [
+      "セキュリティ",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-074",
+    "domain": "セキュリティ",
+    "question": "オンプレミスからAWSへ転送する機密データを通信経路で保護したい。最優先で検討するのは？",
+    "choices": [
+      "S3ライフサイクル",
+      "EC2 Auto Scaling",
+      "TLSやIPsecなど転送時暗号化",
+      "S3のバージョニング"
+    ],
+    "answer": 2,
+    "explanation": "転送時暗号化にはTLSやIPsecなどを用い、通信経路上での盗聴や改ざんのリスクを低減します。",
+    "reference": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/protecting-data-in-transit.html",
+    "difficulty": 3,
+    "tags": [
+      "セキュリティ",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-075",
+    "domain": "耐障害性",
+    "question": "サーバー障害発生時にアプリが即時復旧できるよう、待機環境を別リージョンで縮小稼働させるDR戦略は？",
+    "choices": [
+      "バックアップ＆リストア",
+      "ウォームスタンバイ",
+      "単一AZ構成",
+      "単一リージョンのMulti-AZだけ"
+    ],
+    "answer": 1,
+    "explanation": "ウォームスタンバイは別環境に縮小版ワークロードを常時稼働させて復旧時間を短縮します。",
+    "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
+    "difficulty": 3,
+    "tags": [
+      "耐障害性",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-076",
+    "domain": "耐障害性",
+    "question": "イベント受信側が一時停止しても送信側を止めず、後で確実に処理したい。適切な構成は？",
+    "choices": [
+      "同期HTTPだけに依存する",
+      "共有EBSのみで直接通信する",
+      "SQSキューを間に置く",
+      "EC2インスタンスストアにだけ保存する"
+    ],
+    "answer": 2,
+    "explanation": "SQSをバッファに使うとコンシューマーが一時停止してもキューへメッセージを保持できます。",
+    "reference": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html",
+    "difficulty": 3,
+    "tags": [
+      "耐障害性",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-077",
+    "domain": "パフォーマンス",
+    "question": "トランザクション処理用RDSの読み取り集中を改善したいが、プライマリへの書き込み可用性とは切り分けたい。最適なのは？",
+    "choices": [
+      "リードレプリカを使う",
+      "Multi-AZスタンバイのみを読み取り先とする",
+      "CloudTrailの証跡を増やす",
+      "S3 GlacierへDBを移す"
+    ],
+    "answer": 0,
+    "explanation": "RDSリードレプリカは読み取りスケールのために利用します。従来型Multi-AZスタンバイは読み取りスケール用ではありません。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html",
+    "difficulty": 3,
+    "tags": [
+      "パフォーマンス",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-078",
+    "domain": "パフォーマンス",
+    "question": "頻繁な同一GETリクエストでAPIの背後のデータベース負荷を下げたい。適切な改善は？",
+    "choices": [
+      "VPC CIDRを拡張する",
+      "NACLの数を増やす",
+      "APIレスポンスを適切なTTLでキャッシュする",
+      "EBSスナップショットを削除する"
+    ],
+    "answer": 2,
+    "explanation": "キャッシュ可能なAPIレスポンスを適切なTTLでキャッシュすればバックエンドへの繰り返しアクセスを削減できます。",
+    "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html",
+    "difficulty": 3,
+    "tags": [
+      "パフォーマンス",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-079",
+    "domain": "コスト最適化",
+    "question": "サーバーレスアーキテクチャで開発初期の少量利用時に固定のEC2稼働費用を抑えたい。候補は？",
+    "choices": [
+      "24時間稼働の最大EC2を配置",
+      "需要時だけLambdaを実行する",
+      "Dedicated Hostを長期占有する",
+      "ピーク値でEC2台数を固定する"
+    ],
+    "answer": 1,
+    "explanation": "Lambdaは実行に基づく課金モデルで、常時稼働するEC2の固定的なコンピューティング費用を回避できる場合があります。",
+    "reference": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
+    "difficulty": 3,
+    "tags": [
+      "コスト最適化",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": "saa-080",
+    "domain": "コスト最適化",
+    "question": "複数アカウントの予算監視で担当チームに予算アラートを送付したい。利用するサービスは？",
+    "choices": [
+      "AWS Shield Advanced",
+      "AWS Cost and Usage Reportの保存だけ",
+      "Amazon EFS",
+      "AWS Budgets"
+    ],
+    "answer": 3,
+    "explanation": "AWS Budgetsは予算のしきい値に応じた通知を設定できます。",
+    "reference": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+    "difficulty": 3,
+    "tags": [
+      "コスト最適化",
+      "シナリオ"
+    ]
   }
 ]
