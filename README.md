@@ -92,3 +92,18 @@ After answering a practice question, the explanation now includes an automatic *
 - **P1 recall:** after practice, a learner can mark recall confidence to bring uncertain or forgotten material back for review.
 - **P1 exam resilience:** 65-question practice session saves question order, answers, score and expiration timestamp locally and provides a resume action. Study data is browser-local and can be lost if cleared.
 - **P2 game loop:** boss HP decreases with correct answers; level, XP, combo, achievements and the daily quest remain.
+
+## OVERDRIVE 3.0 — music and screen effects
+
+The game uses an **original, procedural Web Audio soundtrack**, with no external tracks, copyrighted sound samples, additional dependencies, or external audio fetches. A single reusable `AudioDirector` lives in `src/audioDirector.ts`; the game does not create a new `AudioContext` for each answer.
+
+- BGM themes switch between home, ordinary mission, spaced-recall, Boss Rush, quiet exam trial and results.
+- SFX cues cover click, option selection, correct/incorrect feedback, five-hit combo, mission start/finish, boss hit/defeat, rank promotion and daily XP reward.
+- Animated rings, sparks and text overlays respond to mission starts, graded answers, combos, boss hits/defeat and XP milestones.
+- Open the **gear icon** at the top right for independent BGM and SE switches and 0–100% volume sliders. The adjacent speaker icon toggles both channels at once.
+- **All sound starts OFF** for new users. Browser audio only starts after a user click because of autoplay policies, and settings persist in localStorage. Audio pauses its scheduling while the page is hidden.
+- **Exam Trial** does not reveal right/wrong animations while answering. Its theme is designed to be quieter than Boss Rush.
+- Accessibility: reduced-motion preference and the explicit motion-reduction checkbox suppress animated overlays; gameplay remains available even without Web Audio.
+- `npm run test:audio` checks default mute, gain bounds and soundtrack scene characteristics; `npm run build` includes this check.
+
+The BGM is a synthesized looping melody rather than a streamed studio recording; if users need richer music later, integrate explicitly licensed audio assets and retain the same accessible controls.
