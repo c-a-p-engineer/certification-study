@@ -12,3 +12,11 @@ export function scheduleReview(previous:ReviewState|undefined,correct:boolean,no
 export function dueQuestionIds(items:ReviewMap,availableIds:string[],now=Date.now()):string[]{
  return availableIds.filter(id=>reviewDue(items[id],now)).sort((a,b)=>items[a].dueAt-items[b].dueAt);
 }
+
+export type Confidence='again'|'unsure'|'good';
+/** Optional learner reflection after a graded practice answer. */
+export function rateReview(previous:ReviewState,confidence:Confidence,now=Date.now()):ReviewState{
+ if(confidence==='again')return {...previous,dueAt:now+DAY_MS,intervalDays:1,streak:0,lapses:previous.lapses+1,lastReviewedAt:now};
+ if(confidence==='unsure')return {...previous,dueAt:now+DAY_MS,intervalDays:1,streak:Math.min(previous.streak,1),lastReviewedAt:now};
+ return previous;
+}
