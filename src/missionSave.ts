@@ -21,7 +21,7 @@ export function isMissionSave(value:unknown):value is MissionSave{
  if(!value||typeof value!=='object')return false;
  const x=value as Partial<MissionSave>;
  if(x.version!==1||!Array.isArray(x.ids)||x.ids.length<1||x.ids.length>1000||x.ids.some(id=>typeof id!=='string'))return false;
- if(!Number.isInteger(x.index)||x.index!<0||x.index!>=x.ids.length)return false;
+ if(typeof x.index!=='number'||!Number.isInteger(x.index)||x.index<0||x.index>=x.ids.length)return false;
  if(x.selected!==null&&(!Number.isInteger(x.selected)||x.selected!< -2))return false;
  if(!Array.isArray(x.multiChoices)||!Array.isArray(x.choiceOrder)||!x.multiChoices.every(Number.isInteger)||!x.choiceOrder.every(Number.isInteger))return false;
  if(!x.answers||typeof x.answers!=='object'||Array.isArray(x.answers))return false;
