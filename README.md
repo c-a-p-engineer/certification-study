@@ -111,3 +111,11 @@ The BGM is a synthesized looping melody rather than a streamed studio recording;
 ## Contextual study terms at the end of each explanation
 
 A collapsed **用語・サービス解説** disclosure appears at the **bottom** of the regular question explanation (after the official reference and Ask ChatGPT controls), and at the **bottom** of each expanded post-exam question review. Unlike the older abbreviation-only glossary, this covers curated AWS services, networking and architecture concepts (e.g. Amazon S3, Amazon RDS, SQS, failover, idempotency, cache and partition keys), along with expanded acronyms such as RTO and RPO. Terms are ranked by relevance to the question and explanation before weaker mentions in distractors, limited to eight per item to reduce scrolling. Explanations remain hidden during the timed exam. The guide is curated and offline, so it makes no per-question AI calls; definitions need ongoing editorial accuracy reviews. Run `npm run test:terms` for coverage and matching regression tests.
+
+## Resume a study mission
+
+Regular practice, weakness raids, recall raids and boss rushes now save question order, answer selections, progress and combo in browser `localStorage`. On the home screen under QUICK PLAY, **前回のミッションを再開** restores the saved position without scoring the previous answer a second time. A separate **65問模擬試験を再開** entry resumes the existing timed trial, whose deadline keeps running while away. Starting a new regular session replaces the previous regular save; finishing the session clears it. Progress remains local to the current browser/device. Clear site data to remove local saves.
+
+## Bottom terminology guide
+
+Each ordinary question screen shows a **用語・サービス解説** drawer along the bottom edge. It is collapsed by default and can be opened before or after answering to inspect abbreviations, Japanese translations, AWS services and architecture terminology from the *current question*. The drawer is deliberately hidden during timed exam attempts and remains available within post-exam answer reviews. The current question gets a fresh collapsed drawer when advancing, so it does not obscure the next question. This guide explains vocabulary rather than giving a hidden answer key.
