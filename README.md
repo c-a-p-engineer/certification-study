@@ -16,7 +16,7 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 ## Current scope
 
-The current prototype includes 300 original AWS SAA practice questions across four domains, a neon skill-tree overview, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown and at least one multi-select question per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+The current prototype includes 300 original AWS SAA practice questions across four domains, a neon skill-tree overview, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
 ## Development
 ```sh
@@ -36,7 +36,7 @@ MIT.
 
 ## Question bank maintenance
 
-Canonical new questions live in `certifications/aws-saa/questions/bank.jsonl` (one JSON object per line). Run `npm run validate:questions` to validate unique IDs, domains, four distinct options, answer indexes, explanations and official AWS references, and regenerate `src/generated/questions.json`. All 300 questions now use the JSONL source, including the eight original prototype questions. Do not edit generated JSON manually. New questions should be original and reviewed for factual accuracy before release.
+Canonical new questions live in `certifications/aws-saa/questions/bank.jsonl` (one JSON object per line). Run `npm run validate:questions` to validate unique IDs, domains, 4–8 distinct options, answer indexes, explanations and official AWS references, and regenerate `src/generated/questions.json`. All 300 questions now use the JSONL source, including the eight original prototype questions. Do not edit generated JSON manually. New questions should be original and reviewed for factual accuracy before release.
 
 ## SAA-C03 readiness plan
 
@@ -45,7 +45,7 @@ Official reference: https://docs.aws.amazon.com/aws-certification/latest/solutio
 - Official exam: 65 questions, 130 minutes, 50 scored and 15 unscored. Question types: single and multiple response. The pass mark is a *scaled score* of 720, **not** a raw percentage.
 - Official scored-domain weights: secure 30%, resilient 26%, high-performing 24%, cost-optimized 20%.
 - **Editorial goal: 300+ original, reviewed practice questions** spanning scenario decisions, architecture trade-offs and multi-response problems. This is a project target, not an AWS requirement or passing guarantee.
-- Current 65-question exam trial is a *practice approximation*: it includes single and multiple-response questions, uses a 130-minute timer and gives immediate feedback. It is not a faithful official exam simulation (answers are revealed during play), and its percent-correct figure cannot be converted into an AWS scaled score.
+- Current 65-question exam trial is a *practice approximation*: it includes single and multiple-response questions, uses a 130-minute timer and defers feedback until the end of the attempt. It is still not an official exam simulation, and its percent-correct figure cannot be converted into an AWS scaled score.
 - Self-assessment heuristic (not a pass prediction): aim for at least 80% on several fresh mixed trials and independently explain why each distractor is inferior; continue reviewing weak domains.
 - Unreviewed questions must not be presented as certified accurate. A separate technical review against AWS official documentation and the SAA-C03 task statements is still required.
 
@@ -59,7 +59,7 @@ Research rationale and limitations: [Learning Science](docs/LEARNING_SCIENCE.md)
 
 ## Coverage and exam-format caveats
 
-The question bank currently contains 200 original items, including 22 multiple-response items; eight of those have five answer choices. The game now supports different numbers of options per question. The dashboard tracks **unique attempted questions by domain**, separately from repeated-attempt accuracy, to make unpractised knowledge visible. A 65-question trial is a study simulation; it is not an AWS passing-score prediction.
+The question bank currently contains 300 original items, including 42 multiple-response items; five-choice and four-choice practice variants coexist. The game now supports different numbers of options per question. The dashboard tracks **unique attempted questions by domain**, separately from repeated-attempt accuracy, to make unpractised knowledge visible. A 65-question trial is a study simulation; it is not an AWS passing-score prediction.
 
 The official SAA-C03 exam guide specifies that multiple-response questions offer **five or more options**. Earlier four-choice practice multi-select items remain for general drills and should be converted or separated from strictly format-faithful trials. Questions, explanations and official reference links still require human editorial accuracy review before being called exam-ready.
 
@@ -81,4 +81,14 @@ A **DAILY QUEST** card tracks today's 5-question goal and correct answers, using
 
 ## AWS abbreviation explanations
 
-After answering a practice question, the explanation now includes an automatic **略語を覚えよう** panel when the question, choices or explanation contain known technical acronyms. Each entry shows the original English full name, Japanese translation and a practical definition. The same glossary appears in the post-exam review, never during a timed exam. Examples: RTO (Recovery Time Objective / 目標復旧時間) versus RPO (Recovery Point Objective / 目標復旧時点), MTBF, SLO, IAM, VPC and other common AWS abbreviations. Canonical glossary: `src/glossary.ts`; verified matching rules: `npm run test:glossary`.
+After answering a practice question, the explanation now includes an automatic **略語を覚えよう** panel when the question, choices or explanation contain known technical acronyms. Each entry shows the original English full name, Japanese translation and a practical definition. The same glossary appears in the post-exam review, never during a timed exam. The glossary is **collapsed by default**, while acronym expansions remain visible in the explanation text. Examples: RTO (Recovery Time Objective / 目標復旧時間) versus RPO (Recovery Point Objective / 目標復旧時点), MTBF, SLO, IAM, VPC and other common AWS abbreviations. Canonical glossary: `src/glossary.ts`; verified matching rules: `npm run test:glossary`.
+
+## October 2026 roadmap implementation status
+
+- **P0 deployed-site inspection:** The public Pages landing page was accessible via a rendered page fetch; the final post-change CI workflow must still be checked separately.
+- **P0 editorial QA tooling:** `npm run audit:questions` writes a near-duplicate and missing-review report. It is advisory, not independent AWS validation. See [QUALITY_GATE](docs/QUALITY_GATE.md).
+- **P1 explanations:** per-choice rationale fields are now supported, validated and displayed when authored; completing all 300 remains editorial work. The acronym glossary is collapsed by default.
+- **P1 topic mastery:** heuristic service-topic categories display review-due, repeated-correct and lapse counts. These metrics are not pass probabilities.
+- **P1 recall:** after practice, a learner can mark recall confidence to bring uncertain or forgotten material back for review.
+- **P1 exam resilience:** 65-question practice session saves question order, answers, score and expiration timestamp locally and provides a resume action. Study data is browser-local and can be lost if cleared.
+- **P2 game loop:** boss HP decreases with correct answers; level, XP, combo, achievements and the daily quest remain.
