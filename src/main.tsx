@@ -7,7 +7,7 @@ import questionBank from './generated/questions.json';
 type Question = { id: string; domain: string; question: string; choices: string[]; answer?: number; answers?: number[]; explanation: string; reference: string };
 const questions: Question[] = questionBank;
 const correctAnswers=(question:Question):number[]=>question.answers??[question.answer!];
-function examPool():Question[]{const quotas:Record<string,number>={'セキュリティ':20,'耐障害性':17,'パフォーマンス':15,'コスト最適化':13};return shuffle(Object.entries(quotas).flatMap(([d,n])=>shuffle(questions.filter(q=>q.domain===d)).slice(0,n)))}
+function examPool():Question[]{const quotas:Record<string,number>={'セキュリティ':20,'耐障害性':17,'パフォーマンス':15,'コスト最適化':13};return shuffle(Object.entries(quotas).flatMap(([d,n])=>(()=>{const domainPool=shuffle(questions.filter(q=>q.domain===d));const multi=domainPool.filter(q=>q.answers).slice(0,1);return [...multi,...domainPool.filter(q=>!multi.includes(q)).slice(0,n-multi.length)]})()))}
 function shuffle<T>(items:T[]):T[]{const result=[...items];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}const key='certification-overdrive-progress-v1';
 type Progress={xp:number;best:number;answered:number;correct:number;mistakes:string[];domains:Record<string,{correct:number;answered:number}>};
 const initial:Progress={xp:0,best:0,answered:0,correct:0,mistakes:[],domains:{}};
