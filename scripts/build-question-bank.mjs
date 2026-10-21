@@ -7,7 +7,7 @@ for(let i=0;i<lines.length;i++){
  if(typeof q.id!=='string'||ids.has(q.id))throw new Error('Missing or duplicate ID at line '+(i+1));
  if(!['セキュリティ','耐障害性','パフォーマンス','コスト最適化'].includes(q.domain))throw new Error('Invalid domain '+q.id);
  if(typeof q.question!=='string'||q.question.length<12)throw new Error('Invalid question '+q.id);
- if(!Array.isArray(q.choices)||(q.choices.length<4||q.choices.length>8)||q.choices.some(c=>typeof c!=='string'||!c.trim())||new Set(q.choices).size!==4)throw new Error('Invalid choices '+q.id);
+ if(!Array.isArray(q.choices)||(q.choices.length<4||q.choices.length>8)||q.choices.some(c=>typeof c!=='string'||!c.trim())||new Set(q.choices).size!==q.choices.length)throw new Error('Invalid choices '+q.id);
  const hasMulti=Array.isArray(q.answers);
  if(hasMulti){
    if(q.answer!==undefined)throw new Error('Both answer and answers defined '+q.id);
