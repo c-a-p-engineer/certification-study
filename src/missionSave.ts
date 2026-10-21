@@ -36,6 +36,6 @@ export function writeMissionSave(value:MissionSave):void{
  try{localStorage.setItem(MISSION_SAVE_KEY,JSON.stringify(value))}catch{/* private mode or quota */}
 }
 export function clearMissionSave():void{try{localStorage.removeItem(MISSION_SAVE_KEY)}catch{}}
-export function restoredMissionIsValid(value:MissionSave,options:number[]):boolean{
+export function restoredMissionIsValid(value:MissionSave,options:readonly string[]):boolean{
  return options.length>=4&&value.choiceOrder.length===options.length&&new Set(value.choiceOrder).size===options.length&&value.choiceOrder.every(n=>n>=0&&n<options.length)&&value.multiChoices.every(n=>n>=0&&n<options.length)&&(!value.answers[value.ids[value.index]]||Array.isArray(value.answers[value.ids[value.index]]));
 }
