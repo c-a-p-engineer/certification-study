@@ -1,13 +1,14 @@
 import {GLOSSARY} from './glossary.ts';
+import {CONCEPT_READINGS,ABBREVIATION_READINGS} from './termReadings.ts';
 
-export type StudyTerm={id:string;title:string;english?:string;meaning:string;note:string;category:'略語'|'AWSサービス'|'技術用語'};
+export type StudyTerm={id:string;title:string;reading:string;english?:string;meaning:string;note:string;category:'略語'|'AWSサービス'|'技術用語'};
 type Concept=StudyTerm&{aliases:readonly string[]};
 
 const concept=(id:string,title:string,english:string,meaning:string,note:string,aliases:string[]=[title]):Concept=>({
- id,title,english,meaning,note,aliases,category:'AWSサービス'
+ id,title,reading:CONCEPT_READINGS[id]||title,english,meaning,note,aliases,category:'AWSサービス'
 });
 const idea=(id:string,title:string,meaning:string,note:string,aliases:string[]=[title]):Concept=>({
- id,title,meaning,note,aliases,category:'技術用語'
+ id,title,reading:CONCEPT_READINGS[id]||title,meaning,note,aliases,category:'技術用語'
 });
 
 /** Curated definitions for SAA-C03. Match actual words in each question, not fabricated AI summaries. */
@@ -93,14 +94,14 @@ export function findStudyTerms(question:{question:string;choices:string[];explan
  const found:{term:StudyTerm;weight:number}[]=[];
  for(const c of CONCEPTS){
   const weight=score(segments,c.aliases);
-  if(weight)found.push({term:{id:c.id,title:c.title,english:c.english,meaning:c.meaning,note:c.note,category:c.category},weight});
+  if(weight)found.push({term:{id:c.id,title:c.title,reading:c.reading,english:c.english,meaning:c.meaning,note:c.note,category:c.category},weight});
  }
  for(const acronym of acronyms){
   const weight=score(segments,[acronym.abbr]);
   if(!weight)continue;
   // Prefer a richer AWS service definition when it explains the same abbreviation.
   const duplicate=found.some(x=>x.term.category==='AWSサービス'&&matched(x.term.title,acronym.abbr));
-  if(!duplicate)found.push({term:{id:'abbr-'+acronym.abbr,title:acronym.abbr,english:acronym.full,meaning:acronym.meaning,note:acronym.note,category:'略語'},weight:weight+5});
+  if(!duplicate)found.push({term:{id:'abbr-'+acronym.abbr,title:acronym.abbr,reading:ABBREVIATION_READINGS[acronym.abbr]||acronym.abbr,english:acronym.full,meaning:acronym.meaning,note:acronym.note,category:'略語'},weight:weight+5});
  }
  return found.sort((a,b)=>b.weight-a.weight||a.term.title.localeCompare(b.term.title,'ja')).slice(0,Math.max(0,limit)).map(x=>x.term);
 }
