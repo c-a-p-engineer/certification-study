@@ -90,3 +90,10 @@
 @keyframes clear-aura{to{box-shadow:0 0 40px #ffea9fb5,0 0 55px #ed9af78c}}
 @media(prefers-reduced-motion:reduce){.app.visual-overdrive .clear-grade.grade-S{animation:none}}
 .app.reduced.visual-overdrive .clear-grade.grade-S{animation:none}
+
+/* Exam mode defers achievement reveals until the result page. */
+.app .exam-earned-titles{display:flex;justify-content:center;align-items:center;gap:13px;flex-wrap:wrap;max-width:630px;padding:13px 17px;margin:15px auto 22px;background:#2d3853;border:1px solid #fce6a5;border-radius:10px;color:#fff5d9;font-weight:900}
+.app .exam-earned-titles svg{color:#ffdc97}
+.app .exam-earned-titles button{display:flex;align-items:center;gap:6px;min-height:44px;border:1px solid #bff6fc;border-radius:8px;background:#1c5866;padding:9px 13px;color:#fff;font-weight:900;font-size:13px}
+.app .exam-earned-titles button:focus-visible{outline:3px solid #ffedba;outline-offset:2px}
+@media(max-width:700px){.app .exam-earned-titles button{width:100%;justify-content:center}}
