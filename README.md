@@ -10,13 +10,13 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
-- 300 original AWS SAA practice questions with explanations and official reference links
+- 332 original AWS SAA practice questions, including 32 longer scenario items, with explanations and official reference links
 - Local progress persistence, weak-topic review, evidence-informed spaced retrieval (RECALL RAID), optional active recall before options, reduced-motion support
 - Extensible certification content format
 
 ## Current scope
 
-The current prototype includes 300 original AWS SAA practice questions across four domains, a neon skill-tree overview, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+The current prototype contains 332 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
 ## Development
 ```sh
@@ -36,7 +36,7 @@ MIT.
 
 ## Question bank maintenance
 
-Canonical new questions live in `certifications/aws-saa/questions/bank.jsonl` (one JSON object per line). Run `npm run validate:questions` to validate unique IDs, domains, 4–8 distinct options, answer indexes, explanations and official AWS references, and regenerate `src/generated/questions.json`. All 300 questions now use the JSONL source, including the eight original prototype questions. Do not edit generated JSON manually. New questions should be original and reviewed for factual accuracy before release.
+Questions live in `certifications/aws-saa/questions/bank.jsonl` (the original 300) and `certifications/aws-saa/questions/scenarios-2026.jsonl` (32 exam-like original scenarios), one JSON object per line. Run `npm run validate:questions` to validate unique IDs, domains, 4–8 distinct options, answer indexes, explanations and official AWS references, and regenerate `src/generated/questions.json`. The build merges both JSONL sources; do not edit `src/generated/questions.json` directly. Do not edit generated JSON manually. New questions should be original and reviewed for factual accuracy before release.
 
 ## SAA-C03 readiness plan
 
@@ -59,7 +59,7 @@ Research rationale and limitations: [Learning Science](docs/LEARNING_SCIENCE.md)
 
 ## Coverage and exam-format caveats
 
-The question bank currently contains 300 original items, including 42 multiple-response items; five-choice and four-choice practice variants coexist. The game now supports different numbers of options per question. The dashboard tracks **unique attempted questions by domain**, separately from repeated-attempt accuracy, to make unpractised knowledge visible. A 65-question trial is a study simulation; it is not an AWS passing-score prediction.
+The question bank currently contains 332 original items, including 50 multiple-response items; five-choice and four-choice practice variants coexist. The game now supports different numbers of options per question. The dashboard tracks **unique attempted questions by domain**, separately from repeated-attempt accuracy, to make unpractised knowledge visible. A 65-question trial is a study simulation; it is not an AWS passing-score prediction.
 
 The official SAA-C03 exam guide specifies that multiple-response questions offer **five or more options**. Earlier four-choice practice multi-select items remain for general drills and should be converted or separated from strictly format-faithful trials. Questions, explanations and official reference links still require human editorial accuracy review before being called exam-ready.
 
@@ -77,7 +77,7 @@ A **DAILY QUEST** card tracks today's 5-question goal and correct answers, using
 
 ## Boss Rush
 
-**BOSS RUSH** is a 10-question hard-mode session that draws from `difficulty: 3` items in the selected domain (or all domains). It uses the normal immediate-feedback learning flow. Difficulty values are editorial labels, not calibrated item-response difficulty estimates. There are 300 original practice items including 42 multi-response items. Game progress cannot guarantee passing the SAA-C03 exam; the question bank still requires a rigorous factual, conceptual-duplication and distractor-quality review.
+**BOSS RUSH** is a 10-question hard-mode session that draws from `difficulty: 3` items in the selected domain (or all domains). It uses the normal immediate-feedback learning flow. Difficulty values are editorial labels, not calibrated item-response difficulty estimates. There are 332 original practice items including 50 multi-response items. Game progress cannot guarantee passing the SAA-C03 exam; the question bank still requires a rigorous factual, conceptual-duplication and distractor-quality review.
 
 ## AWS abbreviation explanations
 
@@ -87,7 +87,7 @@ After answering a practice question, the explanation now includes an automatic *
 
 - **P0 deployed-site inspection:** The public Pages landing page was accessible via a rendered page fetch; the final post-change CI workflow must still be checked separately.
 - **P0 editorial QA tooling:** `npm run audit:questions` writes a near-duplicate and missing-review report. It is advisory, not independent AWS validation. See [QUALITY_GATE](docs/QUALITY_GATE.md).
-- **P1 explanations:** per-choice rationale fields are now supported, validated and displayed when authored; completing all 300 remains editorial work. The acronym glossary is collapsed by default.
+- **P1 explanations:** per-choice rationale fields are now supported, validated and displayed when authored; completing per-choice reasons for the 300 legacy items remains editorial work. The acronym glossary is collapsed by default.
 - **P1 topic mastery:** heuristic service-topic categories display review-due, repeated-correct and lapse counts. These metrics are not pass probabilities.
 - **P1 recall:** after practice, a learner can mark recall confidence to bring uncertain or forgotten material back for review.
 - **P1 exam resilience:** 65-question practice session saves question order, answers, score and expiration timestamp locally and provides a resume action. Study data is browser-local and can be lost if cleared.
@@ -124,7 +124,7 @@ Each ordinary question screen shows an inline **用語・サービス図鑑** di
 
 **Two-stage terminology UI:** In normal practice, the collapsed **用語・サービス図鑑** appears directly below each question, before answer controls. Open the index to see a compact list of context-matched terms and their Japanese kana readings; tap an individual term to expand its definition, full English name (if known), and architectural comparison. Each new question resets the index to a collapsed state. The exam attempt still hides all hints; its completed review includes the nested guide. All 58 curated AWS/concept entries and 32 acronym entries have hand-authored readings in `src/termReadings.ts`. These are displayed pronunciation guides, not automatic speech synthesis.
 
-**MENU / COMMAND CENTER:** A persistent header button opens three tabs: STATUS (XP, level, rank requirements, answers, active days, streak, recall and domain performance), BADGES (unlocked/locked achievements), and OPTIONS (BGM, SFX, optional haptic strength, reduced effects). Profiles are derived from existing browser-local data and do not predict official AWS exam results. The modal supports Escape and keyboard tab wrap-around; use CONTINUE to return to gameplay.
+**MENU / COMMAND CENTER:** A persistent header button opens four tabs: STATUS (XP, level, rank requirements, answers, active days, streak, recall and domain performance), TITLES (35 unlockable and equipable Japanese nicknames), BADGES (unlocked/locked achievements), and OPTIONS (BGM, SFX, optional haptic strength, reduced effects). Profiles are derived from existing browser-local data and do not predict official AWS exam results. The modal supports Escape and keyboard tab wrap-around; use CONTINUE to return to gameplay.
 
 **Haptic & fever gameplay:** Browser-supported vibration patterns differ for answer selection, correct and incorrect choices, 5-combo milestones, boss hits, victories, level-related events and daily rewards. Choose OFF / NORMAL / OVERDRIVE in MENU → OPTIONS. No vibration is attempted when motion reduction is enabled, and a timed exam only uses optional light selection feedback (no right/wrong hints). The Vibration API is unavailable in some browsers including many iOS environments; unsupported devices fail silently. Audio remains **OFF by default** and does not affect vibration settings. The quiz HUD also has a FEVER charge meter and immediate XP-gain feedback. See `src/haptics.ts` and `src/gameProfile.ts`.
 
@@ -138,6 +138,17 @@ Each submitted answer — including repeat practice and exam attempts — update
 
 **Legacy migration is intentionally conservative.** Older versions kept lifetime XP/answer totals and the most recent daily quest, but not dated daily history. The app retains lifetime totals, carries over the one known daily quest date when available, and explicitly marks all other lifetime answers as having **unknown dates**. It never invents historical daily counts or zero-activity days before the earliest recorded date. Future chart updates begin with each new answer. History and progress are stored in the same browser-local storage; Brave and Chrome do not share them automatically.
 
-**Ranks are no longer XP-only:** `ROOKIE → BRONZE → SILVER → GOLD → PLATINUM → DIAMOND → LEGEND`. A tier requires all three milestone gates: XP, lifetime submitted answers, and *known active days*. LEGEND requires **120,000 XP, 700 answers and 50 recorded active days**. Rank is derived from saved totals and updated daily history; older XP and answer records are not reset, although the recalibrated rank can be lower. In MENU → STATUS, the three requirements for the next tier are visible separately. RPG levels continue to use the original square-root XP formula, independent from ranks.
+**Ranks are no longer XP-only:** 19 tiers from `ROOKIE → SPARK → SCOUT → BRONZE` through `MYTHIC → LEGEND`. A tier requires all three milestone gates: XP, lifetime submitted answers, and *known active days*. LEGEND requires **120,000 XP, 700 answers and 50 recorded active days**. Rank is derived from saved totals and updated daily history; older XP and answer records are not reset, although the recalibrated rank can be lower. In MENU → STATUS, the three requirements for the next tier are visible separately. RPG levels continue to use the original square-root XP formula, independent from ranks.
 
 Regression coverage: `npm run test:history` and `npm run test:profile` are included in `npm run build`.
+
+## 2026 scenario expansion and RPG honorifics
+
+- **19 calibrated-in-game ranks** with Japanese subtitles. These are game progression tiers rather than AWS exam scores. Every tier still requires minimum XP, a number of submitted answers, and a number of recorded active learning days. The 120,000 XP / 700 answers / 50 days LEGEND requirement remains unchanged.
+- **35 independent unlockable titles** are earned for milestones in answers, correct-answer streaks, distinct attempted questions, topic/domain correctness, study-day streaks, learning days and XP. Choose MENU → TITLES to equip one; the home screen and STATUS show the chosen Japanese nickname. Equipped title ID is saved in the same browser's localStorage and does not reset XP.
+- **32 longer original architectural scenario questions** were added across the four SAA-C03 domains, 8 in each domain, including two five-choice multiple-response problems per domain. Each has original scenario constraints, 4–5 plausible choices, a rationale for each option, difficulty tagging and an AWS documentation reference. All 332 are non-official practice content; editorial labels and sourced references do **not** imply they are verbatim or verified AWS exam questions.
+- **Adaptive but deterministic-in-purpose question selection:** normal sessions and the 65-question trial prefer unattempted scenario-rich questions, penalize recently served questions, and spread major AWS services/concepts across each session. Deliberate weakness/due-review raids continue to repeat the learning material selected for repetition. Question history is locally saved and kept separate from the lifetime progress record; resumed practice/exams retain their previously selected question IDs.
+- The 65-question practice exam preserves the existing domain mix (20/17/15/13, approximating the official 30/26/24/20 scored-domain weights), four-choice single-response format, and five-or-more-choice multiple-response format. The official exam has 50 scored and 15 unscored items; this app's 65-question simulation is **not a scaled-score predictor**.
+- Quality gates: `npm run test:selection` verifies scenario structure and selection behavior; `npm run test:titles` verifies unlocked/equippable titles. All existing study, grading, glossary, mastery and saved-session tests remain enabled.
+
+Reference: [AWS SAA-C03 official exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html).
