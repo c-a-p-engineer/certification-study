@@ -109,3 +109,21 @@
 .gm-vibration-tests{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .gm-vibration-tests .gm-vibration-test{min-width:0;font-size:12px;padding:10px 8px;line-height:1.45}
 @media(max-width:380px){.gm-vibration-tests{grid-template-columns:1fr}}
+
+/* Options hierarchy: diagnostics stay one disclosure away rather than occupying the settings screen. */
+.game-menu-header{padding-bottom:15px}
+.game-menu-header h2{margin:3px 0 0}
+.gm-avatar{height:90px;min-width:90px}
+.gm-character-info h3{margin:3px 0 7px}
+.gm-badge-heading{margin-bottom:10px}
+.gm-haptic-diagnostics{padding:0;border-color:#627e95;background:#1b2b42}
+.gm-haptic-diagnostics>summary{min-height:50px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;cursor:pointer;color:#d0f7ff;font-size:13px;font-weight:900;list-style:none}
+.gm-haptic-diagnostics>summary::-webkit-details-marker{display:none}
+.gm-haptic-diagnostics>summary::after{content:'+';margin-left:auto;color:#b4e8f6;font-size:19px}
+.gm-haptic-diagnostics[open]>summary::after{content:'−'}
+.gm-haptic-diagnostics>summary svg{color:#93ebea}
+.gm-haptic-diagnostics>summary:focus-visible{outline:3px solid #ffedbc;outline-offset:-3px}
+.gm-haptic-diagnostics[open] .gm-haptic-facts{padding:14px;border-top:1px solid #637e9655}
+.gm-haptic-diagnostics[open] .gm-vibration-tests,.gm-haptic-diagnostics[open] .gm-haptic-result,.gm-haptic-diagnostics[open] .gm-haptic-advice,.gm-haptic-diagnostics[open] .gm-haptic-note{margin-left:13px!important;margin-right:13px!important}
+.gm-haptic-diagnostics[open] .gm-haptic-note{margin-bottom:15px!important}
+@media(max-width:700px){.gm-avatar{height:80px;min-width:80px}.game-menu-content{padding:16px}}
