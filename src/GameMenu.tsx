@@ -14,7 +14,7 @@ export type GameMenuProps={
  titles:Title[];equippedTitle:string;onEquipTitle:(id:string)=>void;
  closeRef:React.RefObject<HTMLButtonElement>;
  profile:Profile;domains:DomainStats;totalQuestions:number;
- session:{mode:'home'|'quiz'|'result';exam:boolean;boss:boolean;index:number;total:number;correct:number};
+ session:{mode:'home'|'quiz'|'result';exam:boolean;boss:boolean;scenario:boolean;index:number;total:number;correct:number};
  audio:AudioSettings;onAudio:(patch:Partial<AudioSettings>)=>void;
  haptics:HapticMode;onHaptics:(mode:HapticMode)=>void;
  onVibrationTest:(kind:HapticTestKind)=>HapticTestResult;canVibrate:boolean;
@@ -42,7 +42,7 @@ export default function GameMenu(p:GameMenuProps){
      <div className="gm-character"><div className="gm-avatar"><Crown size={42}/></div><div className="gm-character-info"><h3>{p.profile.rank}</h3><span className="gm-rank-subtitle">{p.profile.rankSubtitle}</span><span className="gm-equipped-title">{p.titles.find(t=>t.id===p.equippedTitle)?.name}</span><strong>LEVEL {p.profile.level} <span>／ {p.profile.xp.toLocaleString()} XP</span></strong></div></div>
      <div className="gm-level"><div><strong>NEXT LEVEL</strong><span>{Math.max(0,p.profile.nextLevelXP-p.profile.xp).toLocaleString()} XP TO GO</span></div><div className="gm-level-track" role="progressbar" aria-label="次のレベルまでの経験値" aria-valuemin={0} aria-valuemax={100} aria-valuenow={p.profile.levelPct}><div style={{width:p.profile.levelPct+'%'}}/></div></div>
      {p.profile.rankGoal?<div className="gm-next-rank"><strong>NEXT RANK · {p.profile.nextRank}</strong><div className="gm-rank-gates"><span className={p.profile.xpToNextRank===0?'complete':''}>XP <b>{p.profile.xp.toLocaleString()}/{p.profile.rankGoal.xp.toLocaleString()}</b></span><span className={p.profile.answersToNextRank===0?'complete':''}>回答 <b>{p.profile.answered}/{p.profile.rankGoal.answers}問</b></span><span className={p.profile.daysToNextRank===0?'complete':''}>活動 <b>{p.profile.activeDays}/{p.profile.rankGoal.days}日</b></span></div></div>:<div className="gm-next-rank maxed"><Crown size={17}/> LEGEND · 全条件達成</div>}
-     {p.session.mode==='quiz'&&<div className="gm-live"><Flame size={20}/><div><strong>{p.session.exam?'EXAM TRIAL':p.session.boss?'BOSS RUSH':'MISSION IN PROGRESS'}</strong><span>{p.session.index+1} / {p.session.total} 問 · 正解 {p.session.correct} 問</span></div></div>}
+     {p.session.mode==='quiz'&&<div className="gm-live"><Flame size={20}/><div><strong>{p.session.exam?'EXAM TRIAL':p.session.boss?'BOSS RUSH':p.session.scenario?'CASE FILES':'MISSION IN PROGRESS'}</strong><span>{p.session.index+1} / {p.session.total} 問 · 正解 {p.session.correct} 問</span></div></div>}
      <div className="gm-stat-grid">
       <div><strong>{p.profile.answered.toLocaleString()}</strong><span><BarChart3 size={15}/> ANSWERS</span></div>
       <div><strong>{p.profile.activeDays}</strong><span>ACTIVE DAYS</span></div>
