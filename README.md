@@ -10,13 +10,36 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
-- 340 original AWS SAA practice questions, including 40 longer scenario items, with explanations and official reference links
+- 348 original AWS SAA practice questions, including 48 longer scenario items, with explanations and official reference links
 - Local progress persistence, weak-topic review, evidence-informed spaced retrieval (RECALL RAID), optional active recall before options, reduced-motion support
 - Extensible certification content format
 
 ## Current scope
 
-The current prototype contains 340 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+The current prototype contains 348 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+
+## OVERDRIVE 5.7–6.0 — Verified implementation scope
+
+### 5.7 — Editorial review tranche (40 issues)
+- Reviewed an additional **40 original questions**, **10 per SAA domain**, to improve complete answer-option rationales and service-specific caveats. Questions keep their identifiers and existing answer indexes. [Detailed evidence ledger](reports/overdrive-5-7-review-batch.json).
+- **Important:** This is an AI-assisted external-source consistency pass, **not signoff by a second independent human reviewer**. The source URLs, explanations and draft rationales still need manual review against current AWS service behavior and regional/pricing caveats. We do **not** falsely populate `reviewedAt` timestamps.
+- 5.6's original 19-question case-by-case evidence ledger remains available. The question-audit artifact includes both ledgers so reviewers can prioritize the remaining human-signoff work.
+
+### 5.8 — Diverse architectural scenarios
+- Added **8 new, original, multi-constraint questions**, IDs `saa-341`–`saa-348`: six in Security, one in Resilience, one in Performance. The app now has **348 questions and 48 rich architectural scenarios**, of which 50 existing items use multiple-response scoring. New cases include IAM Access Analyzer unused permissions, Security Hub CSPM delegated administration, SSE-KMS cross-account policy, S3 VPCE restriction with console-lockout considerations, CloudTrail org trails, CloudFront OAC + KMS, DynamoDB PITR restore, and hot-partition mitigation.
+- Rewrote four lexically similar questions into distinct real-world design decisions without deleting IDs or changing answer indices. [Manual overlap triage](reports/overdrive-5-8-overlap-triage.json) distinguishes true learning-objective overlap from complementary concepts. The bank is **not** claimed to exactly reproduce the SAA-C03 item distribution; focus is on authentic design trade-offs. Security bank coverage increased from 89/340 to **95/348**, compared with the official exam domain weighting of 30%.
+
+### 5.9 — Retention Lab
+- Added a local-only **7-day retrospective** and descriptive side-by-side review accuracy for SMART and non-SMART practice, plus the observed success rate on repeats on **different local calendar days**.
+- Optional per-attempt `mode` and `at` fields are appended to existing answer history. **Old records remain valid**; unknown-mode history is not assigned to a category retroactively. No pass likelihood or causal improvement claim is made. Review groups with fewer than five samples should not be compared.
+- SMART QUEST now avoids repeated IDs even in malformed candidate pools, ignores nonfinite due dates and falls back sensibly when a bucket is exhausted. It operates without paid APIs or automatic collection.
+
+### 6.0 — Offline resilience and safe restore
+- A durable browser-local **rollback journal** is written before importing a JSON study backup. If the browser shuts down midway, the app first attempts recovery from the journal before loading progress. If recovery cannot be completed, ordinary automatic progress saving is blocked and a warning is shown rather than overwriting original records with empty state. The journal is not exported in backup files.
+- Input JSON is checked for schema, nesting depth (max 32), total nodes, unsafe field names, bound-length entries and valid dated answer events. Old version-1 backups still import. A storage quota failure before the journal is written rejects the restore without touching user progress; rollback is best-effort when browser storage itself is impaired.
+- A compact **OFFLINE STATUS** dashboard shows current local cache revision, cached shell/asset counts and network/service-worker state, with manual refresh and update-check controls. It never forces a quiz interruption and disables manual checking when a saved mission remains. Cache readiness is an observation, not a successful offline device test.
+- Mobile UI keeps 44px-or-greater interactive controls, responsive density presets, keyboard focus outlines and reduced-motion handling; the new status panels do not overlay answer choices.
+- GitHub Actions runs the additional `test:release6`, `test:effectiveness` and `test:resilience` suites plus every prior gate, TypeScript, Vite build and generated PWA. The actionable audit artifacts are uploaded from the PR workflow. **Browser E2E and Android physical-device checks are still deferred**.
 
 ## OVERDRIVE 5.6 — Editorial Evidence and Quality Triage
 
