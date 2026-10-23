@@ -4,6 +4,7 @@ import type {AudioSettings} from './audioDirector';
 import {getHapticEnvironment,type HapticMode,type HapticTestResult,type HapticTestKind} from './haptics';
 import type {gameProfile} from './gameProfile';
 import type {Title} from './titleSystem';
+import type {TextScale} from './readability';
 import './gameMenu.css';
 
 type Profile=ReturnType<typeof gameProfile>;
@@ -19,6 +20,7 @@ export type GameMenuProps={
  haptics:HapticMode;onHaptics:(mode:HapticMode)=>void;
  onVibrationTest:(kind:HapticTestKind)=>HapticTestResult;canVibrate:boolean;
  reduced:boolean;onReduced:(value:boolean)=>void;onSoundTest:()=>void;
+ textScale:TextScale;onTextScale:(value:TextScale)=>void;
 };
 const domainNames=['セキュリティ','耐障害性','パフォーマンス','コスト最適化'];
 export default function GameMenu(p:GameMenuProps){
@@ -69,6 +71,8 @@ export default function GameMenu(p:GameMenuProps){
      <div className="gm-badge-list">{p.profile.achievements.map(item=><div key={item.id} className={'gm-badge '+(item.unlocked?'unlocked':'locked')}><span className="gm-badge-icon">{item.icon}</span><div><strong>{item.label}</strong><small>{item.description}</small></div><span className="gm-badge-state">{item.unlocked?'UNLOCKED':'LOCKED'}</span></div>)}</div>
     </>}
     {p.tab==='settings'&&<>
+     <h4 className="gm-section-title">READING SIZE</h4>
+     <div className="gm-reading-size" role="group" aria-label="文字の大きさ">{([['standard','標準'],['large','大きく'],['extra','特大']] as const).map(([value,label])=><button type="button" key={value} className={p.textScale===value?'active':''} aria-pressed={p.textScale===value} onClick={()=>p.onTextScale(value)}>{label}</button>)}</div>
      <h4 className="gm-section-title"><Vibrate size={18}/> HAPTIC POWER</h4>
      
      <div className="gm-haptic-options" role="group" aria-label="振動の強さ">{(['off','normal','overdrive'] as const).map(value=><button key={value} type="button" aria-pressed={p.haptics===value} className={p.haptics===value?'active':''} onClick={()=>{p.onHaptics(value);setTestResult(null);setFelt(null)}}>{value==='off'?'OFF':value==='normal'?'NORMAL':'OVERDRIVE'}</button>)}</div>
