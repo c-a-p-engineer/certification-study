@@ -30,7 +30,12 @@ const editorialPriority=issues.map(issue=>({...issue,
  priority:issue.reasons.includes('not independently reviewed')?'P1':issue.reasons.includes('missing per-option rationale')?'P2':'P3',
  nextAction:issue.reasons.includes('not independently reviewed')?'Verify reasoning and each distractor against the linked official AWS document':'Improve option-level rationales before claiming exam fidelity'
 }));
+const referenceProblems=bank.filter(q=>{try{const u=new URL(q.reference);return u.protocol!=='https:'||u.hostname!=='docs.aws.amazon.com'}catch{return true}})
+ .map(q=>({id:q.id,reference:q.reference,reason:'not an AWS official HTTPS documentation URL'}));
+const suspiciousExplanations=bank.filter(q=>/(?:必ず|絶対に|すべての場合|常に)/.test(q.explanation||'')&&!q.reviewedAt).map(q=>({id:q.id,reason:'absolute wording; verify exceptions in linked AWS docs'}));
+const unresolvedReviews=bank.filter(q=>!q.reviewedAt).map(q=>({id:q.id,reference:q.reference,domain:q.domain,status:'awaiting independent factual review'}));
 const report={generatedAt:new Date().toISOString(),total:bank.length,reviewed:bank.filter(q=>!!q.reviewedAt).length,nearDuplicateThreshold:.36,nearDuplicateCandidates:suspects,domainCoverage,editorialQueue:editorialPriority,
+ referenceProblems,suspiciousExplanations,unresolvedReviews,
  caveat:'Structural/reference presence checks do not independently verify AWS factual accuracy. New questions without reviewedAt require human editorial review.'};
 mkdirSync('reports',{recursive:true});
 writeFileSync('reports/question-audit.json',JSON.stringify(report,null,2)+'\n');
