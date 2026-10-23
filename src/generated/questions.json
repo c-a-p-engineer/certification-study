@@ -58,16 +58,22 @@
   {
     "id": "saa-005",
     "domain": "耐障害性",
-    "question": "RDSでプライマリDBの障害時に自動フェイルオーバーを実現したい。何を選ぶ？",
+    "question": "Amazon RDS for PostgreSQLの単一DBインスタンスを運用している。別AZに同期スタンバイを維持し、プライマリインスタンスやAZの障害時にRDS側で自動フェイルオーバーさせたい。最も適切な構成は？",
     "choices": [
-      "リードレプリカだけを作成",
-      "RDS Multi-AZ配置",
-      "DBインスタンスのストレージのみ増強",
-      "スナップショットを手動取得"
+      "非同期のRDSリードレプリカだけを作成する",
+      "RDS Multi-AZ DBインスタンス配置を有効化する",
+      "自動バックアップの保存期間を延長する",
+      "スナップショットを毎日手動で取得する"
     ],
     "answer": 1,
-    "explanation": "RDS Multi-AZは高可用性のためにスタンバイを維持し、対象の構成では障害時に自動フェイルオーバーします。",
-    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+    "explanation": "Multi-AZ DBインスタンス配置は別AZに同期スタンバイを維持し、障害時に自動フェイルオーバーする高可用性機能。従来型のスタンバイは読み取り接続を処理しない。一方、RDS Multi-AZ DBクラスターは2つの読み取り可能なスタンバイを持つ別構成であるため、両者を区別する。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
+    "distractorReasons": [
+      "リードレプリカは読み取り負荷分散を主目的とし、単独ではMulti-AZ DBインスタンスと同じ自動フェイルオーバー要件を保証しない。",
+      "正解。別AZへの同期スタンバイとRDS管理の自動切り替えを実現する。",
+      "バックアップの保持期間は復元できる時点に関係するが、実行中のDB障害の自動切り替えにはならない。",
+      "手動スナップショットは復元作業が別途必要で、自動フェイルオーバーの代替とはならない。"
+    ]
   },
   {
     "id": "saa-006",
@@ -86,16 +92,22 @@
   {
     "id": "saa-007",
     "domain": "パフォーマンス",
-    "question": "読み取り負荷が高いRDSデータベースの読み取り処理をスケールさせるには？",
+    "question": "既存のAmazon RDS for MySQLのMulti-AZ DBインスタンス配置で、書き込み可用性を維持しつつ増え続ける参照SQLを別の接続先へ逃がしたい。正しい施策は？",
     "choices": [
-      "Multi-AZだけで読み取り性能を倍増",
-      "リードレプリカを使用",
-      "DBを単一AZに限定",
-      "バックアップ頻度を減らす"
+      "従来型Multi-AZの同期スタンバイへ読み取りSQLをルーティングする",
+      "読み取り専用のRDSリードレプリカを追加して参照処理を振り分ける",
+      "自動バックアップを無効化し、読み取りインスタンスが自動生成されるのを待つ",
+      "プライマリとスタンバイを同じAZへ置き、通信距離を短くする"
     ],
     "answer": 1,
-    "explanation": "RDSリードレプリカは読み取りトラフィックを分散する用途に適しています。高可用性を目的とするMulti-AZとは役割が異なります。",
-    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html"
+    "explanation": "従来型のRDS Multi-AZ DBインスタンスのスタンバイは読み取りトラフィックを処理しない。読み取り拡張は別のRDSリードレプリカが担う。なおRDS Multi-AZ DBクラスターは読み取り可能な2スタンバイを持つため、「Multi-AZでは読み取れない」と一般化しない。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
+    "distractorReasons": [
+      "単一スタンバイのMulti-AZ DBインスタンスは障害待機用で、通常の読み取り先には使えない。",
+      "正解。リードレプリカへ読み取りSQLを分離し、プライマリの負荷を減らす。複製遅延の許容は別途検討する。",
+      "バックアップを止めてもリードレプリカは作られず、データ保護機能を損なう。",
+      "同一AZ配置は可用性の要件に逆行し、読取専用の別処理能力を増やせない。"
+    ]
   },
   {
     "id": "saa-008",
@@ -240,30 +252,42 @@
   {
     "id": "saa-018",
     "domain": "耐障害性",
-    "question": "DNSレベルでエンドポイントの正常性に応じてトラフィックを切り替えたい。候補は？",
+    "question": "本番と待機の2つの公開Webエンドポイントを用意した。DNSでヘルスチェックを評価し、通常は本番、障害時は待機へ名前解決を切り替えたい。候補となるRoute 53機能は？",
     "choices": [
-      "Route 53フェイルオーバールーティング",
-      "Amazon ECR",
-      "AWS KMS",
-      "Amazon Inspector"
+      "Route 53のフェイルオーバールーティングとヘルスチェック",
+      "Amazon ECRでDockerイメージのタグを切り替える",
+      "AWS KMSのキーのローテーションでDNSの回答を変更する",
+      "Amazon InspectorでEC2の脆弱性を検出する"
     ],
     "answer": 0,
-    "explanation": "Route 53はヘルスチェックを組み合わせたフェイルオーバールーティングをサポートします。",
-    "reference": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy-failover.html"
+    "explanation": "Route 53のフェイルオーバールーティングはプライマリとセカンダリのレコードを使い、正常性に応じたDNS回答の切り替えを構成できる。ただしDNSキャッシュのTTLにより反映は瞬時とは限らず、すべてのターゲットが不健康な場合の最終手段のルーティングにも注意する。",
+    "reference": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-problems.html",
+    "distractorReasons": [
+      "正解。ヘルスチェックを関連付け、プライマリが不健康になった際にセカンダリへ回答を切り替える。",
+      "ECRはコンテナイメージのレジストリであり、DNSレコードの健全性による切り替え機能ではない。",
+      "KMSの鍵管理はDNSのレコード選択とは無関係であり、障害時のトラフィック切り替えに使えない。",
+      "Inspectorは脆弱性の検出を支援するが、Route 53のDNSフェイルオーバーを構成しない。"
+    ]
   },
   {
     "id": "saa-019",
     "domain": "耐障害性",
-    "question": "オブジェクトの誤削除に備えて以前の状態を保持したい。S3の機能は？",
+    "question": "S3バケットで誤って同じキーのオブジェクトを上書きしたり、バージョンIDを指定しない削除を行ったりした場合に、以前の内容を復元できるようにしたい。事前に有効化する機能は？",
     "choices": [
       "S3 Versioning",
-      "S3 Transfer Accelerationのみ",
-      "S3静的ウェブサイトホスティング",
+      "S3 Transfer Acceleration",
+      "S3静的Webサイトホスティング",
       "S3イベント通知のみ"
     ],
     "answer": 0,
-    "explanation": "S3バージョニングは同じキーの複数バージョンを保持して誤上書き・削除からの復旧を助けます。",
-    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html"
+    "explanation": "S3 Versioningを有効にすると、上書き前のデータを非現行バージョンとして保存できる。通常のDELETEは削除マーカーを追加するため過去バージョンを復旧可能。ただし権限を持つユーザーがversionIdを指定して完全削除したバージョンは復元できない。削除禁止まで必要ならObject Lockを検討する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html",
+    "distractorReasons": [
+      "正解。同じキーの旧バージョンを保持し、誤上書きやバージョン指定なしの削除から復元できる。",
+      "転送の高速化は過去のオブジェクトバージョンや削除マーカーを保存しない。",
+      "静的Webサイトホスティングは公開方法であり、誤上書きや削除への復旧策にならない。",
+      "イベント通知だけでは旧バージョンのデータを保護・保持できない。"
+    ]
   },
   {
     "id": "saa-020",
@@ -380,16 +404,22 @@
   {
     "id": "saa-028",
     "domain": "コスト最適化",
-    "question": "S3オブジェクトを利用状況に応じて適切なストレージクラスへ移行したい。使う機能は？",
+    "question": "S3バケットに保管するログは作成後90日で低頻度アクセス用ストレージへ移し、365日で期限切れにするという**日数ベースの保持ルール**が決まっている。設定だけで定期的に自動実行する適切な機能は？",
     "choices": [
-      "S3 Lifecycle",
-      "CloudTrail Lake",
-      "AWS WAF",
-      "Amazon VPC Flow Logs"
+      "S3 Lifecycleの移行・有効期限ルール",
+      "S3 Intelligent-Tieringのアクセス頻度監視だけで、指定した日数にオブジェクトを完全削除する",
+      "S3 Replicationを設定すると作成日から365日で削除される",
+      "CloudTrail LakeのイベントデータストアでS3のオブジェクト保持期間を設定する"
     ],
     "answer": 0,
-    "explanation": "S3 Lifecycleルールでオブジェクトの経過日数等に基づく移行・失効を自動化できます。",
-    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html"
+    "explanation": "S3 Lifecycleではオブジェクトの経過日数、プレフィックスやタグなどに基づくストレージクラスへの移行と有効期限処理を設定できる。アクセス頻度を監視して自動階層化するIntelligent-Tieringとは別機能。2024年9月以降の新しいLifecycle設定では128KB未満のオブジェクトは既定でストレージクラス移行の対象外であり、設定時にサイズ条件を確認する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html",
+    "distractorReasons": [
+      "正解。日数ベースの移行と期限切れをバケットのLifecycleルールで管理する。",
+      "Intelligent-Tieringはアクセス頻度に基づく階層移動が主で、指定した日数に全オブジェクトを期限切れ削除する仕組みではない。",
+      "Replicationはオブジェクトの複製を管理し、指定日数での移行や失効処理を単独で行わない。",
+      "CloudTrail Lakeのイベント保持設定は監査データ向けであり、このS3バケットのログオブジェクト寿命を制御しない。"
+    ]
   },
   {
     "id": "saa-029",
@@ -422,16 +452,22 @@
   {
     "id": "saa-031",
     "domain": "コスト最適化",
-    "question": "利用頻度が予測できないS3オブジェクトのストレージコストを自動最適化したい。候補は？",
+    "question": "128KB以上のS3オブジェクトを大量に保存しており、アクセス時期が予測できない。アクセスに応じて低レイテンシーを維持する階層へ自動的に移動させたい。監視・自動化の料金も検討する場合、最適なクラスは？",
     "choices": [
       "S3 Intelligent-Tiering",
-      "S3 One Zone-IAのみ",
-      "EBS io2",
-      "Amazon EFSのみ"
+      "S3 One Zone-IAへ全データを固定",
+      "Amazon EBS io2をS3オブジェクト用に使用",
+      "Amazon EFSへ全オブジェクトをコピーする"
     ],
     "answer": 0,
-    "explanation": "S3 Intelligent-Tieringはアクセスパターンに応じて対象のアクセス階層を自動移動します。",
-    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering-overview.html"
+    "explanation": "S3 Intelligent-Tieringはアクセス履歴に基づきFrequent、Infrequent、Archive Instant Accessへ自動移動する。基本の自動階層はミリ秒アクセスを維持する。128KB未満は監視・自動階層移行の対象外で、Frequent Accessに留まる。追加の非同期アーカイブ階層を有効化した場合は復元遅延を考慮する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering-overview.html",
+    "distractorReasons": [
+      "正解。自動階層化に適し、対象オブジェクトの監視料金と取得性能を一緒に評価する。",
+      "One Zone-IAの固定配置はアクセス頻度に応じた自動移動を行わず、AZ障害のリスクも変わる。",
+      "EBS io2はEC2用ブロックストレージで、S3オブジェクトの自動階層化機能ではない。",
+      "EFSはファイルストレージであり、S3オブジェクトのアクセス階層を自動変更する手段ではない。"
+    ]
   },
   {
     "id": "saa-032",
@@ -824,19 +860,25 @@
   {
     "id": "saa-057",
     "domain": "パフォーマンス",
-    "question": "Auroraのリーダーエンドポイントを使用する主な目的は？",
+    "question": "1つ以上のAuroraレプリカを持つAmazon Auroraクラスターで、読み取り中心のアプリの**新規接続**を複数のレプリカに分散するために利用するエンドポイントは？",
     "choices": [
-      "読み取り接続をレプリカへ分散する",
-      "書き込みを全レプリカへ直接分散する",
-      "S3をマウントする",
-      "DNSゾーンを管理する"
+      "Auroraリーダーエンドポイント",
+      "クラスターのライターエンドポイント",
+      "Aurora DBインスタンスの固定インスタンスエンドポイント",
+      "Auroraバックアップの復元エンドポイント"
     ],
     "answer": 0,
-    "explanation": "Auroraのリーダーエンドポイントは読み取り専用接続をレプリカへ負荷分散します。",
-    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html",
+    "explanation": "AuroraリーダーエンドポイントはAuroraレプリカ間で新しい読み取り接続を分散する。SQLクエリ単位ではなく接続単位であることに注意。レプリカが1つもないクラスターではリーダーエンドポイントがプライマリへ接続する場合があるため、設問ではレプリカが存在する条件を明示した。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Endpoints.Reader.html",
     "difficulty": 2,
     "tags": [
       "パフォーマンス"
+    ],
+    "distractorReasons": [
+      "正解。レプリカがある場合、読み取り接続をそのレプリカ群へ分散できる。",
+      "ライターエンドポイントは書き込み可能な現行プライマリを指し、レプリカへの読取接続分散を目的としない。",
+      "個別のインスタンスエンドポイントを固定すると、複数レプリカ間への自動接続分散は行われない。",
+      "Auroraにその名称の一般的な読取負荷分散エンドポイントは存在しない。"
     ]
   },
   {
@@ -1022,7 +1064,7 @@
   {
     "id": "saa-068",
     "domain": "耐障害性",
-    "question": "S3で保存後のオブジェクトの削除や上書きを所定期間禁止する機能は？",
+    "question": "監査証跡として保管するS3オブジェクトの**特定のバージョン**を、決められた保持期間中は削除できないようにしたい。バージョン単位で保護するS3の機能は？",
     "choices": [
       "S3 Inventory",
       "S3 Transfer Acceleration",
@@ -1030,11 +1072,17 @@
       "S3 Object Lock"
     ],
     "answer": 3,
-    "explanation": "Object LockはWORMモデルで指定期間のオブジェクト変更・削除を防ぐ機能です。",
+    "explanation": "S3 Object Lockは保持期間やリーガルホールドにより指定したオブジェクトバージョンの完全削除・改変を防ぐWORM機能。キー自体を将来一切上書き不能にするわけではなく、新しいオブジェクトバージョンのPUTや削除マーカーの追加は可能。権限者にも保持期間を迂回させない場合はComplianceモードを選ぶ。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
     "difficulty": 2,
     "tags": [
       "耐障害性"
+    ],
+    "distractorReasons": [
+      "Inventoryはオブジェクトの一覧やメタデータ出力用で、削除禁止の保持ポリシーではない。",
+      "転送高速化では保持期間中のバージョン削除を制限できない。",
+      "S3 Selectは特定の問い合わせ用途であり、削除の禁止やWORM保護を構成しない。",
+      "正解。Object Lockの保持設定はバージョン単位でデータを保護する。"
     ]
   },
   {
@@ -1188,20 +1236,26 @@
   {
     "id": "saa-077",
     "domain": "パフォーマンス",
-    "question": "トランザクション処理用RDSの読み取り集中を改善したいが、プライマリへの書き込み可用性とは切り分けたい。最適なのは？",
+    "question": "RDS for MySQLの単一スタンバイMulti-AZ DBインスタンス配置で、OLTPワークロードの読み取りクエリだけが増えている。高可用性とは別に読み取り先を増やす最適な構成は？",
     "choices": [
-      "リードレプリカを使う",
-      "Multi-AZスタンバイのみを読み取り先とする",
-      "CloudTrailの証跡を増やす",
-      "S3 GlacierへDBを移す"
+      "RDSリードレプリカを追加する",
+      "既存のMulti-AZ DBインスタンスの待機用スタンバイへSQLを流す",
+      "CloudTrail証跡を増やして読み取り負荷を減らす",
+      "RDSの本番DBをGlacierへ移して読取専用にする"
     ],
     "answer": 0,
-    "explanation": "RDSリードレプリカは読み取りスケールのために利用します。従来型Multi-AZスタンバイは読み取りスケール用ではありません。",
-    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html",
+    "explanation": "単一スタンバイのRDS Multi-AZ DBインスタンス配置の待機系は障害時の切り替え用で、通常読み取りを受け付けない。参照負荷を分けるには別のリードレプリカが適切。MySQL/PostgreSQLで利用できるRDS Multi-AZ DBクラスターは読み取り可能なスタンバイを持つ別製品構成である。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
     "difficulty": 3,
     "tags": [
       "パフォーマンス",
       "シナリオ"
+    ],
+    "distractorReasons": [
+      "正解。読み取り専用SQLをレプリカに振り分け、書き込みと可用性の設計から分離する。",
+      "単一スタンバイのMulti-AZ DBインスタンスではスタンバイに読み取り接続できない。",
+      "CloudTrailはAPI監査サービスで、RDSのSQL参照リクエストを分散しない。",
+      "Glacierはアーカイブ用オブジェクトストレージで、RDSデータベースの読取処理先ではない。"
     ]
   },
   {
@@ -1378,20 +1432,26 @@
   {
     "id": "saa-087",
     "domain": "セキュリティ",
-    "question": "AWS OrganizationsでSCPを適用しても、個々のIAMプリンシパルへ操作許可が別途必要となる理由は？",
+    "question": "AWS Organizationsの**メンバーアカウント**でSCPをAllowしている操作をIAMロールが実行できない。IAM許可ポリシーを別途必要とする理由として正しいのは？",
     "choices": [
-      "SCPがネットワークACLを上書きするため",
-      "SCPはIAMポリシーを自動生成するため",
-      "SCPは権限の上限を定義し権限付与はしないため",
-      "SCPはEC2にしか使えないため"
+      "SCPがVPCネットワークACLの代わりになるため",
+      "SCPを設定するとIAM許可ポリシーが自動作成されるため",
+      "SCPは利用可能な権限の上限を規定するだけで許可自体は付与しないため",
+      "SCPはEC2だけで使用できる仕組みだから"
     ],
     "answer": 2,
-    "explanation": "SCPはアカウントで使用できる権限の最大範囲を制約しますが、それ自体は許可を付与しません。",
+    "explanation": "SCPはOrganizationsのメンバーアカウントで使用可能な権限の最大範囲を制約するガードレールであり、IAMプリンシパルにAllow権限は与えない。実操作にはIAMまたはリソース側の適切な許可が必要。管理アカウントのユーザー・ロールにはSCPが適用されないという例外も押さえる。",
     "reference": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html",
     "difficulty": 3,
     "tags": [
       "シナリオ",
       "セキュリティ"
+    ],
+    "distractorReasons": [
+      "SCPはサービス操作の許可上限を統制するもので、ネットワークACLのパケット制御とは独立している。",
+      "SCPを割り当ててもプリンシパルに許可ポリシーを自動発行しない。",
+      "正解。IAMの許可とSCPの上限制約の双方を満たして初めて許可される。",
+      "SCPはEC2専用ではなく、AWSの多くのサービス操作に対して組織的に適用できる。"
     ]
   },
   {
@@ -1625,20 +1685,26 @@
   {
     "id": "saa-100",
     "domain": "耐障害性",
-    "question": "高可用なデータベースと読み取り処理の拡張を別々に達成したい。適切な設計は？",
+    "question": "既存のRDS for PostgreSQLを**単一スタンバイのMulti-AZ DBインスタンス配置**として運用中。フェイルオーバー可用性は維持し、参照ワークロードだけを拡張したい。最も直接的な追加設計は？",
     "choices": [
-      "Multi-AZを省略して単一AZのみにする",
-      "リードレプリカだけで全障害の自動フェイルオーバーを保証",
-      "Multi-AZで可用性を確保し必要に応じ読み取りレプリカを追加",
-      "バックアップを停止してI/Oを節約"
+      "Multi-AZを無効化して単一AZインスタンスだけにする",
+      "単一の非同期リードレプリカがすべての障害に自動フェイルオーバーするとみなす",
+      "Multi-AZ DBインスタンスを維持したまま別のリードレプリカを追加する",
+      "読み取り時の負荷を減らすため自動バックアップを停止する"
     ],
     "answer": 2,
-    "explanation": "Multi-AZは高可用性、読み取りレプリカは読み取りスケールが主目的で、要件に応じて組み合わせます。 なおRDSのMulti-AZ DBクラスターは2つの読み取り可能なスタンバイを持つ別構成です。ここでの高可用性対策は単一スタンバイのMulti-AZ DBインスタンスを想定します。",
+    "explanation": "単一スタンバイのRDS Multi-AZ DBインスタンス配置は高可用性に使うもので、待機系は通常の読み取り接続を処理しない。読み取り拡張には独立したリードレプリカを追加する。RDS Multi-AZ DBクラスターは読み取り可能な2つのスタンバイを持つ別構成のため、両者を区別して選定する。",
     "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
     "difficulty": 3,
     "tags": [
       "シナリオ",
       "可用性"
+    ],
+    "distractorReasons": [
+      "単一AZではAZ障害への耐性が低下する。",
+      "非同期リードレプリカだけでは従来型Multi-AZ DBインスタンスの自動フェイルオーバーと同等ではない。",
+      "正解。単一スタンバイによる可用性と別のリードレプリカによる読み取り処理能力を両立する。",
+      "バックアップ停止は復旧性を損なううえ、参照SQLを受けるDBインスタンス数は増やせない。"
     ]
   },
   {
@@ -4328,20 +4394,26 @@
   {
     "id": "saa-236",
     "domain": "セキュリティ",
-    "question": "S3に保存したバックアップを法規制上の保持期間中に誰も削除できないようにしたい。どの機能が最適か？",
+    "question": "コンプライアンス監査で、S3に保存するバックアップの確定済み**オブジェクトバージョン**を7年間、アカウントのrootユーザーでも完全削除できないようにする必要がある。適切な保持設定は？",
     "choices": [
-      "S3 Access Analyzerのみ",
-      "S3 Object LockのComplianceモード",
-      "S3 Transfer Acceleration",
-      "S3 Select"
+      "IAM Access Analyzerの外部アクセス検出のみを有効化する",
+      "S3 Object LockのComplianceモードで保持期間を設定する",
+      "S3 Transfer Accelerationの高速転送を有効化する",
+      "S3 Selectを使ってオブジェクトを読み取る"
     ],
     "answer": 1,
-    "explanation": "Object LockのComplianceモードは指定保持期間内のオブジェクトバージョンの削除や上書きを防ぎます。",
+    "explanation": "Object LockのComplianceモードは保持期限まで特定のオブジェクトバージョンの完全削除や保持期間の短縮を拒否し、AWSアカウントのrootユーザーでも回避できない。Governanceモードは特定権限でバイパスできるため、この規制要件に不十分。新規バージョンが作られること自体は妨げない点も重要。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
     "difficulty": 2,
     "tags": [
       "サービス比較",
       "実務判断"
+    ],
+    "distractorReasons": [
+      "Access Analyzerはアクセス許可の評価を支援するが、バージョンの不変保持を保証しない。",
+      "正解。Complianceモードはrootユーザーによる保持期間中の削除も防止する。",
+      "転送高速化はデータ保護の不変性や保持期限の実施には関係しない。",
+      "S3 Selectは監査証跡の不変保持を実現する機能ではない。"
     ]
   },
   {
@@ -4480,20 +4552,26 @@
   {
     "id": "saa-244",
     "domain": "耐障害性",
-    "question": "S3オブジェクトを別リージョンへレプリケーションする前提として必要な設定は？",
+    "question": "S3のクロスリージョンレプリケーション（CRR）を構成する。レプリケーション元と先のバケットに**共通して必須**となる有効化設定は？",
     "choices": [
-      "両バケットのバージョニングを有効化",
-      "レプリケーション元をパブリック公開",
-      "両バケットの同一AZ配置",
-      "CloudFrontのTTLを0に設定"
+      "両方のS3バケットでバージョニングを有効化する",
+      "元バケットを匿名ユーザーへ公開する",
+      "両バケットを同一AZに配置する",
+      "CloudFrontのTTLをゼロに設定する"
     ],
     "answer": 0,
-    "explanation": "S3のレプリケーションには送信元と送信先の両方でバージョニングが必要です。",
+    "explanation": "S3 Replicationではソースと宛先の双方でVersioningを有効にすることが必須。加えてS3へレプリケーションの権限を与えるIAM設定、対象ルールなどが必要になる。クロスリージョンの場合はリージョンが異なるため、同一AZという考え方は適用されない。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-requirements.html",
     "difficulty": 2,
     "tags": [
       "サービス比較",
       "実務判断"
+    ],
+    "distractorReasons": [
+      "正解。複製元と複製先のVersioning有効化がCRRの必須前提となる。",
+      "公開アクセスは必要なく、むしろセキュリティ要件を損ねる。",
+      "クロスリージョン複製では異なるリージョンのバケットが前提で、同一AZへの配置は要件と矛盾する。",
+      "CloudFrontのキャッシュTTLはS3オブジェクトレプリケーションの成立要件ではない。"
     ]
   },
   {
@@ -4670,20 +4748,26 @@
   {
     "id": "saa-254",
     "domain": "コスト最適化",
-    "question": "オブジェクトのアクセスパターンが変動し長期的な頻度を予測できない。自動でアクセス階層を調整したい。適切なS3機能は？",
+    "question": "128KB以上の大量のS3オブジェクトで、アクセス頻度が不規則に変化する。アプリにはミリ秒級の読み取りが必要で、明示的な非同期アーカイブは有効化しない。自動で階層を変える適切な選択肢は？",
     "choices": [
-      "S3 Intelligent-Tiering",
-      "S3 One Zone-IAのみ",
-      "S3 Multi-Region Access Points",
-      "S3 Transfer Acceleration"
+      "S3 Intelligent-Tieringを設定し対象階層のアクセスを自動調整する",
+      "S3 One Zone-IAにすべてを固定する",
+      "S3 Multi-Region Access Pointsを設定すれば各オブジェクトの料金階層を自動変更できる",
+      "S3 Transfer Accelerationだけで保存料金を最適化する"
     ],
     "answer": 0,
-    "explanation": "S3 Intelligent-Tieringはアクセスパターンに応じて対象階層を自動移動します。監視・自動化料金なども評価します。",
+    "explanation": "S3 Intelligent-Tieringはアクセスされない期間に応じて低頻度・Archive Instant Accessの階層へオブジェクトを自動移行し、標準の3階層は低レイテンシーアクセスを維持する。128KB未満は自動階層化の対象外となる。任意で有効化するArchive Access/Deep Archive Accessは取り出し待ち時間が異なるため条件に含めない。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering-overview.html",
     "difficulty": 2,
     "tags": [
       "サービス比較",
       "実務判断"
+    ],
+    "distractorReasons": [
+      "正解。アクセス頻度に応じた自動階層化で、監視料金も含めた総コストを評価する。",
+      "One Zone-IAはAZ障害リスクがあり、アクセス頻度に応じた階層自動変更もしない。",
+      "Multi-Region Access Pointsはアクセス経路やリージョンの選択機能であり、ストレージクラスの自動階層化にはならない。",
+      "Transfer Accelerationはネットワーク転送の高速化で、保存時のアクセス階層を切り替えない。"
     ]
   },
   {
@@ -4974,7 +5058,7 @@
   {
     "id": "saa-267",
     "domain": "コスト最適化",
-    "question": "S3データの保存費用を下げる際に検討すべき施策をすべて選んでください。",
+    "question": "S3バケットの保存費用を最適化する。保持要件を守り、参照時の取り出し時間や料金も含めて検討すべき施策を**3つ**選べ。",
     "choices": [
       "S3 Storage Lensで利用量を分析する",
       "保持要件を踏まえてLifecycleを設定する",
@@ -4987,12 +5071,19 @@
       1,
       2
     ],
-    "explanation": "利用状況の分析とクラス選択・保持管理の組み合わせで費用を最適化できます。",
+    "explanation": "Storage Lensで容量・使用傾向を分析し、Lifecycleで保持期限や移行条件を管理する。ストレージクラスの選択では取得遅延・取り出し料金・最低保存期間も考慮する。Lifecycleは2024年9月以降の既定設定では128KB未満のオブジェクトを移行しない点や、バージョニング時の非現行バージョン保持にも注意する。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html",
     "difficulty": 3,
     "tags": [
       "複数選択",
       "設計判断"
+    ],
+    "distractorReasons": [
+      "正解。Storage Lensはオブジェクト数や使用状況の把握に役立ち、最適化対象を洗い出せる。",
+      "正解。Lifecycleを保持ポリシーに合わせて設計すれば、不要なストレージコストを抑制できる。",
+      "正解。アクセス頻度と必要な取り出し性能によって適切なストレージクラスが変わる。",
+      "すべてをDeep Archiveへ固定すると、即時アクセスが必要なオブジェクトの要件を満たせない。",
+      "不要な非現行バージョンを保持し続けると追加の保存料金が発生し、保持要件の検証もできない。"
     ]
   },
   {
@@ -5307,20 +5398,26 @@
   {
     "id": "saa-284",
     "domain": "コスト最適化",
-    "question": "S3に保存したメディアデータの削除期限を規約で定めている。不要な保管費用を抑える自動化機能は？",
+    "question": "S3へアップロードしたメディアデータに、保管日数に応じた削除期限を設定したい。バージョニングの有無に応じた動作も理解したうえで採用する自動化機能は？",
     "choices": [
-      "S3 Lifecycleの有効期限アクション",
-      "S3バージョニングだけ",
-      "CloudFront Functionsのみ",
-      "IAMアクセスキーのローテーション"
+      "S3 Lifecycleの有効期限アクションを設定する",
+      "S3 Versioningだけを有効化する",
+      "CloudFront Functionsのビューワーリクエスト処理でS3オブジェクトを削除する",
+      "IAMアクセスキーを定期的にローテーションする"
     ],
     "answer": 0,
-    "explanation": "S3 Lifecycleの有効期限ルールは条件を満たしたオブジェクトを自動削除し、保持期限と費用管理に利用できます。",
+    "explanation": "S3 Lifecycle Expirationは設定した保持期間に達したオブジェクトを期限切れ処理する。バージョニングが無効なバケットでは削除されるが、有効時は一般に削除マーカーが追加され、元のバージョンは非現行として残る。古いバージョン自体も消すにはNoncurrentVersionExpirationを別途設計する。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-expire-general-considerations.html",
     "difficulty": 3,
     "tags": [
       "応用",
       "サービス選定"
+    ],
+    "distractorReasons": [
+      "正解。オブジェクトの寿命を経過日数などで制御できる。ただしバージョニング時は旧バージョンの管理も必要。",
+      "Versioningは過去バージョンを保存する機能であり、保持期間経過後の自動削除を単独では行わない。",
+      "CloudFront Functionsはリクエスト処理に使用し、S3 Lifecycleの期限切れ管理の代替にならない。",
+      "IAMアクセスキーの更新は認証情報の管理であり、オブジェクトの保存期限に影響しない。"
     ]
   },
   {
