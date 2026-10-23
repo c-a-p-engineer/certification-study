@@ -31,12 +31,13 @@ export default function BackupPanel(){
   catch(e){setStatus('復元できませんでした。元の記録の復旧を試みました：'+(e instanceof Error?e.message:'ブラウザの保存領域を確認してください'))}
  }
  const summary=incoming?backupPreview(incoming):null;
+ const current=(()=>{try{return backupPreview(createBackup(localStorage))}catch{return null}})();
  return <section className="backup-panel" aria-labelledby="backup-heading">
   <h4 className="gm-section-title" id="backup-heading"><FileCheck2 size={19}/> STUDY BACKUP</h4>
   <p>回答履歴、XP、称号、敵HP、途中のミッション、設定をJSONで保存できます。サーバーへの送信はありません。</p>
   <button type="button" className="backup-save" onClick={download}><Download size={18}/> バックアップをダウンロード</button>
   <label className="backup-picker"><Upload size={18}/> JSONファイルを選択<input type="file" accept=".json,application/json" onChange={e=>{void inspect(e.currentTarget.files?.[0])}}/></label>
-  {summary&&<div className="backup-preview" role="group" aria-label="復元するバックアップ"><strong>復元予定のデータ</strong><span>保存日：{new Date(summary.date).toLocaleString('ja-JP')}</span><span>回答：{summary.answered}問　XP：{summary.xp.toLocaleString()}</span><span>敵：ステージ {summary.stage}　項目：{summary.savedKeys}</span><button type="button" onClick={restore}><ShieldAlert size={17}/> 確認して復元する</button></div>}
+  {summary&&<div className="backup-preview" role="group" aria-label="復元するバックアップ"><strong>復元予定のデータ</strong><span>保存日：{new Date(summary.date).toLocaleString('ja-JP')}</span><span>復元ファイル：回答 {summary.answered}問・XP {summary.xp.toLocaleString()}</span>{current&&<span>現在の記録：回答 {current.answered}問・XP {current.xp.toLocaleString()}</span>}{current&&(summary.answered<current.answered||summary.xp<current.xp)&&<strong>注意：現在より古い記録に戻る可能性があります。先にバックアップを保存してください。</strong>}<span>敵：ステージ {summary.stage}　項目：{summary.savedKeys}</span><button type="button" onClick={restore}><ShieldAlert size={17}/> 確認して復元する</button></div>}
   <p className="backup-message" role="status" aria-live="polite">{status}</p>
   <p className="gm-caveat">復元は現在の保存データを置き換えます。端末やブラウザ間で自動同期はされません。機密情報を含む可能性があるためJSONの共有先に注意してください。</p>
  </section>;
