@@ -19,6 +19,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: question-quality-audit
-          path: reports/question-audit.json
+          path: |\n            reports/question-audit.json\n            reports/question-audit.md\n            reports/editorial-evidence-2026-10-24.json
           if-no-files-found: warn
           retention-days: 14
