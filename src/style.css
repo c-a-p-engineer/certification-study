@@ -260,3 +260,59 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
  .question-terms .study-terms-panel>summary.term-panel-heading strong{font-size:15px}
  .question-terms .study-terms-panel>summary.term-panel-heading span{font-size:11px}
 }
+
+/* OVERDRIVE CODEX: first show a compact index, then tap individual terms for lore. */
+.term-picker{display:grid;gap:9px;padding:0 14px 16px}
+.term-card{display:block;overflow:hidden;border:1px solid #587ea8;border-radius:10px;background:#162f46;box-shadow:inset 0 0 20px #81e8ff07}
+.term-card[open]{border-color:#89f7e8;background:#1b374d}
+.term-card-title{display:flex;align-items:center;gap:10px;min-height:65px;padding:12px 14px;cursor:pointer;list-style:none;color:#f7ffff}
+.term-card-title::-webkit-details-marker{display:none}
+.term-card-title::marker{display:none}
+.term-card-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.term-card-name>strong{font-size:16px;color:#f6fcff;line-height:1.35;overflow-wrap:anywhere}
+.term-card-name>small{font-size:12px;color:#b2e8ff;line-height:1.5}
+.term-card .term-kind{margin:0;font-size:10px;white-space:nowrap;align-self:center;letter-spacing:0;font-weight:800}
+.term-card-chevron{color:#8cfded;transition:transform .18s ease;flex-shrink:0}
+.term-card[open] .term-card-chevron{transform:rotate(180deg)}
+.study-terms-panel[open] .term-card>summary::after,.term-card>summary::after{display:none!important;content:none!important}
+.term-card-title:focus-visible{outline:3px solid #ffe29b;outline-offset:-4px}
+.term-card-detail{padding:13px 16px 19px;border-top:1px solid #80cfd454;background:linear-gradient(180deg,#1f4250,#1a334b)}
+.term-card-detail p{margin:0 0 11px;color:#e8f5ff!important;font-size:14px!important;line-height:1.8!important}
+.term-card-detail .term-reading{font-size:12px!important;color:#b8e4ff!important}
+.term-card-detail .term-reading strong{font-size:15px;color:#f7fcff}
+.term-card-detail .term-full-name{font-size:12px!important;color:#b8e4ff!important}
+.term-card-detail .term-full-name strong{display:block;color:#f3fcff;font-size:14px;overflow-wrap:anywhere}
+.term-card-detail .term-meaning strong{display:block;font-size:17px;color:#ffe5a9;line-height:1.5}
+.term-card-detail .term-note{padding:12px;border-left:3px solid #8ef4dd;border-radius:3px;background:#132b40}
+.term-card-detail .term-memory-tip{padding:11px;background:#3a324a;color:#ffdda9!important;border-radius:6px}
+.term-card-detail .term-memory-tip b{color:#fff3af}
+.study-terms-panel .term-guide-intro{margin:8px 0 4px!important;padding:0 16px 12px;font-size:13px!important;line-height:1.75!important;color:#cbdff3!important}
+.question-terms .study-terms-panel>summary.term-panel-heading{min-height:58px}
+.game-menu-trigger{display:flex;gap:7px;align-items:center;justify-content:center;min-height:42px;padding:8px 13px;border:1px solid #83d7f3;border-radius:9px;background:linear-gradient(100deg,#184a5d,#303668);color:#e6fcff;font-size:12px;font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:0 0 15px #5cddff2d}
+.game-menu-trigger:hover{background:linear-gradient(100deg,#236878,#3d4381);box-shadow:0 0 23px #5cddff5c}
+.game-menu-trigger:focus-visible{outline:3px solid #ffe8b3;outline-offset:2px}
+.fever-meter{padding:12px 15px;margin:0 0 16px;border-radius:9px;border:1px solid #7774a8;background:#1b2040}
+.fever-label{display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;color:#d7a6ff;letter-spacing:.5px}
+.fever-label strong{flex:1}.fever-label>span{font-size:11px;color:#efe1ff}
+.fever-track{margin-top:9px;height:10px;border-radius:11px;background:#0d152d;overflow:hidden}
+.fever-track>div{height:100%;border-radius:11px;background:linear-gradient(90deg,#5fd3f8,#b56fff,#ffb876);box-shadow:0 0 22px #c393fe;transition:width .33s ease-out}
+.fever-meter.charged{border-color:#ef99dc;box-shadow:0 0 24px #e88fe132;animation:fever-pulse 1.6s ease-in-out infinite}
+.fever-meter.charged .fever-label{color:#ffe5a2}
+.xp-award{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 6px;padding:12px 13px;border-radius:8px;background:linear-gradient(100deg,#235748,#1d3d55);border:1px solid #8fe5bc;color:#baffd6;animation:xp-pop .55s cubic-bezier(.1,.8,.12,1.3)}
+.xp-award strong{font:900 29px 'Barlow Condensed',sans-serif;color:#fff2a7}
+.xp-award span{margin-left:auto;font-size:13px;color:#efffcc;font-weight:900}
+@keyframes fever-pulse{50%{box-shadow:0 0 32px #f6a2ed6c}}
+@keyframes xp-pop{0%{transform:translateY(10px) scale(.9);opacity:0}70%{transform:translateY(-4px) scale(1.03);opacity:1}100%{transform:none;opacity:1}}
+@media(max-width:700px){
+ .top-actions{gap:7px}
+ .game-menu-trigger{min-height:38px;min-width:39px;padding:7px}
+ .game-menu-trigger>span{display:none}
+ .term-picker{padding:0 9px 11px;gap:7px}
+ .term-card-title{min-height:61px;padding:11px;gap:8px}
+ .term-card-name>strong{font-size:15px}
+ .term-card-name>small{font-size:11px}
+ .term-card .term-kind{font-size:9px}
+ .xp-award strong{font-size:24px}
+}
+@media(prefers-reduced-motion:reduce){.fever-meter.charged,.xp-award{animation:none!important}.fever-track>div,.term-card-chevron{transition:none!important}}
+.app.reduced .fever-meter.charged,.app.reduced .xp-award{animation:none!important}
