@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "program": "CERTIFICATION // OVERDRIVE 5.6",
+  "checkedOn": "2026-10-24",
+  "method": "Targeted claim-by-claim cross-check against current AWS documentation for selected high-risk concepts. Not a full independent editorial approval of question stems, answers and all distractors.",
+  "questionIds": [
+    "saa-005",
+    "saa-007",
+    "saa-077",
+    "saa-100",
+    "saa-018",
+    "saa-019",
+    "saa-284",
+    "saa-028",
+    "saa-267",
+    "saa-031",
+    "saa-254",
+    "saa-057",
+    "saa-068",
+    "saa-236",
+    "saa-087",
+    "saa-244"
+  ],
+  "entries": [
+    {
+      "id": "saa-005",
+      "category": "rds-multi-az-versus-readable-cluster",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Multi-AZ DBインスタンスの単一スタンバイは読み取り不可。ただしMulti-AZ DBクラスターには2つの読み取り可能なスタンバイがある。設問側で構成を明確化。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-007",
+      "category": "rds-multi-az-versus-readable-cluster",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Multi-AZ DBインスタンスの単一スタンバイは読み取り不可。ただしMulti-AZ DBクラスターには2つの読み取り可能なスタンバイがある。設問側で構成を明確化。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-077",
+      "category": "rds-multi-az-versus-readable-cluster",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Multi-AZ DBインスタンスの単一スタンバイは読み取り不可。ただしMulti-AZ DBクラスターには2つの読み取り可能なスタンバイがある。設問側で構成を明確化。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-100",
+      "category": "rds-multi-az-versus-readable-cluster",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Multi-AZ DBインスタンスの単一スタンバイは読み取り不可。ただしMulti-AZ DBクラスターには2つの読み取り可能なスタンバイがある。設問側で構成を明確化。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html",
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-018",
+      "category": "route53-failover-edge-cases",
+      "risk": "medium",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "DNSフェイルオーバーにはキャッシュTTLがあり、全ターゲット不健康時は最終手段のルーティング挙動がある。瞬時の保証を暗示しない。",
+      "sources": [
+        "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-problems.html",
+        "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/best-practices-dns.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-019",
+      "category": "s3-versioning-expiration",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "S3 Versioningの通常削除は削除マーカー。versionIdを指定した完全削除は復旧不能。Lifecycle Expirationはversioning有効時に旧バージョンを残すためNoncurrentVersionExpirationが別途必要。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html",
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-expire-general-considerations.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-284",
+      "category": "s3-versioning-expiration",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "S3 Versioningの通常削除は削除マーカー。versionIdを指定した完全削除は復旧不能。Lifecycle Expirationはversioning有効時に旧バージョンを残すためNoncurrentVersionExpirationが別途必要。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html",
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-expire-general-considerations.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-028",
+      "category": "s3-lifecycle-versus-intelligent-tiering",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Lifecycleは保持ルール・日数ベース。アクセス頻度による自動階層化はIntelligent-Tiering。2024-09以降の小オブジェクト移行128KB既定制約を明記。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html",
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-267",
+      "category": "s3-lifecycle-versus-intelligent-tiering",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Lifecycleは保持ルール・日数ベース。アクセス頻度による自動階層化はIntelligent-Tiering。2024-09以降の小オブジェクト移行128KB既定制約を明記。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html",
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-031",
+      "category": "s3-intelligent-tiering-128kb",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "S3 Intelligent-Tieringの128KB未満は自動階層化対象外。既定の3階層は即時取得可能。オプションの非同期アーカイブ階層は別の性能要件。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering-overview.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-254",
+      "category": "s3-intelligent-tiering-128kb",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "S3 Intelligent-Tieringの128KB未満は自動階層化対象外。既定の3階層は即時取得可能。オプションの非同期アーカイブ階層は別の性能要件。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering-overview.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-057",
+      "category": "aurora-reader-endpoint",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Auroraリーダーエンドポイントは接続単位で分散。レプリカがない場合はプライマリへ接続することがあるため、レプリカあり条件を明記。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Endpoints.Reader.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-068",
+      "category": "object-lock-protected-version-versus-key",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Object Lockは特定のオブジェクトバージョンを保護し、新しいバージョン作成や削除マーカーを禁止しない。Complianceはrootからも保持中削除不可。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-236",
+      "category": "object-lock-protected-version-versus-key",
+      "risk": "high",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "Object Lockは特定のオブジェクトバージョンを保護し、新しいバージョン作成や削除マーカーを禁止しない。Complianceはrootからも保持中削除不可。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-087",
+      "category": "scp-is-permission-boundary",
+      "risk": "medium",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "SCPは許可を付与しない。Organizationsのメンバーアカウントの最大権限を制限し、管理アカウントのIAMユーザー／ロールには適用されない。",
+      "sources": [
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-244",
+      "category": "s3-replication-versioning-prerequisite",
+      "risk": "medium",
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "finding": "S3レプリケーションは送信元／先のVersioningが必須。加えて複製権限の設定が必要である旨を明記。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-requirements.html"
+      ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    }
+  ]
+}
