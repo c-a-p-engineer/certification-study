@@ -5,6 +5,7 @@ import {getHapticEnvironment,type HapticMode,type HapticTestResult,type HapticTe
 import type {gameProfile} from './gameProfile';
 import type {Title} from './titleSystem';
 import type {TextScale} from './readability';
+import type {QuizLayout} from './quizLayout';
 import type {VisualPower} from './visualPower';
 import './gameMenu.css';
 
@@ -22,6 +23,7 @@ export type GameMenuProps={
  onVibrationTest:(kind:HapticTestKind)=>HapticTestResult;canVibrate:boolean;
  reduced:boolean;onReduced:(value:boolean)=>void;onSoundTest:()=>void;
  textScale:TextScale;onTextScale:(value:TextScale)=>void;
+ quizLayout:QuizLayout;onQuizLayout:(value:QuizLayout)=>void;
  visualPower:VisualPower;onVisualPower:(value:VisualPower)=>void;
 };
 const domainNames=['セキュリティ','耐障害性','パフォーマンス','コスト最適化'];
@@ -74,7 +76,10 @@ export default function GameMenu(p:GameMenuProps){
     </>}
     {p.tab==='settings'&&<>
      <h4 className="gm-section-title">READING SIZE</h4>
-     <div className="gm-reading-size" role="group" aria-label="文字の大きさ">{([['standard','標準'],['large','大きく'],['extra','特大']] as const).map(([value,label])=><button type="button" key={value} className={p.textScale===value?'active':''} aria-pressed={p.textScale===value} onClick={()=>p.onTextScale(value)}>{label}</button>)}</div>
+     <div className="gm-reading-size" role="group" aria-label="文字の大きさ">{([['compact','最小'],['small','小さめ'],['standard','標準'],['large','大きく'],['extra','特大']] as const).map(([value,label])=><button type="button" key={value} className={p.textScale===value?'active':''} aria-pressed={p.textScale===value} onClick={()=>p.onTextScale(value)}>{label}</button>)}</div>
+     <h4 className="gm-section-title">QUIZ LAYOUT</h4>
+     <div className="gm-reading-size" role="group" aria-label="クイズ画面の表示密度">{([['compact','省スペース'],['detailed','詳細表示']] as const).map(([value,label])=><button type="button" key={value} className={p.quizLayout===value?'active':''} aria-pressed={p.quizLayout===value} onClick={()=>p.onQuizLayout(value)}>{label}</button>)}</div>
+     <p className="gm-caveat">省スペースでは敵HPとコンボを一行に集約。文字サイズとは別に切り替えられます。スマホは初回のみ省スペースにします。</p>
      <h4 className="gm-section-title"><Zap size={18}/> VISUAL POWER</h4>
      <div className="gm-visual-options" role="group" aria-label="演出の強さ">{([['balanced','BALANCED'],['overdrive','OVERDRIVE']] as const).map(([value,label])=><button type="button" key={value} className={p.visualPower===value?'active':''} aria-pressed={p.visualPower===value} onClick={()=>p.onVisualPower(value)} disabled={p.reduced}>{label}</button>)}</div>
      <h4 className="gm-section-title"><Vibrate size={18}/> HAPTIC POWER</h4>
