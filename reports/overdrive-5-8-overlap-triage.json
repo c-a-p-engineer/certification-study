@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-24",
+  "policy": "Do not automatically remove question IDs; similar wording does not prove duplicate teaching objectives",
+  "decisions": [
+    {
+      "pair": [
+        "saa-055",
+        "saa-056"
+      ],
+      "decision": "distinct",
+      "why": "RPO is tolerated data loss; RTO is tolerated recovery time. Keep both."
+    },
+    {
+      "pair": [
+        "saa-002",
+        "saa-010"
+      ],
+      "decision": "distinct",
+      "why": "Identity-based authorization via role vs network routing through gateway endpoint."
+    },
+    {
+      "pair": [
+        "saa-122",
+        "saa-258"
+      ],
+      "decision": "distinct",
+      "why": "S3 data confidentiality vs public web ALB request protection."
+    },
+    {
+      "pair": [
+        "saa-141",
+        "saa-225"
+      ],
+      "decision": "distinct",
+      "why": "Private endpoints for KMS/Secrets Manager vs S3/Secrets Manager require different endpoint types."
+    },
+    {
+      "pair": [
+        "saa-266",
+        "saa-268"
+      ],
+      "decision": "distinct",
+      "why": "Interruptible batch optimization vs steady-state commitment and rightsizing."
+    },
+    {
+      "pair": [
+        "saa-005",
+        "saa-335"
+      ],
+      "decision": "distinct",
+      "why": "Multi-AZ failover vs combined failover and read scaling."
+    },
+    {
+      "pair": [
+        "saa-125",
+        "saa-229"
+      ],
+      "decision": "rewritten",
+      "why": "One covers general caching/transfer optimizations, the other covers versioned web assets and safe update strategy."
+    },
+    {
+      "pair": [
+        "saa-121",
+        "saa-226"
+      ],
+      "decision": "rewritten",
+      "why": "One covers cross-account human access generally; the other is an OU guardrail and API audit scenario."
+    },
+    {
+      "pair": [
+        "saa-123",
+        "saa-260"
+      ],
+      "decision": "rewritten",
+      "why": "A generalized high-availability components question vs live session persistence during AZ outage."
+    },
+    {
+      "pair": [
+        "saa-144",
+        "saa-230"
+      ],
+      "decision": "rewritten",
+      "why": "Key skew improvement vs distinct read and write hotspots under known skew."
+    },
+    {
+      "pair": [
+        "saa-218",
+        "saa-230"
+      ],
+      "decision": "rewritten",
+      "why": "Single best key distribution fix vs multiple read/write design options."
+    },
+    {
+      "pair": [
+        "saa-025",
+        "saa-101"
+      ],
+      "decision": "previously_rewritten",
+      "why": "Data lake service selection vs semi-structured application log analysis."
+    },
+    {
+      "pair": [
+        "saa-064",
+        "saa-107"
+      ],
+      "decision": "previously_rewritten",
+      "why": "Generic EC2 stopping vs EBS root persistence and on-demand compute billing."
+    },
+    {
+      "pair": [
+        "saa-125",
+        "saa-263"
+      ],
+      "decision": "previously_rewritten",
+      "why": "Basic cache hit optimization vs query parameter forwarding separated from cache key."
+    }
+  ],
+  "reviewStatus": "AI-assisted triage; maintain distinct concepts pending editorial review",
+  "newSecurityArchitectureScenarios": 6
+}
