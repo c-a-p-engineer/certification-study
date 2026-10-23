@@ -49,7 +49,7 @@ export function rememberQuestionSelection(ids:readonly string[]):void{
  try{
   if(typeof localStorage==='undefined')return;
   const list=readRecentQuestions();
-  const unique=[...new Set([...list,...ids])];
+  const selected=[...new Set(ids)];const used=new Set(selected);const unique=[...list.filter(id=>!used.has(id)),...selected];
   localStorage.setItem(RECENT_QUESTIONS_KEY,JSON.stringify(unique.slice(-120)));
  }catch{/* private mode */}
 }
