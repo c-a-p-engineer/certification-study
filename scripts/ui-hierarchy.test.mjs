@@ -63,3 +63,11 @@ test('learning timeline sits on dashboard and records answers in the existing pr
  assert.ok(source.includes('const rank=profile.rank'));
  assert.equal(source.includes('rankFor('),false);
 });
+
+test('scenario-only challenge is discoverable and survives practice resume',()=>{
+ assert.ok(source.includes('CASE FILES · {questions.filter(isScenarioQuestion).length} SCENARIOS'));
+ assert.ok(source.includes('start(false,false,false,false,true)'));
+ assert.ok(source.includes('setCaseMode(!!saved.scenario)'));
+ assert.ok(source.includes('scenario:caseMode'));
+ assert.ok(source.includes('start(review,examMode,studyMode===\'due\',bossMode,caseMode)'));
+});
