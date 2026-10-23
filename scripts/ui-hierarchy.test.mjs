@@ -71,3 +71,20 @@ test('scenario-only challenge is discoverable and survives practice resume',()=>
  assert.ok(source.includes('scenario:caseMode'));
  assert.ok(source.includes('start(review,examMode,studyMode===\'due\',bossMode,caseMode)'));
 });
+
+test('gamified progress and title unlocks are discoverable without extra overlays',()=>{
+ assert.ok(source.includes('className="hero-level-hud"'));
+ assert.ok(source.includes('aria-label="次のレベルまでの進行度"'));
+ assert.ok(source.includes("onClick={()=>showMenu('titles')}"));
+ assert.ok(source.includes('className="fever-milestones"'));
+ assert.ok(source.includes('className="clear-judgement"'));
+ assert.ok(source.includes('practiceGrade.letter'));
+ assert.ok(source.includes('className="title-drop"'));
+});
+test('timed exam holds new badges and rank promotions until the result screen',()=>{
+ assert.ok(source.includes("if(examMode&&mode==='quiz'){setDeferredRankNotice(current)}"));
+ assert.ok(source.includes("if(examMode&&mode==='result'&&deferredRankNotice)"));
+ assert.ok(source.includes("if(!examMode)setNewTitleIds([])"));
+ assert.ok(source.includes("examMode&&newTitleIds.length>0&&"));
+ assert.ok(!source.includes('selected!==null&&examMode&&<div className="explanation"'));
+});
