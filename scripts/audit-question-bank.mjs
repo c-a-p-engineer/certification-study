@@ -40,7 +40,7 @@ const report={
  referenceProblems,suspiciousExplanations,unresolvedReviews,
  targetedCrossChecks:{checkedOn:ledger.checkedOn,count:ledger.entries.length,ids:[...spotChecked].sort(),
   limitation:'Targeted cross-check of selected AWS behavior, not independent approval of the entire question.'},
- caveat:'Structural/reference presence checks do not independently verify AWS factual accuracy. A human editorial review of every question is necessary; every one of 340 questions needs claim-level review before promising exam fidelity. Candidates may be false positives. Never automatically delete or relabel question IDs.'
+ caveat:'Structural/reference presence checks do not independently verify AWS factual accuracy. A human editorial review of every question is necessary; every question in the bank needs claim-level review before promising exam fidelity. Candidates may be false positives. Never automatically delete or relabel question IDs.'
 };
 mkdirSync('reports',{recursive:true});
 writeFileSync('reports/question-audit.json',JSON.stringify(report,null,2)+'\n');
