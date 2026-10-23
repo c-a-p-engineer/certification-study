@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BOSSES,bossOutcome,bossFor,isBossDomain,normalizeBossRecords,recordBossVictory} from '../src/bossCampaign.ts';
+import {selectVaried} from '../src/questionSelection.ts';
+import {loadQuestions} from './question-source.mjs';
 const D=BOSSES[0].domain;
 test('four unique domain bosses and clear conditions',()=>{
  assert.equal(BOSSES.length,4);
@@ -48,4 +50,16 @@ test('all domains retain independent medals, legacy progress need not contain re
  for(const boss of BOSSES){const result=recordBossVictory(records,boss.domain,9,10,123);records=result.records;assert.equal(result.award,400)}
  assert.equal(Object.keys(records).length,4);
  assert.equal(recordBossVictory(records,D,9,10).award,0);
+});
+
+test('each live boss can draw ten different challenging questions from its own AWS domain',()=>{
+ const questions=loadQuestions();
+ for(const boss of BOSSES){
+  const candidates=questions.filter(q=>q.domain===boss.domain&&q.difficulty===3);
+  assert.ok(candidates.length>=10,boss.domain);
+  const picked=selectVaried(candidates,10,new Set(),new Set(),()=>0.5);
+  assert.equal(picked.length,10);
+  assert.equal(new Set(picked.map(q=>q.id)).size,10);
+  assert.ok(picked.every(q=>q.domain===boss.domain&&q.difficulty===3));
+ }
 });
