@@ -12,6 +12,9 @@ export type MissionSave={
  combo:number;
  weak:boolean;
  boss:boolean;
+ /** Optional v1 extensions; missing fields mean a legacy mission. */
+ bossDomain?:string;
+ focusTopic?:string;
  scenario?:boolean;
  due:boolean;
  showChoices:boolean;
@@ -27,7 +30,7 @@ export function isMissionSave(value:unknown):value is MissionSave{
  if(!Array.isArray(x.multiChoices)||!Array.isArray(x.choiceOrder)||!x.multiChoices.every(Number.isInteger)||!x.choiceOrder.every(Number.isInteger))return false;
  if(!x.answers||typeof x.answers!=='object'||Array.isArray(x.answers))return false;
  if(!x.session||!Number.isInteger(x.session.correct)||!Number.isInteger(x.session.total))return false;
- if(!Number.isInteger(x.combo)||typeof x.weak!=='boolean'||typeof x.boss!=='boolean'||(x.scenario!==undefined&&typeof x.scenario!=='boolean')||typeof x.due!=='boolean'||typeof x.showChoices!=='boolean'||typeof x.reflection!=='string'||!Number.isFinite(x.savedAt))return false;
+ if(!Number.isInteger(x.combo)||typeof x.weak!=='boolean'||typeof x.boss!=='boolean'||(x.scenario!==undefined&&typeof x.scenario!=='boolean')||(x.bossDomain!==undefined&&(typeof x.bossDomain!=='string'||x.bossDomain.length>40))||(x.focusTopic!==undefined&&(typeof x.focusTopic!=='string'||x.focusTopic.length>60))||typeof x.due!=='boolean'||typeof x.showChoices!=='boolean'||typeof x.reflection!=='string'||!Number.isFinite(x.savedAt))return false;
  return true;
 }
 export function readMissionSave():MissionSave|null{

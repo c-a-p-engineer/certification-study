@@ -42,3 +42,15 @@ test('case-only mission resumes without breaking old v1 snapshots',()=>{
  assert.equal(isMissionSave(base()),true);
  assert.equal(isMissionSave({...base(),scenario:'on'}),false);
 });
+
+test('OVERDRIVE 4.0 boss and focused training resume via optional fields with v1 compatibility',()=>{
+ const prior=base();
+ const boss={...prior,boss:true,bossDomain:'セキュリティ'};
+ const focus={...prior,focusTopic:'VPC / ネットワーク'};
+ assert.equal(isMissionSave(prior),true);
+ assert.equal(isMissionSave(boss),true);
+ assert.equal(isMissionSave(focus),true);
+ assert.equal(restoredMissionIsValid(boss,['A','B','C','D']),true);
+ assert.equal(isMissionSave({...boss,bossDomain:{bad:true}}),false);
+ assert.equal(isMissionSave({...focus,focusTopic:123}),false);
+});

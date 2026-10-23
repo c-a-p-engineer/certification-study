@@ -1,0 +1,75 @@
+/* OVERDRIVE 4.0 — responsive, accessible gameplay layers. Cosmetic rewards never obscure questions. */
+.app .od4-boss-board,.app .od4-tree,.app .od4-vault{margin:26px 0;padding:24px;border:1px solid #6384ae;border-radius:16px;color:#f3f8ff;background:linear-gradient(145deg,#17283f,#121a2f 65%,#24203e);box-shadow:0 16px 38px #030c1a35}
+.app .od4-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}
+.app .od4-kicker{display:flex;align-items:center;gap:8px;color:#a9f7f8;font-size:12px;letter-spacing:.14em;font-weight:900}
+.app .od4-heading h2{color:#fff;font:900 clamp(24px,3vw,34px) 'Barlow Condensed',system-ui,sans-serif;letter-spacing:.025em;margin:6px 0 0;line-height:1.25}
+.app .od4-count{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:900;color:#ffe4a0;white-space:nowrap}
+.app .od4-note{margin:17px 0 0;color:#cbddf2;font-size:12px;line-height:1.75}
+.app .od4-boss-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.app .od4-boss-card{display:flex;flex-direction:column;gap:10px;min-width:0;padding:16px 13px 13px;border:1px solid #506b90;border-radius:13px;background:linear-gradient(155deg,#253951,#1d2942);position:relative;overflow:hidden}
+.app .od4-boss-card::before{position:absolute;content:'';height:3px;top:0;left:0;right:0;background:linear-gradient(90deg,#53d7ed,#df9fff)}
+.app .od4-boss-1::before{background:linear-gradient(90deg,#ffad87,#ffe195)}.app .od4-boss-2::before{background:linear-gradient(90deg,#7ae6fd,#a6a6ff)}.app .od4-boss-3::before{background:linear-gradient(90deg,#e5b2ff,#ffa9ba)}
+.app .od4-cleared{border-color:#c7a865;background:linear-gradient(155deg,#343b4d,#2a293c)}
+.app .od4-boss-crest{display:flex;align-items:center;justify-content:center;position:relative;min-height:85px;border-radius:10px;background:radial-gradient(circle at 50% 40%,#394b78,#182942 68%);border:1px solid #596a92;color:#e5e8ff}
+.app .od4-boss-crest>span{position:absolute;top:9px;right:11px;font-size:18px;color:#ffda9b}
+.app .od4-boss-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11px;color:#b5d2eb;font-weight:900}
+.app .od4-boss-meta>span:last-child{color:#ffebad}
+.app .od4-boss-card h3{font:900 clamp(17px,2.1vw,22px) 'Barlow Condensed',system-ui,sans-serif;line-height:1.2;letter-spacing:.02em;color:#fff;margin:0;min-height:51px;overflow-wrap:anywhere}
+.app .od4-boss-card p{margin:0;font-size:13px;line-height:1.7;color:#e2eefa;min-height:43px}
+.app .od4-boss-intel{display:flex;align-items:center;gap:7px;font-size:12px;color:#c5d9ee;line-height:1.5;min-height:40px}
+.app .od4-boss-medal{display:flex;align-items:center;gap:6px;color:#ffdb8d;font-weight:900;font-size:12px;min-height:20px}
+.app .od4-launch{display:flex;align-items:center;justify-content:center;gap:8px;min-height:49px;margin-top:auto;background:#345c77;border:1px solid #90ddec;color:#fff;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer}
+.app .od4-cleared .od4-launch{background:#654f39;border-color:#ffc987}.app .od4-launch:hover{filter:brightness(1.14)}
+.app .od4-tree-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.app .od4-skill-node{position:relative;min-width:0;display:flex;flex-direction:column;gap:9px;padding:17px;border:1px solid #506a88;border-radius:14px;background:linear-gradient(155deg,#1e314c,#1b2440)}
+.app .od4-skill-node::after{content:'';position:absolute;top:50px;right:-15px;width:15px;height:2px;background:#50738c}
+.app .od4-skill-node:nth-child(3n)::after{display:none}
+.app .od4-tier-2{border-color:#70c9c2;background:linear-gradient(155deg,#1e3b4c,#242b44)}
+.app .od4-tier-3{border-color:#e4c279;background:linear-gradient(155deg,#353d49,#28283e);box-shadow:inset 0 0 0 1px #e4c27920}
+.app .od4-node-top{display:flex;align-items:center;justify-content:space-between;gap:7px;color:#bad4ec;font-size:11px;letter-spacing:.08em;font-weight:800}
+.app .od4-node-top b{color:#fff0bd;font-size:13px}
+.app .od4-node-orb{display:grid;place-items:center;height:62px;width:62px;border-radius:50%;border:2px solid #536e98;background:radial-gradient(circle,#263a5e,#14243d);color:#8198bb}
+.app .od4-tier-1 .od4-node-orb{color:#a0dcff;border-color:#6babe1;box-shadow:0 0 15px #85cbf52a}
+.app .od4-tier-2 .od4-node-orb{color:#8affed;border-color:#82dfc8;box-shadow:0 0 22px #78ffe23b}
+.app .od4-tier-3 .od4-node-orb{color:#ffe9a3;border-color:#ebcb76;box-shadow:0 0 27px #e8bf6a55}
+.app .od4-skill-node h3{color:#fff;font-size:clamp(16px,1.8vw,19px);line-height:1.5;margin:4px 0 0;overflow-wrap:anywhere}
+.app .od4-stage-name{font-size:12px;color:#94dfe7;font-weight:900;letter-spacing:.06em}.app .od4-stage-name span{margin-left:8px;color:#d9e7f5;letter-spacing:0}
+.app .od4-node-track{height:11px;background:#0b1a30;border-radius:99px;overflow:hidden;border:1px solid #49617c}
+.app .od4-node-track>div{height:100%;background:linear-gradient(90deg,#5fbbdf,#a0f3d0);border-radius:inherit;transition:width .25s ease}
+.app .od4-tier-3 .od4-node-track>div{background:linear-gradient(90deg,#91e2b8,#ffe7a1)}
+.app .od4-node-numbers{display:flex;flex-wrap:wrap;gap:7px 11px;color:#e3effa;font-size:12px}
+.app .od4-node-next{margin:0;font-size:12px;color:#b9d4e9;line-height:1.6;min-height:39px}
+.app .od4-skill-node button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;width:100%;border:1px solid #8bd9e5;background:#2b5066;color:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-weight:900;margin-top:auto}
+.app .od4-skill-node button:disabled{opacity:.6;cursor:not-allowed}
+.app .od4-relic-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.app .od4-relic{min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:8px;border:1px solid #536e94;border-radius:12px;padding:16px 13px;background:#1a2b44}
+.app .od4-relic.od4-owned{border-color:#c49d6b;background:linear-gradient(160deg,#34364b,#202942)}
+.app .od4-relic.od4-mythic.od4-owned{border-color:#daa8fc;box-shadow:inset 0 0 21px #d9a3ff24}
+.app .od4-relic-art{display:grid;place-items:center;width:65px;height:65px;border-radius:14px;background:#243650;color:#8ba9d0;border:1px solid #667e9c}
+.app .od4-owned .od4-relic-art{color:#ffe1a6;border-color:#d2aa70;background:linear-gradient(145deg,#6b513b,#3e3446)}
+.app .od4-rarity{color:#aabedb;letter-spacing:.14em;font-size:11px;font-weight:900}.app .od4-owned .od4-rarity{color:#ffdc97}
+.app .od4-relic h3{color:#fff;font-size:15px;line-height:1.4;margin:0;overflow-wrap:anywhere}
+.app .od4-relic p{margin:0;font-size:12px;color:#d5e2f1;line-height:1.65;min-height:62px}
+.app .od4-relic button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;border:1px solid #acdbe6;border-radius:8px;background:#2f506a;color:white;font-size:13px;font-weight:900;cursor:pointer;margin-top:auto}
+.app .od4-relic button:disabled{opacity:.65;cursor:default}
+.app .od4-battle-hud{margin:16px 0;padding:15px 17px;border:1px solid #b2799f;border-radius:13px;background:linear-gradient(115deg,#35233f,#20243e);box-shadow:0 0 26px #ed72af1a}
+.app .od4-battle-broken{border-color:#f1d087;background:linear-gradient(115deg,#3c3644,#27373d)}
+.app .od4-battle-identity{display:flex;align-items:center;gap:12px}.app .od4-battle-avatar{display:grid;place-items:center;flex:none;width:50px;height:50px;border-radius:12px;background:#74485c;color:#fff2cf}
+.app .od4-battle-identity>div:nth-child(2){min-width:0;flex:1}.app .od4-battle-identity>div:nth-child(2)>span{display:block;font-size:11px;letter-spacing:.08em;color:#fad4e1;font-weight:900}
+.app .od4-battle-identity strong{display:block;color:#fff;font-size:clamp(17px,2.2vw,23px);line-height:1.4}
+.app .od4-battle-phase{font-size:11px;letter-spacing:.06em;white-space:nowrap;font-weight:900;color:#ffe0a0}
+.app .od4-battle-health{margin:13px 0 9px}.app .od4-battle-health-title{display:flex;justify-content:space-between;gap:9px;color:#f9e1df;font-size:12px;font-weight:900}
+.app .od4-battle-health-title>span{display:flex;gap:6px;align-items:center}.app .od4-battle-health-track{height:14px;margin-top:6px;background:#112137;border-radius:99px;border:1px solid #907a8f;overflow:hidden}
+.app .od4-battle-health-track>div{height:100%;background:linear-gradient(90deg,#ffb98e,#f16d9f);transition:width .24s ease}
+.app .od4-battle-help{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px;color:#e8d8e6}.app .od4-battle-help>span:last-child{display:flex;align-items:center;gap:5px;color:#ffe4a1;font-weight:900}
+.app .od4-result-report{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin:16px auto;padding:18px;border:1px solid #e5c37c;border-radius:12px;background:linear-gradient(115deg,#373c46,#2c3a40);color:#ffe8ab}
+.app .od4-result-report>div{display:flex;flex-direction:column;gap:5px}.app .od4-result-report strong{font-size:clamp(20px,3vw,28px)}.app .od4-result-report span{font-size:14px;color:#f4f6ff}
+.app .od4-result-report.od4-defeat{border-color:#ce909c;color:#ffe0e4}
+.app .od4-relic-drop{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;border:1px solid #b8cbaa;padding:14px;margin:14px 0;border-radius:10px;background:#253d3d;color:#dcffdf;font-weight:900;font-size:14px}
+.app .od4-equipped-relic{display:inline-flex;align-items:center;gap:7px;max-width:100%;margin:8px 0 0;padding:7px 11px;border:1px solid #f2c389;border-radius:99px;background:#2e3244;color:#ffe1a3;font-weight:900;font-size:12px}
+.app .od4-boss-board button:focus-visible,.app .od4-tree button:focus-visible,.app .od4-vault button:focus-visible{outline:3px solid #ffedb3;outline-offset:3px}
+@media(max-width:1020px){.app .od4-boss-grid,.app .od4-relic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app .od4-tree-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app .od4-skill-node::after{display:none}}
+@media(max-width:580px){.app .od4-boss-board,.app .od4-tree,.app .od4-vault{padding:17px 12px;margin:21px 0}.app .od4-heading{align-items:flex-start}.app .od4-count{font-size:12px}.app .od4-heading h2{font-size:25px}.app .od4-boss-grid,.app .od4-tree-grid,.app .od4-relic-grid{gap:10px}.app .od4-boss-card{padding:13px 10px}.app .od4-boss-card h3{font-size:18px;min-height:43px}.app .od4-boss-crest{min-height:65px}.app .od4-boss-card p{font-size:12px}.app .od4-boss-intel{font-size:11px}.app .od4-skill-node{padding:13px 10px}.app .od4-node-top{font-size:10px}.app .od4-node-orb{height:47px;width:47px}.app .od4-skill-node h3{font-size:15px}.app .od4-relic{padding:13px 9px}.app .od4-relic h3{font-size:13px}.app .od4-relic p{font-size:12px;min-height:72px}.app .od4-battle-phase{white-space:normal;text-align:right;font-size:10px}.app .od4-battle-identity strong{font-size:16px}.app .od4-battle-hud{padding:12px}}
+@media(max-width:365px){.app .od4-boss-grid,.app .od4-tree-grid,.app .od4-relic-grid{grid-template-columns:1fr}.app .od4-heading{flex-wrap:wrap}.app .od4-boss-card h3,.app .od4-boss-card p,.app .od4-relic p{min-height:0}}
+@media(prefers-reduced-motion:reduce){.app .od4-node-track>div,.app .od4-battle-health-track>div{transition:none}}
+.app.reduced .od4-node-track>div,.app.reduced .od4-battle-health-track>div{transition:none}
