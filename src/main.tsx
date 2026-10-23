@@ -9,7 +9,7 @@ import {findStudyTerms} from './termGuide';
 import {readMissionSave,writeMissionSave,clearMissionSave,restoredMissionIsValid,type MissionSave} from './missionSave';
 import {TOPICS,topicFor,masteryByTopic} from './mastery';
 import {AudioDirector,readAudioSettings,saveAudioSettings,type AudioSettings,type MusicScene,type SoundEffect} from './audioDirector';
-import {gameProfile} from './gameProfile';
+import {gameProfile,RANKS} from './gameProfile';
 import ActivityTimeline from './ActivityTimeline';
 import {localDateKey,migrateActivity,recordDailyAnswer,type ActivityHistory} from './studyHistory';
 import GameMenu from './GameMenu';
@@ -110,7 +110,7 @@ function App(){
  useEffect(()=>()=>{audioRef.current?.dispose();audioRef.current=null},[]);
  useEffect(()=>{if(!sceneEffect)return;const id=window.setTimeout(()=>setSceneEffect(null),1450);return()=>window.clearTimeout(id)},[sceneEffect]);
  useEffect(()=>{localStorage.setItem(key,JSON.stringify(progress))},[progress]);
- useEffect(()=>{const current=profile.rank;if(previousRank.current!==current){const previous=previousRank.current;previousRank.current=current;if(profile.rankIndex>0&&current!==previous){setRankNotice(current);audioRef.current?.play('rank');triggerHaptic('rank',hapticMode,reduced,false);pulse('rank')}}},[profile.rank]);
+ useEffect(()=>{const current=profile.rank;if(previousRank.current!==current){const previousIndex=RANKS.findIndex(item=>item.name===previousRank.current);previousRank.current=current;if(profile.rankIndex>previousIndex){setRankNotice(current);audioRef.current?.play('rank');triggerHaptic('rank',hapticMode,reduced,false);pulse('rank')}}},[profile.rank]);
  useEffect(()=>{if(!examMode||mode!=='quiz')return;const tick=()=>setTimeLeft(Math.max(0,Math.ceil((examDeadline-Date.now())/1000)));tick();const id=window.setInterval(tick,1000);return()=>window.clearInterval(id)},[examMode,mode,examDeadline]);
  useEffect(()=>{if(!examMode||mode!=='quiz')return;const save:ExamSave={ids:pool.map(q=>q.id),index,selected,multiChoices,choiceOrder,answers:sessionAnswers,session,deadline:examDeadline};localStorage.setItem(examSaveKey,JSON.stringify(save));setExamSave(save)},[examMode,mode,pool,index,selected,multiChoices,choiceOrder,sessionAnswers,session,examDeadline]);
  useEffect(()=>{if(mode==='result'&&examMode){localStorage.removeItem(examSaveKey);setExamSave(null)}},[mode,examMode]);
