@@ -19,7 +19,10 @@
     "saa-068",
     "saa-236",
     "saa-087",
-    "saa-244"
+    "saa-244",
+    "saa-263",
+    "saa-101",
+    "saa-107"
   ],
   "entries": [
     {
@@ -236,6 +239,46 @@
       "sources": [
         "https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-requirements.html"
       ],
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-263",
+      "category": "cloudfront-origin-request-policy",
+      "risk": "medium",
+      "finding": "CloudFrontはキャッシュキーとオリジン転送を別ポリシーで制御可能。単なるTTL/圧縮クイズをログ分析の要件付き判断問題へ変更。",
+      "sources": [
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html",
+        "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html"
+      ],
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-101",
+      "category": "athena-vs-cloudtrail-and-redshift",
+      "risk": "medium",
+      "finding": "S3にある任意アプリログへのサーバーレス標準SQLクエリはAthenaが適する。単なるサービス名暗記から運用設計問題に変更。",
+      "sources": [
+        "https://docs.aws.amazon.com/athena/latest/ug/"
+      ],
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
+      "independentReview": "not_complete",
+      "answerKeyChanged": false
+    },
+    {
+      "id": "saa-107",
+      "category": "ec2-stop-root-ebs-versus-instance-store",
+      "risk": "medium",
+      "finding": "EBSルートを持つEC2の停止中は計算料金が止まるがEBS料金は残り、インスタンスストアは永続性を持たない。",
+      "sources": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Stop_Start.html"
+      ],
+      "checkedOn": "2026-10-24",
+      "evidenceLevel": "targeted_official_document_cross_check",
       "independentReview": "not_complete",
       "answerKeyChanged": false
     }
