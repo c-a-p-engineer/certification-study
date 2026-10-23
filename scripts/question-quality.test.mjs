@@ -2,11 +2,11 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {loadQuestions} from './question-source.mjs';
 import {readFileSync} from 'node:fs';
 const bank=loadQuestions(),added=bank.filter(q=>/^saa-3(3[3-9]|40)$/.test(q.id));
-test('340 distinct SAA questions and 10 realistic scenarios per domain',()=>{
- assert.equal(bank.length,340);assert.equal(added.length,8);
+test('348 distinct SAA questions and 48 realistic scenarios across domains',()=>{
+ assert.equal(bank.length,348);assert.equal(added.length,8);
  for(const domain of ['セキュリティ','耐障害性','パフォーマンス','コスト最適化']){
   const scenarios=bank.filter(q=>q.domain===domain&&q.tags?.includes('複合設計判断'));
-  assert.equal(scenarios.length,10,domain);
+  assert.equal(scenarios.length,({'セキュリティ':16,'耐障害性':11,'パフォーマンス':11,'コスト最適化':10})[domain],domain);
   assert.equal(added.filter(q=>q.domain===domain).length,2,domain);
  }
 });
