@@ -140,3 +140,16 @@
  .app.reading-extra .explanation .xp-award span{margin-left:0;width:100%}
  .app.reading-extra .fever-label{flex-wrap:wrap;line-height:1.6}
 }
+
+/* Home-level anticipation: a slim track and direct route to earned nicknames. */
+.app .player-title-chip{cursor:pointer;min-height:43px;text-align:left;max-width:100%}
+.app .player-title-chip .player-title-arrow{transform:rotate(-90deg);color:#b6f9ff;flex:none;margin-left:2px}
+.app .player-title-chip:focus-visible{outline:3px solid #ffebb5;outline-offset:3px}
+.app .hero-level-hud{display:flex;align-items:center;gap:11px;width:min(360px,100%);margin:13px 0 2px;color:#c9d8f5;font-weight:900;font-size:13px}
+.app .hero-level-hud>span:first-child{color:#fff0ba;white-space:nowrap}
+.app .hero-level-hud>span:last-child{min-width:37px;text-align:right;font-variant-numeric:tabular-nums}
+.app .hero-level-bar{flex:1;min-width:0;height:10px;border:1px solid #7d9cbd;border-radius:12px;background:#122038;overflow:hidden}
+.app .hero-level-bar>div{height:100%;background:linear-gradient(90deg,#71f4e4,#baa2ff,#ffe3a1);border-radius:12px;transition:width .35s ease-out}
+@media(max-width:700px){.app .hero-level-hud{margin:11px 0 3px}.app .player-title-chip{min-height:43px}}
+@media(prefers-reduced-motion:reduce){.app .hero-level-bar>div{transition:none}}
+.app.reduced .hero-level-bar>div{transition:none}
