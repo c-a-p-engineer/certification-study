@@ -4,15 +4,15 @@ export type HapticEvent='select'|'correct'|'wrong'|'combo'|'boss-hit'|'boss-win'
 export const HAPTIC_KEY='cert-overdrive-haptics-v1';
 export const DEFAULT_HAPTIC_MODE:HapticMode='normal';
 export const HAPTIC_PATTERNS:Record<HapticEvent,readonly number[]>={
- select:[12],
- correct:[28,32,42],
- wrong:[105,65,110],
- combo:[25,30,35,30,70],
- 'boss-hit':[42,20,85],
- 'boss-win':[70,45,80,45,150],
- rank:[36,30,36,30,125],
- reward:[18,25,32,25,70],
- start:[35,35,45]
+ select:[45],
+ correct:[75,50,85],
+ wrong:[145,65,145],
+ combo:[55,35,65,40,105],
+ 'boss-hit':[80,35,115],
+ 'boss-win':[105,45,115,45,165],
+ rank:[70,45,80,45,150],
+ reward:[55,35,75,35,110],
+ start:[65,45,80]
 };
 export function isHapticMode(x:unknown):x is HapticMode{return x==='off'||x==='normal'||x==='overdrive'}
 export function readHapticMode():HapticMode{
@@ -32,6 +32,7 @@ export function triggerHaptic(event:HapticEvent,mode:HapticMode,reduced=false,ex
 }
 
 /** A browser's true return value only means the request was accepted, not that the motor moved. */
+export type HapticTestKind='single'|'pattern';
 export type HapticTestResult={
  status:'accepted'|'rejected'|'unsupported'|'reduced'|'disabled'|'error';
  message:string;
@@ -45,7 +46,7 @@ export function getHapticEnvironment(){
  return {apiAvailable,systemReducedMotion,hasGesture,secureContext};
 }
 /** Call synchronously inside the user's test-button click handler (not inside a promise). */
-export function testHapticDevice(mode:HapticMode,reduced=false):HapticTestResult{
+export function testHapticDevice(mode:HapticMode,reduced=false,kind:HapticTestKind='pattern'):HapticTestResult{
  const environment=getHapticEnvironment();
  const hasGesture=environment.hasGesture;
  if(mode==='off')return {status:'disabled',message:'振動設定がOFFです。NORMALまたはOVERDRIVEを選択してください。',hasGesture};
@@ -53,7 +54,7 @@ export function testHapticDevice(mode:HapticMode,reduced=false):HapticTestResult
  if(!environment.apiAvailable)return {status:'unsupported',message:'このブラウザではWeb振動APIが利用できません。',hasGesture};
  try{
   // Longer than ordinary tap haptics so it can be felt even with weak actuator response.
-  const accepted=navigator.vibrate([180,80,180]);
+  const accepted=navigator.vibrate(kind==='single'?250:[220,100,220]);
   return accepted
    ?{status:'accepted',message:'ブラウザは振動要求を受理しました。実際に振動したかは端末で確認してください。',hasGesture}
    :{status:'rejected',message:'ブラウザが振動要求を拒否しました。ページを直接タップしてから再試行してください。',hasGesture};
