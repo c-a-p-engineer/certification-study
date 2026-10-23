@@ -3,7 +3,16 @@ import {loadQuestions} from './question-source.mjs';
 import {coverageVsGuide,qualitySignals,nearDuplicateCandidates,SIMILARITY_CANDIDATE_THRESHOLD,SIMILARITY_STRONG_THRESHOLD,EXAM_WEIGHTS} from './quality-metrics.mjs';
 const bank=loadQuestions();
 const ledger=JSON.parse(readFileSync('reports/editorial-evidence-2026-10-24.json','utf8'));
+const reviewerBatch=JSON.parse(readFileSync('reports/overdrive-5-7-review-batch.json','utf8'));
+const overlapTriage=JSON.parse(readFileSync('reports/overdrive-5-8-overlap-triage.json','utf8'));
 const indexed=new Map(bank.map(q=>[q.id,q]));
+if(reviewerBatch.items.length!==40||new Set(reviewerBatch.items.map(x=>x.id)).size!==40)throw new Error('Editorial batch must contain 40 unique question IDs');
+for(const row of reviewerBatch.items){
+ const q=indexed.get(row.id);
+ if(!q||!q.distractorReasons||q.distractorReasons.length!==q.choices.length||row.reviewStatus!=='option_rationales_drafted;independent_human_signoff_pending')throw new Error('Incomplete batch evidence '+row.id);
+}
+if(!Array.isArray(overlapTriage.decisions)||overlapTriage.decisions.length<12)throw new Error('Missing manual overlap triage');
+
 if(!Array.isArray(ledger.entries)||ledger.entries.length!==new Set(ledger.entries.map(x=>x.id)).size)throw new Error('Invalid or duplicate evidence records');
 for(const x of ledger.entries){
  if(!indexed.has(x.id)||x.evidenceLevel!=='targeted_official_document_cross_check'||x.independentReview!=='not_complete')throw new Error('Invalid audit evidence '+x.id);
@@ -32,6 +41,8 @@ const referenceProblems=bank.filter(q=>{try{const u=new URL(q.reference);return 
 const suspiciousExplanations=bank.filter(q=>/(?:必ず|絶対に|すべての場合|常に)/.test(q.explanation||'')&&!q.reviewedAt).map(q=>({id:q.id,reason:'absolute wording; verify exceptions in linked AWS docs'}));
 const unresolvedReviews=bank.filter(q=>!q.reviewedAt).map(q=>({id:q.id,reference:q.reference,domain:q.domain,status:'awaiting independent factual review'}));
 const report={
+ 5_7Batch:{count:reviewerBatch.items.length,independentHumanSignoff:'pending'},
+ 5_8Content:{total:bank.length,richScenarios:bank.filter(q=>q.tags?.includes('複合設計判断')).length,overlapTriageDecisions:overlapTriage.decisions.length},
  generatedAt:new Date().toISOString(),total:bank.length,reviewed:bank.filter(q=>!!q.reviewedAt).length,
  reviewDateOnlyCaveat:'reviewedAt is a recorded editorial date, not proof of an independent claim-by-claim review.',
  nearDuplicateThreshold:SIMILARITY_STRONG_THRESHOLD,nearDuplicateCandidates:suspects,
@@ -59,6 +70,8 @@ const rows=[
  '| Editorial date present (not independently verified) | '+report.reviewed+' |',
  '| Missing editorial date | '+unresolvedReviews.length+' |',
  '| Targeted AWS-document cross-checks | '+ledger.entries.length+' |',
+ '| Additional 5.7 AI-assisted option reviews (human signoff pending) | '+reviewerBatch.items.length+' |',
+ '| 5.8 original scenario questions (total) | '+bank.filter(q=>q.tags?.includes('複合設計判断')).length+' |',
  '| Structural/editorial action queue | '+issues.length+' |',
  '| Fuzzy similarity candidates ≥ '+SIMILARITY_CANDIDATE_THRESHOLD+' | '+candidates.length+' |',
  '| High-similarity pairs ≥ '+SIMILARITY_STRONG_THRESHOLD+' | '+suspects.length+' |',
@@ -96,4 +109,4 @@ const rows=[
  '- E2E/browser automation remains deferred per project request.'
 ];
 writeFileSync('reports/question-audit.md',rows.join('\n')+'\n');
-console.log(JSON.stringify({total:bank.length,reviewed:report.reviewed,missingReview:unresolvedReviews.length,nearDuplicateCandidates:suspects.length,similarityCandidates:candidates.length,editorialQueue:issues.length,crossChecked:ledger.entries.length}));
+console.log(JSON.stringify({total:bank.length,reviewed:report.reviewed,missingReview:unresolvedReviews.length,nearDuplicateCandidates:suspects.length,similarityCandidates:candidates.length,editorialQueue:issues.length,crossChecked:ledger.entries.length,optionAuditDrafts:reviewerBatch.items.length,scenarios:report['5_8Content'].richScenarios}));
