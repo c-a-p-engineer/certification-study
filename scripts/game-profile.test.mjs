@@ -20,17 +20,19 @@ test('new player starts as ROOKIE and no made-up pass probability',()=>{
 test('a few thousand XP is no longer LEGEND; rank requires practice and separate days',()=>{
  const p=gameProfile(progress(5000,28,1),300,NOW);
  assert.equal(p.rank,'BRONZE');
- assert.equal(p.nextRank,'SILVER');
+ assert.equal(p.nextRank,'SEEKER');
  assert.equal(p.xpToNextRank,0);
- assert.equal(p.answersToNextRank,2);
- assert.equal(p.daysToNextRank,2);
+ assert.equal(p.answersToNextRank,0);
+ assert.equal(p.daysToNextRank,1);
  assert.equal(p.activeDays,1);
  assert.equal(p.currentStreak,1);
 });
 
 test('rank milestones are ordered, none can be skipped by XP alone',()=>{
- assert.deepEqual(RANKS.map(x=>x.name),['ROOKIE','BRONZE','SILVER','GOLD','PLATINUM','DIAMOND','LEGEND']);
- assert.deepEqual(RANKS.map(x=>x.minXP),[0,1000,4500,12000,26000,55000,120000]);
+ assert.deepEqual(RANKS.filter(x=>['ROOKIE','BRONZE','SILVER','GOLD','PLATINUM','DIAMOND','LEGEND'].includes(x.name)).map(x=>x.name),['ROOKIE','BRONZE','SILVER','GOLD','PLATINUM','DIAMOND','LEGEND']);
+ assert.ok(RANKS.length>=18);
+ assert.ok(RANKS.every(x=>x.subtitle.length>=4));
+ assert.deepEqual(RANKS.filter(x=>['ROOKIE','BRONZE','SILVER','GOLD','PLATINUM','DIAMOND','LEGEND'].includes(x.name)).map(x=>x.minXP),[0,1000,4500,12000,26000,55000,120000]);
  let before=0;
  for(const xp of [0,119,120,399,400,1000,4800,12000,26000,55000,120000]){
   const p=gameProfile(progress(xp,5,1),300,NOW);
@@ -59,7 +61,7 @@ test('rank status keeps learning coverage, accuracy and milestones',()=>{
  assert.equal(p.learned,1);
  assert.equal(p.due,1);
  assert.equal(p.activeDays,1);
- assert.equal(p.rankGoal?.days,3);
- assert.equal(p.rankGoal?.answers,30);
+ assert.equal(p.rankGoal?.days,2);
+ assert.equal(p.rankGoal?.answers,12);
  assert.equal(p.unlockedAchievements,p.achievements.filter(x=>x.unlocked).length);
 });
