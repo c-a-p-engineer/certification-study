@@ -36,7 +36,7 @@ export function planSmartQuest<T extends SelectableQuestion>(items:readonly T[],
   const next=selectAdaptive(options,limit,{...context,recent:new Set([...context.recent,...used])});
   for(const item of next){picked.push(item);used.add(item.id);reasons[item.id]=SMART_LABELS[kind]}
  };
- const kinds:SmartCategory[]=['due','recovery','unseen','challenge'];
+ const kinds:SmartCategory[]=['due','recovery','challenge','unseen'];
  for(const kind of kinds)select(kind,Math.max(0,targets[kind]));
  const lacking=Math.max(0,Math.min(count,items.length)-picked.length);
  if(lacking){
