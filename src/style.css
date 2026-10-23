@@ -385,3 +385,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 .player-title-chip>svg{color:#fff0b0}.player-title-chip strong{color:#fff7cc;font-size:14px}
 .player-title-chip span{color:#c4d8f4;font-size:11px;padding-left:10px;border-left:1px solid #cfbf9b88}
 @media(max-width:700px){.player-title-chip{max-width:100%;margin:9px 0 0;padding:7px 10px;gap:6px}.player-title-chip strong{font-size:12px}.player-title-chip span{font-size:10px;padding-left:7px}}
+
+/* Scenario-only play uses a distinct compact study-mode card. */
+.scenario-cta{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 20px;margin:12px 0 0;background:linear-gradient(105deg,#194056,#182a43);border:1px solid #71cdea;border-radius:10px;box-shadow:0 0 21px #53d8f01b;flex-wrap:wrap}
+.scenario-cta>div{flex:1;min-width:180px}
+.scenario-cta strong{display:flex;align-items:center;gap:10px;color:#baf4ff;font:900 22px 'Barlow Condensed',sans-serif}
+.scenario-cta button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:11px 15px;border-radius:7px;border:1px solid #a1f3ff;background:#284f6b;color:#f0fcff;cursor:pointer;font-size:12px;letter-spacing:.3px;font-weight:900}
+.scenario-cta button:hover{background:#366884;border-color:#eaffff}
+.scenario-cta button:focus-visible{outline:3px solid #ffdf97;outline-offset:3px}
+@media(max-width:700px){.scenario-cta{padding:15px;gap:11px}.scenario-cta strong{font-size:21px}.scenario-cta button{width:100%;min-height:48px}}
