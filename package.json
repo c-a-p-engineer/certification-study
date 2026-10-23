@@ -29,7 +29,7 @@
     "test:overdrive4": "node --experimental-strip-types --test scripts/boss-campaign.test.mjs scripts/skill-tree.test.mjs scripts/relic-system.test.mjs scripts/overdrive4-ui.test.mjs",
     "test:campaign": "node --experimental-strip-types --test scripts/enemy-campaign.test.mjs scripts/enemy-campaign-ui.test.mjs",
     "test:quiz-layout": "node --experimental-strip-types --test scripts/quiz-layout.test.mjs",
-    "build:offline": "node scripts/build-offline.mjs",
+    "build:offline": "node scripts/generate-icons.mjs && node scripts/build-offline.mjs",
     "test:offline": "node --test scripts/offline.test.mjs",
     "test:backup": "node --experimental-strip-types --test scripts/backup.test.mjs",
     "test:adaptive": "node --experimental-strip-types --test scripts/adaptive-quest.test.mjs",
