@@ -52,3 +52,14 @@ test('unique learning information and safeguards are still visible or available 
  assert.ok(menu.includes('<details className="gm-haptic-diagnostics">'));
  assert.ok(menu.includes('aria-modal="true"'));
 });
+
+test('learning timeline sits on dashboard and records answers in the existing progress store',()=>{
+ const timeline=source.indexOf('<ActivityTimeline ');
+ const stat=source.indexOf('className="stats"');
+ const mastery=source.indexOf('className="mastery-section"');
+ assert.ok(stat>=0&&timeline>stat&&mastery>timeline);
+ assert.ok(source.includes('recordDailyAnswer(p.activity??migrateActivity(p),answerDay,ok)'));
+ assert.ok(source.includes('activity:migrateActivity(old)'));
+ assert.ok(source.includes('const rank=profile.rank'));
+ assert.equal(source.includes('rankFor('),false);
+});
