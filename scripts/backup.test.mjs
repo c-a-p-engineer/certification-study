@@ -1,4 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {BACKUP_KEYS,createBackup,parseBackup,restoreBackup,backupPreview,MAX_BACKUP_BYTES,validProgress} from '../src/backup.ts';
 const progress={xp:1200,best:5,answered:10,correct:8,mistakes:['q1'],domains:{'セキュリティ':{answered:10,correct:8}},reviews:{q1:{streak:1,lapses:0,dueAt:999,lastReviewedAt:100,intervalDays:1}},enemyCampaign:{stageIndex:0,hp:20,cleared:[],hitIds:['q2'],completed:false}};
 const fakeStore=(seed={},failKey=null)=>{
@@ -42,7 +43,7 @@ test('quota exception triggers rollback without losing existing progress',()=>{
  assert.equal(target.getItem('cert-overdrive-haptics-v1'),'off');
 });
 test('real UI requires explicit preview and confirmation before reload',()=>{
- const {readFileSync}=await import('node:fs');const ui=readFileSync('src/BackupPanel.tsx','utf8');const menu=readFileSync('src/GameMenu.tsx','utf8');
+ const ui=readFileSync('src/BackupPanel.tsx','utf8');const menu=readFileSync('src/GameMenu.tsx','utf8');
  assert.ok(ui.includes('parseBackup(await file.text())'));
  assert.ok(ui.includes('window.confirm('));assert.ok(ui.includes('restoreBackup(incoming,localStorage)'));
  assert.ok(ui.includes('window.location.reload()'));assert.ok(menu.includes('<BackupPanel/>'));
