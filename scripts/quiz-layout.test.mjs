@@ -41,7 +41,7 @@ test('mobile compact view combines HUD instead of stacking two gameplay cards',(
  assert.ok(hud.includes('<MonsterArt'));
  assert.ok(hud.includes('comboMultiplier(combo)'));
  assert.ok(hud.includes('aria-valuenow={hp}'));
- assert.ok(hud.includes("battle?bossOutcome(correct,total)"));
+ assert.ok(hud.includes("boss?bossOutcome(correct,total)"));
  assert.ok(css.includes('grid-template-columns:62px minmax(0,1fr)'));
  assert.ok(css.includes('min-height:45px'));
  assert.ok(css.includes('min-height:44px'));
