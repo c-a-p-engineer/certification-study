@@ -18,6 +18,16 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 332 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## Mobile reading & compact combat layout
+
+On narrow screens (up to 700px CSS width), the quiz defaults to **省スペース (compact)**, unless the browser already has a saved preference. Enemy HP, its SVG portrait, and the combo multiplier share a single battle strip instead of two large stacked panels, creating more room for the question and answer choices. This is a visual-layout setting, not a change in combat XP, combo calculations, review scheduling, or exam timing.
+
+Quiz headers now contain **A− / A＋** controls for changing reading size without entering the menu, plus **詳細 / 省スペース** to toggle the HUD layout. `MENU → OPTIONS → READING SIZE` offers **最小 / 小さめ / 標準 / 大きく / 特大**. The two smaller sizes use approximately 18–20px Japanese question text and 14–15px answer text on phones, with normal-size tap targets and no screen-obscuring overlay. Existing `standard`, `large`, and `extra` preferences are retained unchanged. The layout preference is saved separately under `cert-overdrive-quiz-layout-v1`; the text-size key remains `cert-overdrive-text-scale-v1`.
+
+The timed exam retains the timer and progress controls but hides combat feedback, even when compact mode is selected. The change leaves existing browser-local study history, progress and mission saves untouched.
+
+Checks: `npm run test:quiz-layout` and `npm run test:readability`, also run by the full `npm run build` CI gate. Device browser chrome and system display zoom vary: a short answer should not require a scroll for every option, but long multi-line AWS exam scenarios naturally still scroll.
+
 ## OVERDRIVE 4.1 — Enemy Campaign (SVG)
 
 Every ordinary practice run (missions, scenario study, weakness review and spaced-retrieval study) now contributes to a persistent **nine-monster RPG campaign**. The four existing 10-question domain bosses remain separate challenges with their own medal and relic rewards.
