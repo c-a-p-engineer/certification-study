@@ -1,0 +1,65 @@
+/* Lightweight monster vector art. A single SVG per card, no extra downloads. */
+.app .monster-visual{display:block;width:100%;max-width:260px;height:auto;overflow:visible;--mv-body:#67dfa4;--mv-dark:#23576c;--mv-core:#b9ffe1;--mv-eye:#142d40;--mv-aura:#60deb433;filter:drop-shadow(0 8px 15px #05111c70);transform-origin:50% 70%}
+.app .mv-zombie{--mv-body:#92c576;--mv-dark:#315b4a;--mv-core:#d5e69e;--mv-eye:#301a41;--mv-aura:#a6e16a2d}
+.app .mv-armor{--mv-body:#819cbd;--mv-dark:#334867;--mv-core:#aef1ff;--mv-eye:#183356;--mv-aura:#85bdff2e}
+.app .mv-chimera{--mv-body:#ae88d8;--mv-dark:#5b3986;--mv-core:#f3c8ff;--mv-eye:#351f59;--mv-aura:#c3a3ff38}
+.app .mv-dragon{--mv-body:#7e9ee9;--mv-dark:#394e83;--mv-core:#cfdaff;--mv-eye:#f5d689;--mv-aura:#9caeff38}
+.app .mv-cerberus{--mv-body:#6e91bf;--mv-dark:#233e69;--mv-core:#b9ddff;--mv-eye:#fdf19c;--mv-aura:#6ebde944}
+.app .mv-phoenix{--mv-body:#ec9770;--mv-dark:#923e58;--mv-core:#ffe4a4;--mv-eye:#fff8c4;--mv-aura:#ffb98042}
+.app .mv-titan{--mv-body:#858fcd;--mv-dark:#38467d;--mv-core:#86f6fd;--mv-eye:#d3fff6;--mv-aura:#939cff48}
+.app .mv-leviathan{--mv-body:#54afae;--mv-dark:#245a78;--mv-core:#afffe1;--mv-eye:#ffe4a1;--mv-aura:#67eddf49}
+.app .mv-aura{fill:var(--mv-aura);stroke:var(--mv-core);stroke-width:1;stroke-opacity:.2}
+.app .mv-shadow{fill:#060d2380}.app .mv-body{fill:var(--mv-body);stroke:var(--mv-dark);stroke-width:5;stroke-linejoin:round}
+.app .mv-core{fill:var(--mv-core);stroke:var(--mv-dark);stroke-width:4;stroke-linejoin:round}
+.app .mv-wing{fill:var(--mv-body);stroke:var(--mv-dark);stroke-width:5;stroke-linejoin:round}
+.app .mv-eye{fill:var(--mv-eye)}.app .mv-line,.app .mv-trim{fill:none;stroke:var(--mv-dark);stroke-width:5;stroke-linejoin:round;stroke-linecap:round}
+.app .mv-mark,.app .mv-lightning{fill:none;stroke:var(--mv-core);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.app .mv-shine{fill:#fff9;stroke:none}.app .mv-blush{fill:#eb88a588}
+.app .mv-wounds path{fill:none;stroke:#ffe9a8;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.app .mv-critical-marks path{fill:none;stroke:#ff8ca6;stroke-width:5;stroke-linecap:round}
+.app .mv-wounded{filter:drop-shadow(0 0 13px #fac67a63)}.app .mv-critical{filter:drop-shadow(0 0 19px #ff8eaf9a)}.app .mv-defeated{opacity:.58;filter:grayscale(.65) drop-shadow(0 9px 16px #fff6)}
+.app .mv-small{max-width:115px}
+.app .ec-panel{position:relative;isolation:isolate;margin:24px 0;padding:24px;border:1px solid #6b9fb4;border-radius:16px;background:linear-gradient(135deg,#172d47,#16233e 60%,#2f294b);color:#f1f8ff;box-shadow:0 13px 32px #08132560}
+.app .ec-panel-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:10px}
+.app .ec-kicker{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:900;letter-spacing:.13em;color:#b3f3ef}
+.app .ec-stage-number{color:#ffe4a4;font-size:12px;font-weight:900}
+.app .ec-panel-layout{display:grid;grid-template-columns:190px minmax(0,1fr);align-items:center;gap:20px}
+.app .ec-portrait{position:relative;display:grid;place-items:center;min-width:0;max-width:220px}
+.app .ec-panel h2{font:900 clamp(24px,3vw,36px) 'Barlow Condensed',system-ui,sans-serif;line-height:1.17;margin:3px 0 8px;color:#fff;overflow-wrap:anywhere}
+.app .ec-description{color:#d7e6f5;font-size:14px;line-height:1.6;margin:0 0 12px}
+.app .ec-health-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:900;color:#ffdeaa}
+.app .ec-health-track{width:100%;height:16px;margin-top:8px;border:1px solid #7091af;border-radius:99px;background:#081829;overflow:hidden}
+.app .ec-health-track>div{height:100%;background:linear-gradient(90deg,#5fe2df,#ffe095);transition:width .26s ease;border-radius:inherit}
+.app .ec-panel.ec-danger .ec-health-track>div{background:linear-gradient(90deg,#ed7b95,#ffe08c)}
+.app .ec-damage{display:inline-flex;align-items:center;gap:7px;margin-top:9px;padding:6px 11px;border:1px solid #f8dc99;border-radius:8px;background:#5f3d35;color:#fff4bd;font-weight:900;font-size:15px}
+.app .ec-clear{border-color:#d4c587;background:#385140;color:#fff4bb}
+.app .ec-no-damage{border:1px solid #8ba2bf;color:#cddcef;background:#263249}
+.app .ec-help{color:#cbdded;font-size:12px;line-height:1.7;margin:9px 0 0}
+.app .ec-panel-cta{margin-top:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:47px;padding:10px 18px;border:1px solid #a0e4ec;border-radius:9px;background:#315d70;color:#fff;font-size:14px;font-weight:900;cursor:pointer}
+.app .ec-collection{margin-top:15px;border-top:1px solid #7ca0b64e;padding-top:12px}
+.app .ec-collection summary{min-height:43px;cursor:pointer;display:flex;align-items:center;gap:7px;color:#d8efff;font-size:14px;font-weight:900}
+.app .ec-collection summary:focus-visible,.app .ec-panel-cta:focus-visible{outline:3px solid #ffe7a7;outline-offset:3px}
+.app .ec-collection-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;padding:9px 0}
+.app .ec-collect-item{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:10px 7px;background:#22364f;border:1px solid #5c718b;border-radius:9px;text-align:center}
+.app .ec-collect-item strong{font-size:11px;line-height:1.45;color:#dceeff;overflow-wrap:anywhere}.app .ec-collect-item small{font-size:10px;color:#bdd2e3}
+.app .ec-collect-item.ec-collected{border-color:#dab870;background:#3c3647}.app .ec-collect-item.ec-collected strong{color:#fff0ba}
+.app .ec-collect-item.ec-hidden .monster-visual{filter:grayscale(1);opacity:.35}
+.app .ec-collect-item.ec-hidden strong{color:#a4b4c8}
+.app .ec-panel.ec-compact{padding:13px 16px;margin:12px 0 15px;border-radius:12px}
+.app .ec-compact .ec-panel-layout{grid-template-columns:96px minmax(0,1fr);gap:13px}
+.app .ec-compact .ec-panel h2,.app .ec-compact h2{font-size:clamp(18px,2.5vw,24px);margin:0 0 4px}
+.app .ec-compact .ec-portrait{max-width:100px}.app .ec-compact .ec-description{display:none}
+.app .ec-compact .ec-health-track{height:12px;margin-top:6px}.app .ec-compact .ec-help{margin-top:6px}
+.app .od4-boss-card .monster-visual{max-width:108px;height:85px}.app .od4-battle-avatar .monster-visual{max-width:70px;height:65px}
+.app .od4-battle-avatar:has(.monster-visual){width:76px;height:72px;overflow:hidden;padding:2px;background:radial-gradient(circle,#565077,#332b50)}
+.app .od4-battle-avatar:has(.monster-visual) .monster-visual{max-width:72px}
+@media(max-width:780px){.app .ec-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:580px){.app .ec-panel{padding:16px 12px}.app .ec-panel-layout{grid-template-columns:116px minmax(0,1fr);gap:11px}.app .ec-portrait{max-width:134px}.app .ec-panel h2{font-size:23px}.app .ec-description{font-size:12px}.app .ec-health-head{font-size:12px}.app .ec-stage-number{font-size:11px}.app .ec-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.app .ec-compact .ec-panel-layout{grid-template-columns:80px minmax(0,1fr);gap:9px}.app .ec-compact .ec-portrait{max-width:86px}.app .ec-kicker{font-size:11px}}
+@media(max-width:370px){.app .ec-panel-layout{grid-template-columns:90px minmax(0,1fr)}.app .ec-panel h2{font-size:19px}.app .ec-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:no-preference){.app:not(.reduced) .monster-visual.mv-hit{animation:mv-impact .36s ease-out}.app:not(.reduced) .monster-visual.mv-defeated{animation:mv-fall .65s ease-out both}.app:not(.reduced) .ec-damage:not(.ec-clear){animation:mv-pop .32s ease-out}}
+@keyframes mv-impact{0%{transform:translateX(0)}22%{transform:translateX(-7px) rotate(-3deg)}53%{transform:translateX(7px) rotate(3deg)}100%{transform:translateX(0)}}
+@keyframes mv-fall{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(8px) scale(.94);opacity:.55}}
+@keyframes mv-pop{0%{transform:scale(.92)}65%{transform:scale(1.04)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.app .ec-health-track>div{transition:none}.app .monster-visual{animation:none!important}}
+.app.reduced .ec-health-track>div{transition:none}
+.app.reduced .monster-visual,.app.reduced .ec-damage{animation:none!important}
