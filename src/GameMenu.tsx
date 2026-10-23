@@ -37,9 +37,13 @@ export default function GameMenu(p:GameMenuProps){
    <section id="menu-active-panel" className="game-menu-content" role="tabpanel" aria-labelledby={'menu-tab-'+p.tab} key={p.tab}>
     {p.tab==='status'&&<>
      <div className="gm-character"><div className="gm-avatar"><Crown size={42}/></div><div className="gm-character-info"><h3>{p.profile.rank}</h3><strong>LEVEL {p.profile.level} <span>／ {p.profile.xp.toLocaleString()} XP</span></strong></div></div>
-     <div className="gm-level"><div><strong>NEXT LEVEL</strong><span>{Math.max(0,p.profile.nextLevelXP-p.profile.xp).toLocaleString()} XP TO GO</span></div><div className="gm-level-track" role="progressbar" aria-label="次のレベルまでの経験値" aria-valuemin={0} aria-valuemax={100} aria-valuenow={p.profile.levelPct}><div style={{width:p.profile.levelPct+'%'}}/></div><small>{p.profile.nextRank?'NEXT RANK · '+p.profile.nextRank+' / '+p.profile.xpToNextRank.toLocaleString()+' XP':'MAX RANK · LEGEND'}</small></div>
+     <div className="gm-level"><div><strong>NEXT LEVEL</strong><span>{Math.max(0,p.profile.nextLevelXP-p.profile.xp).toLocaleString()} XP TO GO</span></div><div className="gm-level-track" role="progressbar" aria-label="次のレベルまでの経験値" aria-valuemin={0} aria-valuemax={100} aria-valuenow={p.profile.levelPct}><div style={{width:p.profile.levelPct+'%'}}/></div></div>
+     {p.profile.rankGoal?<div className="gm-next-rank"><strong>NEXT RANK · {p.profile.nextRank}</strong><div className="gm-rank-gates"><span className={p.profile.xpToNextRank===0?'complete':''}>XP <b>{p.profile.xp.toLocaleString()}/{p.profile.rankGoal.xp.toLocaleString()}</b></span><span className={p.profile.answersToNextRank===0?'complete':''}>回答 <b>{p.profile.answered}/{p.profile.rankGoal.answers}問</b></span><span className={p.profile.daysToNextRank===0?'complete':''}>活動 <b>{p.profile.activeDays}/{p.profile.rankGoal.days}日</b></span></div></div>:<div className="gm-next-rank maxed"><Crown size={17}/> LEGEND · 全条件達成</div>}
      {p.session.mode==='quiz'&&<div className="gm-live"><Flame size={20}/><div><strong>{p.session.exam?'EXAM TRIAL':p.session.boss?'BOSS RUSH':'MISSION IN PROGRESS'}</strong><span>{p.session.index+1} / {p.session.total} 問 · 正解 {p.session.correct} 問</span></div></div>}
      <div className="gm-stat-grid">
+      <div><strong>{p.profile.answered.toLocaleString()}</strong><span><BarChart3 size={15}/> ANSWERS</span></div>
+      <div><strong>{p.profile.activeDays}</strong><span>ACTIVE DAYS</span></div>
+      <div><strong>{p.profile.currentStreak}</strong><span><Flame size={15}/> STREAK DAYS</span></div>
       <div><strong>{p.profile.accuracy}%</strong><span><Shield size={15}/> ACCURACY</span></div>
       <div><strong>{p.profile.seen}<small>/{p.totalQuestions}</small></strong><span><BarChart3 size={15}/> EXPLORED</span></div>
       <div><strong>{p.profile.learned}</strong><span><Crown size={15}/> RETAINED</span></div>
@@ -49,7 +53,7 @@ export default function GameMenu(p:GameMenuProps){
      </div>
      <h4 className="gm-section-title">DOMAIN CLEAR RATE <small>累計正答率</small></h4>
      <div className="gm-domains">{domainNames.map(name=>{const item=p.domains?.[name];const accuracy=item?.answered?Math.round(item.correct/item.answered*100):0;return <div key={name}><div><span>{name}</span><strong>{accuracy}% <small>({item?.answered||0}回)</small></strong></div><div className="gm-domain-track"><div style={{width:accuracy+'%'}}/></div></div>})}</div>
-     <p className="gm-caveat">LEVEL・XP・正答率は学習ゲーム内の記録です。AWS本試験の合格確率や換算スコアではありません。</p>
+     <p className="gm-caveat">活動日数は日付が記録されている分のみです。LEGENDはXP・回答数・活動日のすべてが必要。AWS試験の予測スコアではありません。</p>
     </>}
     {p.tab==='achievements'&&<>
      <div className="gm-badge-heading"><Trophy size={35}/><div><strong>{p.profile.unlockedAchievements} / {p.profile.allAchievements} UNLOCKED</strong></div></div>
