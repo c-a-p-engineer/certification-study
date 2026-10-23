@@ -12,7 +12,7 @@ const ids=new Set<ContractId>(CONTRACTS.map(item=>item.id));
 const uniqueIds=(value:unknown):string[]=>Array.isArray(value)?Array.from(new Set(value.filter((id):id is string=>typeof id==='string'&&id.length>0&&id.length<=160))).slice(0,3):[];
 /** Only the current local day counts. Previous dates remain in the activity timeline. */
 export function todayContracts(value:unknown,date:string):DailyContracts{
- const raw=value&&typeof value==='object'&&!Array.isArray(value)?value as Partial<DailyContracts>:{};
+ const raw:Partial<DailyContracts>=value&&typeof value==='object'&&!Array.isArray(value)?value as Partial<DailyContracts>:{};
  const same=raw.date===date;
  return {date,warmup:same?uniqueIds(raw.warmup):[],explore:same?uniqueIds(raw.explore):[],
   recover:same?uniqueIds(raw.recover):[],recall:same?uniqueIds(raw.recall):[],
