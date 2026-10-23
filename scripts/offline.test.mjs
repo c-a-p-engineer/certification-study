@@ -21,6 +21,6 @@ test('offline shell preloads only built app assets and never caches another orig
  assert.ok(template.includes('caches.match(BASE+\'index.html\')'));
  assert.ok(!template.includes('skipWaiting()'));
  assert.ok(builder.includes("createHash('sha256')"));
- assert.ok(builder.includes('assets\/'));
+ assert.ok(builder.includes('precache=allowed.map'));
  assert.ok(builder.includes("endsWith('.js')"));
 });
