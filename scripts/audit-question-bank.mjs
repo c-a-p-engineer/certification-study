@@ -19,7 +19,19 @@ const issues=bank.map(q=>{
  if(!Array.isArray(q.tags)||!q.tags.length)reasons.push('missing topic tags');
  return reasons.length?{id:q.id,domain:q.domain,reasons}:null;
 }).filter(Boolean);
-const report={generatedAt:new Date().toISOString(),total:bank.length,reviewed:bank.filter(q=>!!q.reviewedAt).length,nearDuplicateThreshold:.36,nearDuplicateCandidates:suspects,editorialQueue:issues};
+const domains=[...new Set(bank.map(q=>q.domain))];
+const domainCoverage=Object.fromEntries(domains.map(domain=>{
+ const set=bank.filter(q=>q.domain===domain);
+ return [domain,{total:set.length,scenarioRich:set.filter(q=>q.tags?.includes('複合設計判断')&&q.distractorReasons&&q.question.length>=90).length,
+  multiResponse:set.filter(q=>Array.isArray(q.answers)).length,independentReviewMissing:set.filter(q=>!q.reviewedAt).length,
+  shortExplanation:set.filter(q=>(q.explanation||'').length<65).length,missingOptionRationales:set.filter(q=>!Array.isArray(q.distractorReasons)).length}];
+}));
+const editorialPriority=issues.map(issue=>({...issue,
+ priority:issue.reasons.includes('not independently reviewed')?'P1':issue.reasons.includes('missing per-option rationale')?'P2':'P3',
+ nextAction:issue.reasons.includes('not independently reviewed')?'Verify reasoning and each distractor against the linked official AWS document':'Improve option-level rationales before claiming exam fidelity'
+}));
+const report={generatedAt:new Date().toISOString(),total:bank.length,reviewed:bank.filter(q=>!!q.reviewedAt).length,nearDuplicateThreshold:.36,nearDuplicateCandidates:suspects,domainCoverage,editorialQueue:editorialPriority,
+ caveat:'Structural/reference presence checks do not independently verify AWS factual accuracy. New questions without reviewedAt require human editorial review.'};
 mkdirSync('reports',{recursive:true});
 writeFileSync('reports/question-audit.json',JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({total:bank.length,reviewed:report.reviewed,nearDuplicateCandidates:suspects.length,editorialQueue:issues.length}));

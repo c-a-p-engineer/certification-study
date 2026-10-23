@@ -77,3 +77,11 @@
 }
 @media(prefers-reduced-motion:reduce){.app .cq-hud-meter>div{transition:none}}
 .app.reduced .cq-hud-meter>div{transition:none}
+
+/* SMART QUEST is a choice, not a forced replacement for ordinary or exam study. */
+.app .adaptive-quest{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:20px 0 24px;padding:18px 20px;border-radius:12px;border:1px solid #8de3d8;background:linear-gradient(108deg,#143d3d,#242447);color:#e8ffff}
+.app .adaptive-quest>div{display:grid;gap:7px;min-width:0;flex:1}.app .adaptive-quest strong{display:flex;align-items:center;gap:8px;color:#c4ffdf;font-weight:900;font-size:17px}
+.app .adaptive-quest span{font-size:13px;color:#d2e9f2;line-height:1.6}.app .adaptive-quest button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:47px;padding:9px 15px;border-radius:8px;border:1px solid #acf7e4;background:#255c54;color:#fff;font-size:14px;font-weight:900;cursor:pointer}
+.app .adaptive-quest button:focus-visible{outline:3px solid #ffe9a5;outline-offset:2px}
+@media(max-width:650px){.app .adaptive-quest{padding:14px 12px}.app .adaptive-quest button{width:100%}.app .adaptive-quest strong{font-size:15px}.app .adaptive-quest span{font-size:12px}}
+.app .question-card{scroll-margin-top:12px}

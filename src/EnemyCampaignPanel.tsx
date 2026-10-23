@@ -30,6 +30,14 @@ export default function EnemyCampaignPanel({campaign,compact=false,attack,onStar
     {onStart&&!done&&<button className="ec-panel-cta" type="button" onClick={onStart}>モンスターに挑む <ArrowRight size={17}/></button>}
    </div>
   </div>
+  {!compact&&<details className="ec-collection ec-combat-log">
+   <summary><Flame size={17}/> BATTLE LOG · ダメージ／撃破履歴</summary>
+   <div className="ec-combat-history">
+    {(state.hitHistory??[]).length===0?<p className="ec-help">まだ攻撃記録がありません。通常練習で正解すると追加されます。</p>:
+     <ol>{[...(state.hitHistory??[])].reverse().slice(0,12).map((hit,i)=><li key={hit.at+'-'+hit.questionId+'-'+i}><span>{hit.attribute} · {hit.enemyId}</span><strong>-{hit.damage} DMG</strong><small>{hit.combo} COMBO</small></li>)}</ol>}
+    {(state.defeatHistory??[]).length>0&&<p className="ec-help">討伐：{(state.defeatHistory??[]).map(hit=>ENEMIES.find(e=>e.id===hit.enemyId)?.short+' ('+new Date(hit.at).toLocaleDateString('ja-JP')+')').join(' → ')}</p>}
+   </div>
+  </details>}
   {!compact&&<details className="ec-collection">
    <summary><BookOpen size={17}/> MONSTER ARCHIVE · 討伐図鑑 ({cleared} / {ENEMIES.length})</summary>
    <div className="ec-collection-grid">{collection.map(monster=><div key={monster.id} className={'ec-collect-item '+(monster.cleared?'ec-collected':monster.discovered?'ec-discovered':'ec-hidden')}>

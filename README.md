@@ -10,13 +10,32 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 ## Features
 - Neon arcade quiz interface with combo, XP, rank and particle effects
-- 332 original AWS SAA practice questions, including 32 longer scenario items, with explanations and official reference links
+- 340 original AWS SAA practice questions, including 40 longer scenario items, with explanations and official reference links
 - Local progress persistence, weak-topic review, evidence-informed spaced retrieval (RECALL RAID), optional active recall before options, reduced-motion support
 - Extensible certification content format
 
 ## Current scope
 
-The current prototype contains 332 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+The current prototype contains 340 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
+
+## OVERDRIVE 4.2 / 5.0 — Mobile Quest + Smart Study
+
+### Backup and safe restore
+From `MENU → OPTIONS → STUDY BACKUP`, export an offline JSON snapshot containing progress (XP, reviewed questions, monster HP and history, boss records and relics), regular mission and exam resume state, equipped titles, recent-question history and local preferences. No user data is uploaded. Import validates a versioned allowlist, previews answer and XP totals, asks for explicit confirmation, and attempts rollback if any storage write fails. Restoring deliberately replaces local study state; export a fresh backup first. It does not automatically sync between devices.
+
+### Installable, offline-ready PWA
+On supported Android browsers, use **Install app** or **Add to Home screen** from the browser menu. The manifest scopes the app to `/certification-study/` and uses a stand-alone display, app icons, and a content-addressed service worker cache generated from production assets. After the first successful online load, the cached app code, styles and all bundled questions are available offline. Exam timing still uses the device clock; localStorage remains origin- and browser-profile-specific. External AWS documentation and ChatGPT links still require a connection. Browsers may choose to evict caches, so keep JSON backups.
+
+### SMART QUEST — optional adaptive practice
+The home screen offers a dedicated **SMART QUEST** button. It assembles a practice session by prioritizing overdue retrieval, mistakes to recover from, unattempted content, weak domains with sufficient answer history, and detailed architectural scenarios, while penalizing recently selected questions and repetitious services. The result is a reproducible local heuristic, not ML, an official score prediction, or a substitute for reviewing AWS docs. Ordinary sessions and the timed 65-question exam remain independent; mission resume saves carry an optional backward-compatible adaptive flag.
+
+### Combat and mobile usability
+The monster archive now has a bounded damage history (last 24 hits), dated enemy clear history and an attack attribute derived from the current question's exam domain. Existing nine-monster HP, anti-farming protections, rewards and the separate boss medals remain unchanged. After **NEXT QUESTION**, the question card is scrolled into view, without interrupting review/explanation reading.
+
+### Content and safeguards
+Eight original, architecture-based difficulty-3 practice scenarios were added (two per AWS SAA domain), taking the total to **340 questions / 40 longer scenarios**. Each includes a source link to AWS documentation and option-by-option reasoning. New questions have **no fabricated independent-review stamp**; expert editorial review against current official documentation remains necessary. The audit output includes by-domain gaps, near-duplicate candidates and an explicit editorial queue.
+
+Full GitHub Actions CI runs the existing suites plus `test:backup`, `test:offline`, `test:adaptive` and `test:quality`. The production build generates a versioned offline worker and verifies that core HTML, JavaScript, CSS and manifest files exist. Browser E2E testing is **intentionally deferred**.
 
 ## Mobile reading & compact combat layout
 

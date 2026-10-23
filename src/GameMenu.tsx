@@ -1,4 +1,5 @@
 import React from 'react';
+import BackupPanel from './BackupPanel';
 import {Award,BarChart3,Crown,Flame,Home,Settings2,Shield,Trophy,Vibrate,Volume2,X,Zap} from 'lucide-react';
 import type {AudioSettings} from './audioDirector';
 import {getHapticEnvironment,type HapticMode,type HapticTestResult,type HapticTestKind} from './haptics';
@@ -99,6 +100,7 @@ export default function GameMenu(p:GameMenuProps){
      <label className="gm-toggle"><input type="checkbox" checked={p.audio.sfxEnabled} onChange={e=>p.onAudio({sfxEnabled:e.target.checked})}/> 効果音を再生</label>
      <label className="gm-range">SFX <span>{Math.round(p.audio.sfxVolume*100)}%</span><input type="range" min="0" max="100" step="5" value={Math.round(p.audio.sfxVolume*100)} onChange={e=>p.onAudio({sfxVolume:Number(e.target.value)/100})}/></label>
      <button type="button" className="gm-test-sfx" disabled={!p.audio.sfxEnabled} onClick={p.onSoundTest}>報酬SEを試聴</button>
+     <BackupPanel/>
      <h4 className="gm-section-title">ACCESSIBILITY</h4>
      <label className="gm-toggle"><input type="checkbox" checked={p.reduced} onChange={e=>p.onReduced(e.target.checked)}/> エフェクトとバイブを抑制する</label>
      <p className="gm-caveat">振動は対応端末のみ。動きの軽減設定を優先します。</p>

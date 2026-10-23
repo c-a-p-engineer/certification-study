@@ -13,18 +13,21 @@ export const ENEMIES=[
  {id:'leviathan',name:'COST LEVIATHAN',short:'リヴァイアサン',hp:600,rewardXp:600,description:'無駄を呑み込む最終巨獣',rarity:'MYTHIC'}
 ] as const;
 export type EnemyId=typeof ENEMIES[number]['id'];
+export type HitRecord={enemyId:EnemyId;questionId:string;damage:number;combo:number;attribute:string;at:number};
+export type DefeatRecord={enemyId:EnemyId;at:number};
 export type EnemyCampaign={
- stageIndex:number;hp:number;cleared:EnemyId[];hitIds:string[];completed:boolean
+ stageIndex:number;hp:number;cleared:EnemyId[];hitIds:string[];completed:boolean;
+ hitHistory?:HitRecord[];defeatHistory?:DefeatRecord[]
 };
 export type CampaignAnswer={
  questionId:string;correct:boolean;exam:boolean;boss:boolean;combo:number;
- difficulty?:number;reviewDue?:boolean;previouslyIncorrect?:boolean
+ difficulty?:number;reviewDue?:boolean;previouslyIncorrect?:boolean;domain?:string;at?:number
 };
 export type CampaignHit={
  state:EnemyCampaign;damage:number;multiplier:number;bonusXp:number;
  defeated:typeof ENEMIES[number]|null;credited:boolean;critical:boolean
 };
-export const initialEnemyCampaign=():EnemyCampaign=>({stageIndex:0,hp:ENEMIES[0].hp,cleared:[],hitIds:[],completed:false});
+export const initialEnemyCampaign=():EnemyCampaign=>({stageIndex:0,hp:ENEMIES[0].hp,cleared:[],hitIds:[],completed:false,hitHistory:[],defeatHistory:[]});
 const isEnemyId=(value:unknown):value is EnemyId=>ENEMIES.some(e=>e.id===value);
 const validIds=(value:unknown):string[]=>Array.isArray(value)?[...new Set(value.filter((v):v is string=>typeof v==='string'&&v.length>0&&v.length<=160))].slice(0,500):[];
 /** Invalid, missing or legacy progress data cannot manufacture a cleared monster. */
@@ -39,8 +42,10 @@ export function normalizeEnemyCampaign(value:unknown):EnemyCampaign{
  if(stageIndex>0&&!hasHistory)return initialEnemyCampaign();
  const completed=stageIndex===ENEMIES.length-1&&raw.completed===true&&cleared.includes(stage.id);
  const hp=completed?0:Number.isInteger(raw.hp)&&raw.hp!>0&&raw.hp!<=stage.hp?raw.hp!:stage.hp;
+ const hits=Array.isArray(raw.hitHistory)?raw.hitHistory.filter((x):x is HitRecord=>!!x&&isEnemyId(x.enemyId)&&typeof x.questionId==='string'&&Number.isSafeInteger(x.damage)&&x.damage>0&&Number.isSafeInteger(x.combo)&&Number.isFinite(x.at)&&typeof x.attribute==='string').slice(-24):[];
+ const defeats=Array.isArray(raw.defeatHistory)?raw.defeatHistory.filter((x):x is DefeatRecord=>!!x&&isEnemyId(x.enemyId)&&typeof x.at==='number'&&Number.isFinite(x.at)&&cleared.includes(x.enemyId)).slice(-ENEMIES.length):[];
  return {stageIndex,hp,cleared:completed?[...new Set([...expectedCleared,stage.id])]:expectedCleared,
-  hitIds:completed?[]:validIds(raw.hitIds),completed};
+  hitIds:completed?[]:validIds(raw.hitIds),completed,hitHistory:hits,defeatHistory:defeats};
 }
 export function currentEnemy(value:unknown){return ENEMIES[normalizeEnemyCampaign(value).stageIndex]}
 export function comboMultiplier(combo:number):number{
@@ -60,10 +65,15 @@ export function applyCampaignAnswer(value:unknown,event:CampaignAnswer):Campaign
  if(state.completed||damage<=0||!event.questionId||event.questionId.length>160||state.hitIds.includes(event.questionId))return empty;
  const enemy=ENEMIES[state.stageIndex],remaining=Math.max(0,state.hp-damage),defeated=remaining===0;
  const nextIndex=Math.min(state.stageIndex+1,ENEMIES.length-1),last=state.stageIndex===ENEMIES.length-1;
+ const at=event.at??Date.now();
+ const attribute=({'セキュリティ':'SHIELD','耐障害性':'RECOVERY','パフォーマンス':'SPEED','コスト最適化':'EFFICIENCY'} as Record<string,string>)[event.domain??'']??'KNOWLEDGE';
+ const hit:HitRecord={enemyId:enemy.id,questionId:event.questionId,damage:Math.min(state.hp,damage),combo:event.combo,attribute,at};
+ const hitHistory=[...(state.hitHistory??[]),hit].slice(-24);
+ const defeatHistory=defeated?[...(state.defeatHistory??[]),{enemyId:enemy.id,at}].slice(-ENEMIES.length):state.defeatHistory;
  const next:EnemyCampaign=defeated
   ?{stageIndex:nextIndex,hp:last?0:ENEMIES[nextIndex].hp,
-    cleared:[...state.cleared,enemy.id],hitIds:[],completed:last}
-  :{...state,hp:remaining,hitIds:[...state.hitIds,event.questionId]};
+    cleared:[...state.cleared,enemy.id],hitIds:[],completed:last,hitHistory,defeatHistory}
+  :{...state,hp:remaining,hitIds:[...state.hitIds,event.questionId],hitHistory,defeatHistory};
  return {state:next,damage:Math.min(state.hp,damage),multiplier,
   bonusXp:defeated?enemy.rewardXp:0,defeated:defeated?enemy:null,
   credited:true,critical:event.difficulty===3||!!event.reviewDue||!!event.previouslyIncorrect};

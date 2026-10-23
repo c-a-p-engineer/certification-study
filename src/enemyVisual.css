@@ -63,3 +63,5 @@
 @media(prefers-reduced-motion:reduce){.app .ec-health-track>div{transition:none}.app .monster-visual{animation:none!important}}
 .app.reduced .ec-health-track>div{transition:none}
 .app.reduced .monster-visual,.app.reduced .ec-damage{animation:none!important}
+
+.app .ec-combat-history{padding:5px 0 10px}.app .ec-combat-history ol{margin:5px 0;padding:0;list-style:none;display:grid;gap:6px}.app .ec-combat-history li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;padding:9px 11px;border-radius:7px;background:#1e344a;border:1px solid #5a799a;color:#e1eff8;font-size:12px}.app .ec-combat-history li strong{color:#ffe39e;font-size:13px}.app .ec-combat-history li small{color:#b9ddf0;font-size:11px}.app .ec-combat-history p{overflow-wrap:anywhere}
