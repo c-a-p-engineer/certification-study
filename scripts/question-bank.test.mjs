@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import {loadQuestions} from './question-source.mjs';
 
-const questions=readFileSync('certifications/aws-saa/questions/bank.jsonl','utf8').trim().split(/\r?\n/).map(JSON.parse);
+const questions=loadQuestions();
 const quotas={'セキュリティ':20,'耐障害性':17,'パフォーマンス':15,'コスト最適化':13};
 test('SAA question bank contains at least 300 original questions',()=>{assert.ok(questions.length>=300)});
 test('question IDs and normalized question text are unique',()=>{
