@@ -1,5 +1,5 @@
 import React from 'react';
-import {Award,BarChart3,Crown,Flame,Gamepad2,Home,Settings2,Shield,Trophy,Vibrate,Volume2,X,Zap} from 'lucide-react';
+import {Award,BarChart3,Crown,Flame,Home,Settings2,Shield,Trophy,Vibrate,Volume2,X,Zap} from 'lucide-react';
 import type {AudioSettings} from './audioDirector';
 import {getHapticEnvironment,type HapticMode,type HapticTestResult,type HapticTestKind} from './haptics';
 import type {gameProfile} from './gameProfile';
