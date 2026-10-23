@@ -120,3 +120,23 @@
 }
 .app.reduced .answer{transition:none!important}
 .app.reduced .answer:not(:disabled):active{transform:none}
+
+/* Reflow narrow status panels instead of squeezing enlarged text into tiny columns. */
+.app.reading-extra .gm-stat-grid,.app.reading-large .gm-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.app.reading-extra .gm-rank-gates{grid-template-columns:1fr}
+.app.reading-extra .gm-rank-gates span{flex-direction:row;justify-content:space-between;align-items:center}
+.app.reading-extra .gm-title-item{align-items:flex-start}
+.app.reading-extra .gm-title-item>b{white-space:normal;text-align:right}
+.app.reading-extra .activity-window button{font-size:15px}
+.app.reading-extra .activity-modes button{font-size:15px}
+.app.reading-extra .game-menu-drawer{overflow-x:hidden}
+.app.reading-extra .gm-character{gap:10px}
+.app.reading-extra .gm-character-info>strong{font-size:16px;line-height:1.6}
+@media(max-width:700px){
+ .app.reading-extra .top-actions{gap:6px}
+ .app.reading-extra .game-menu-tabs button{font-size:11px;gap:6px}
+ .app.reading-extra .gm-reading-size button{font-size:16px}
+ .app.reading-extra .explanation .xp-award{flex-wrap:wrap}
+ .app.reading-extra .explanation .xp-award span{margin-left:0;width:100%}
+ .app.reading-extra .fever-label{flex-wrap:wrap;line-height:1.6}
+}
