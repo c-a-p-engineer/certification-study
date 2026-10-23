@@ -50,3 +50,14 @@ test('test differentiates API acceptance and refusal and never claims hardware v
   if(previousWindow)Object.defineProperty(globalThis,'window',previousWindow);else delete globalThis.window;
  }
 });
+
+test('device diagnostics report disabled and reduced states rather than claiming physical success',()=>{
+ assert.equal(testHapticDevice('off').status,'disabled');
+ assert.equal(testHapticDevice('normal',true,'single').status,'reduced');
+ assert.equal(testHapticDevice('normal',true,'pattern').status,'reduced');
+});
+test('tactile feedback lasts long enough to distinguish right and wrong answers',()=>{
+ assert.ok(HAPTIC_PATTERNS.select[0]>=40);
+ assert.ok(HAPTIC_PATTERNS.correct[0]>=60);
+ assert.ok(HAPTIC_PATTERNS.wrong[0]>=120);
+});
