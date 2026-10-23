@@ -8,11 +8,11 @@ const scenarios=bank.filter(isScenarioQuestion);
 const seen=new Set();
 
 test('scenario expansion contains at least 40 original long-form questions, across all domains',()=>{
- assert.ok(bank.length>=332);
- assert.equal(scenarios.length,40);
+ assert.ok(bank.length>=348);
+ assert.equal(scenarios.length,48);
  for(const domain of ['セキュリティ','耐障害性','パフォーマンス','コスト最適化']){
   const matches=scenarios.filter(x=>x.domain===domain);
-  assert.equal(matches.length,10,domain);
+  assert.equal(matches.length,({'セキュリティ':16,'耐障害性':11,'パフォーマンス':11,'コスト最適化':10})[domain],domain);
   assert.ok(matches.every(q=>q.question.length>=90),domain);
   assert.equal(matches.filter(q=>q.answers).length,2,domain);
  }
