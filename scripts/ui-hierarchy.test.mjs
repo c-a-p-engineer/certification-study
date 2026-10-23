@@ -69,7 +69,7 @@ test('scenario-only challenge is discoverable and survives practice resume',()=>
  assert.ok(source.includes('start(false,false,false,false,true)'));
  assert.ok(source.includes('setCaseMode(!!saved.scenario)'));
  assert.ok(source.includes('scenario:caseMode'));
- assert.ok(source.includes('start(review,examMode,studyMode===\'due\',bossMode,caseMode,bossDomain??undefined,skillFocus??undefined)'));
+ assert.ok(source.includes('start(review,examMode,studyMode===\'due\',bossMode,caseMode,bossDomain??undefined,skillFocus??undefined,adaptiveMode)'));
 });
 
 test('gamified progress and title unlocks are discoverable without extra overlays',()=>{

@@ -1,0 +1,53 @@
+/* OVERDRIVE 5.1–5.5: bounded panels and mobile-first educational clarity. */
+.app .q-feedback{margin:15px 0;border:1px solid #6f90aa;border-radius:10px;background:#1d3046;padding:9px 12px;color:#d6efff}
+.app .q-feedback summary{display:flex;align-items:center;gap:9px;cursor:pointer;min-height:44px;font-weight:900;font-size:13px}
+.app .q-feedback label{display:grid;gap:7px;margin:10px 0;font-size:13px;font-weight:800}
+.app .q-feedback select,.app .q-feedback textarea{width:100%;max-width:100%;box-sizing:border-box;border-radius:8px;border:1px solid #8da9c3;background:#142639;color:#fff;font:inherit;padding:11px;min-height:44px}
+.app .q-feedback textarea{line-height:1.6}
+.app .q-feedback p,.app .q-feedback small{font-size:12px;line-height:1.6;color:#bdd6e9}
+.app .q-feedback .q-review-state{color:#f7d59a}
+.app .q-feedback-actions{display:flex;flex-wrap:wrap;gap:8px}
+.app .q-feedback-actions button,.app .q-feedback-actions a{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:8px;padding:9px 11px;border:1px solid #83dcd8;background:#284e61;color:#f9ffff;font-size:12px;font-weight:900;cursor:pointer;text-decoration:none}
+.app .q-feedback :focus-visible{outline:3px solid #ffe9ad;outline-offset:2px}
+.app .smart-board,.app .growth-board{margin:22px 0;padding:20px;border-radius:15px;background:linear-gradient(135deg,#172e43,#201c3e);border:1px solid #6c9eaa;color:#eefaff}
+.app .smart-heading,.app .growth-heading{display:flex;align-items:start;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.app .smart-heading>div:first-child,.app .growth-heading>div:first-child{flex:1;min-width:160px}
+.app .smart-heading span:first-child,.app .growth-heading>div:first-child>span{display:flex;align-items:center;gap:7px;font-size:12px;letter-spacing:.1em;color:#9ff1e9;font-weight:900}
+.app .smart-heading h2,.app .growth-heading h2{font:900 clamp(22px,3vw,31px) 'Barlow Condensed',system-ui,sans-serif;color:#fff;margin:7px 0}
+.app .smart-heading p,.app .smart-explanation,.app .growth-note{font-size:12px;line-height:1.75;color:#d2e7ed}
+.app .smart-profiles,.app .growth-windows{display:flex;gap:5px;flex-wrap:wrap}
+.app .smart-profiles button,.app .growth-windows button{min-height:43px;padding:7px 10px;border:1px solid #829bb3;color:#d7effe;background:#263852;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer}
+.app .smart-profiles button.active,.app .growth-windows button.active{color:#132f32;background:#b9f9e2;border-color:#dffff8}
+.app .smart-mix,.app .growth-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:15px 0}
+.app .smart-mix>div,.app .growth-metrics>div{min-width:0;border:1px solid #52758d;background:#243750;padding:12px 10px;border-radius:10px;display:grid;gap:7px}
+.app .smart-mix span,.app .growth-metrics small{font-size:12px;color:#d5edf9}
+.app .smart-mix strong,.app .growth-metrics strong{font-size:19px;color:#ffe4a9;white-space:nowrap}
+.app .growth-metrics strong{font-size:clamp(23px,4vw,32px)}
+.app .growth-metrics span{font-size:11px;color:#bdd3e7}
+.app .smart-mix>div>div,.app .growth-domain-track{width:100%;height:9px;overflow:hidden;border-radius:99px;background:#0c2133;border:1px solid #57788e}
+.app .smart-mix i,.app .growth-domain-track i{display:block;height:100%;background:linear-gradient(90deg,#7adeeb,#b3f7ce)}
+.app .smart-start{display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 16px;min-height:48px;border-radius:9px;background:#35676d;color:#fff;border:1px solid #abffdd;font-weight:900;font-size:14px;cursor:pointer}
+.app .smart-start:disabled{opacity:.5}
+.app .smart-profiles button:focus-visible,.app .growth-windows button:focus-visible,.app .smart-start:focus-visible{outline:3px solid #ffe4ab;outline-offset:2px}
+.app .smart-reason{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;margin:4px 0 13px;background:#2a524e;border:1px solid #74b9b3;color:#dbffea;border-radius:7px;font-size:12px;font-weight:900}
+.app .growth-chart,.app .growth-domains{padding:14px;border:1px solid #58758e;border-radius:10px;margin:14px 0;background:#1b3048}
+.app .growth-chart-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px}
+.app .growth-chart-heading strong,.app .growth-domains>strong{display:flex;align-items:center;gap:7px;color:#d8f5ed}
+.app .growth-chart-heading span{color:#c3d8e8;font-size:12px}
+.app .growth-graph{height:134px;position:relative;display:flex;align-items:end;gap:3px;padding:7px 0 0;border-bottom:1px solid #86a5b8}
+.app .growth-bar-cell{height:100%;flex:1;min-width:2px;display:flex;align-items:end;justify-content:center}
+.app .growth-bar{width:100%;max-width:24px;border-radius:4px 4px 0 0;background:#64c7dc90}
+.app .growth-graph svg{position:absolute;inset:0;width:100%;height:100%;color:#fff5ae;pointer-events:none}
+.app .growth-day-detail summary{padding:10px 0;cursor:pointer;font-size:12px;color:#d5ebf6}
+.app .growth-day-detail p,.app .growth-empty{font-size:12px;color:#dae8f8}
+.app .growth-domains>div{display:grid;gap:10px;margin-top:13px}
+.app .growth-domains>div>div{display:grid;grid-template-columns:minmax(90px,1fr) 2fr minmax(85px,1fr);align-items:center;gap:9px;font-size:12px}
+.app .growth-domains b{font-size:13px;color:#ffe3a1;text-align:right}.app .growth-domains small{font-size:10px;color:#c2d9ed}
+.app .ec-ng-plus{display:flex;align-items:center;gap:8px;font-weight:900;color:#ffecaf;font-size:13px;margin-top:8px}
+.app .ec-replay{background:#51456d;border-color:#e2b9ff}
+.app .update-banner{position:relative;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin:0 0 15px;padding:12px 14px;background:#294a4b;border:1px solid #b0f9e8;border-radius:9px;color:#eefff9}
+.app .update-banner strong{font-size:13px}.app .update-banner p{font-size:12px;margin:3px 0;color:#d7e9ed}
+.app .update-banner button{padding:9px 12px;border:1px solid #d6ffec;border-radius:7px;background:#386c67;color:#fff;min-height:44px;font-weight:900;cursor:pointer}
+@media(max-width:750px){.app .smart-mix,.app .growth-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.app .smart-board,.app .growth-board{padding:15px 11px}.app .smart-heading,.app .growth-heading{gap:10px}.app .smart-profiles button{font-size:11px;padding:7px}.app .growth-domains>div>div{grid-template-columns:minmax(88px,1fr) 1.6fr minmax(75px,.8fr)}}
+@media(max-width:370px){.app .growth-domains>div>div{grid-template-columns:1fr 1fr;gap:5px}.app .growth-domain-track{grid-column:1/-1;grid-row:2}.app .growth-domains b{grid-column:2;grid-row:1}.app .q-feedback-actions button,.app .q-feedback-actions a{flex:1}}
+@media(prefers-reduced-motion:reduce){.app .growth-graph svg,.app .smart-mix i{transition:none}}

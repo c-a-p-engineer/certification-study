@@ -18,6 +18,28 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 340 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## OVERDRIVE 5.1–5.5
+
+All enhancements are designed around **existing browser-local progress and optional v1 fields**, preserving XP, earned medals, historical quest data, daily contracts and saved practice runs.
+
+### 5.1 — Question Quality
+Every normal question explanation and post-exam review now includes an expandable local **「この問題を報告」** panel. Reasons include ambiguous correct answer, incorrect explanation, outdated AWS information and display bugs. Reports are stored locally (up to 100) and included in JSON backups. Users may explicitly copy a suggested report or open a prefilled GitHub Issue to submit it themselves; no report is automatically published or transmitted. The interface distinguishes a source-provided `reviewedAt` editorial date from independent AWS factual verification. The automated audit exports `reports/question-audit.json` with domain coverage, possible duplicates, missing option analysis, unsupported absolutist wording and an explicit queue of unreviewed sources. Pull-request CI uploads the report as an artifact. **Reference URL presence and syntactic validity do not prove all 340 answers are current or correct.** Independent subject-matter review is still needed.
+
+### 5.2 — Adaptive Engine 2.0
+SMART QUEST now offers **Balanced**, **Review emphasis**, or **Exploration emphasis** presets with a transparent 10-question recipe. Due reviews, mistake recovery, unseen questions and design/weakness scenarios are targeted in weighted buckets; when a bucket is empty, remaining candidates fill the gap without repeating a question. Each selected question displays why it appeared, and that label survives a resumed mission. Existing timed 65-question exams and fixed 10-question domain bosses do not use the SMART selector. Smart profile preferences are saved separately and included in backup.
+
+### 5.3 — Growth Analytics
+The new dashboard distinguishes first-attempt accuracy, later attempts, due-review correctness, and successful attempts on previously missed questions. It shows 7/30/90-day activity and answer-rate trends, and cumulative domain accuracy with explicit sample counts. **These granular metrics begin only after the 5.3 release**; earlier aggregate history is not retroactively fabricated. Only the last 3,000 granular attempt events are retained, and they are included in progress backups. The analytics are descriptive, not pass probability predictions.
+
+### 5.4 — Monster Evolution / NEW GAME+
+After all nine monsters are defeated, the campaign offers an **opt-in NEW GAME+**. A completed cycle raises subsequent monster HP by 25% per round up to +100%. The bestiary retains earlier unlocks, dates, combat records and unique question-hit anti-farming rules. First-clear monster XP is never granted again on NG+ defeats; all regular correct-answer XP rules remain unchanged. The current round and its health are displayed on desktop and on the compact mobile enemy HUD. The optional `cycle` and `runCleared` fields load safely from older progress.
+
+### 5.5 — Mobile and offline polish
+PWA releases now wait for an explicit **Update & restart** action on the dashboard instead of automatically interrupting a quiz or exam. A banner appears only when a new service worker is ready and the player is back on the home screen. Updating does not intentionally clear local progress. Backup import previews the **current vs. incoming** answer/XP counts and warns if the incoming state is older. Issue reports and smart preferences are backed up as new optional keys, without increasing the backup schema version. Smaller text, compact HUD, motion reduction and next-question scroll behavior are preserved.
+
+### Verification / constraints
+`npm run build` runs all existing unit/regression checks and new `test:quality-feedback`, `test:smart`, `test:growth`, `test:replay`, and `test:mobile5` suites, generates the offline service worker, performs TypeScript checking and emits the QA report. CI uploads the question audit; GitHub Pages deployment must pass independently. Browser E2E and device-level Android/Brave validation are intentionally **deferred** by request.
+
 ## OVERDRIVE 4.2 / 5.0 — Mobile Quest + Smart Study
 
 ### Backup and safe restore

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run validate:questions && vite --host 0.0.0.0",
-    "build": "npm run validate:questions && npm run test:questions && npm run test:selection && npm run test:study && npm run test:glossary && npm run test:terms && npm run test:mastery && npm run test:audio && npm run test:mission-save && npm run test:haptics && npm run test:profile && npm run test:titles && npm run test:campaign && npm run test:overdrive4 && npm run test:contracts && npm run test:history && npm run test:ui && npm run test:backup && npm run test:adaptive && npm run test:offline && npm run test:quiz-layout && npm run test:readability && npm run test:grade && npm run test:visual && npm run test:quality && npm run audit:questions && tsc --noEmit && vite build && npm run build:offline",
+    "build": "npm run validate:questions && npm run test:questions && npm run test:selection && npm run test:study && npm run test:glossary && npm run test:terms && npm run test:mastery && npm run test:audio && npm run test:mission-save && npm run test:haptics && npm run test:profile && npm run test:titles && npm run test:campaign && npm run test:overdrive4 && npm run test:contracts && npm run test:history && npm run test:ui && npm run test:backup && npm run test:adaptive && npm run test:offline && npm run test:quiz-layout && npm run test:readability && npm run test:grade && npm run test:visual && npm run test:quality && npm run test:quality-feedback && npm run test:smart && npm run test:growth && npm run test:replay && npm run test:mobile5 && npm run audit:questions && tsc --noEmit && vite build && npm run build:offline",
     "preview": "vite preview",
     "validate:questions": "node scripts/build-question-bank.mjs",
     "test:questions": "node --test scripts/question-bank.test.mjs",
@@ -33,7 +33,12 @@
     "test:offline": "node --test scripts/offline.test.mjs",
     "test:backup": "node --experimental-strip-types --test scripts/backup.test.mjs",
     "test:adaptive": "node --experimental-strip-types --test scripts/adaptive-quest.test.mjs",
-    "test:quality": "node --test scripts/question-quality.test.mjs"
+    "test:quality": "node --test scripts/question-quality.test.mjs",
+    "test:quality-feedback": "node --experimental-strip-types --test scripts/quality-feedback.test.mjs",
+    "test:smart": "node --experimental-strip-types --test scripts/smart-quest.test.mjs",
+    "test:growth": "node --experimental-strip-types --test scripts/growth-analytics.test.mjs",
+    "test:replay": "node --experimental-strip-types --test scripts/campaign-replay.test.mjs",
+    "test:mobile5": "node --experimental-strip-types --test scripts/mobile-polish.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

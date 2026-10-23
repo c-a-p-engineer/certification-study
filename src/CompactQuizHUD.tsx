@@ -1,6 +1,6 @@
 import React from 'react';
 import {Flame,Shield,Skull,Trophy,Zap} from 'lucide-react';
-import {ENEMIES,normalizeEnemyCampaign,comboMultiplier,type EnemyCampaign,type CampaignHit} from './enemyCampaign.ts';
+import {ENEMIES,normalizeEnemyCampaign,comboMultiplier,campaignMaxHp,type EnemyCampaign,type CampaignHit} from './enemyCampaign.ts';
 import {bossFor,bossOutcome,type BossDomain} from './bossCampaign.ts';
 import MonsterArt from './MonsterArt';
 
@@ -17,7 +17,7 @@ export default function CompactQuizHUD({campaign,attack,combo,bossDomain,correct
  const monster=attack?.defeated??current;
  const id=boss?({'セキュリティ':'cerberus','耐障害性':'phoenix','パフォーマンス':'titan','コスト最適化':'leviathan'} as const)[boss.domain]:monster.id;
  const name=boss?.name??(state.completed&&!attack?.defeated?'ALL CLEAR':monster.name);
- const maxHp=battle?.target??monster.hp;
+ const maxHp=battle?.target??campaignMaxHp(monster,state.cycle??0);
  const hp=battle?.remaining??(attack?.defeated?0:state.hp);
  const ratio=maxHp?Math.max(0,Math.min(1,hp/maxHp)):0;
  const damage=attack?.credited?attack.damage:0;
