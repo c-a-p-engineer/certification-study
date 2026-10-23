@@ -152,3 +152,13 @@ Regression coverage: `npm run test:history` and `npm run test:profile` are inclu
 - Quality gates: `npm run test:selection` verifies scenario structure and selection behavior; `npm run test:titles` verifies unlocked/equippable titles. All existing study, grading, glossary, mastery and saved-session tests remain enabled.
 
 Reference: [AWS SAA-C03 official exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html).
+
+## Reading modes and rewarding feedback (October 2026)
+
+- **Android-first readability:** The quiz now uses larger, high-contrast question and answer text, a Japanese-capable system font fallback, generous line height, wrapping for long service names, and minimum-size choice buttons. Detailed option rationales, glossary disclosures, activity counts and the exam review also scale. In **MENU → OPTIONS → READING SIZE**, select 標準, 大きく or 特大. The value persists in that browser's localStorage and does not change answers or learning progress. Larger settings reflow status cards and rank-goal layouts.
+- **Optional visual celebration:** In **MENU → OPTIONS → VISUAL POWER**, BALANCED is the default; OVERDRIVE enhances the color/glow of combo, correct answers, XP, newly unlocked titles and high mission grades. The display does not use rapid strobing. Browser/OS reduced-motion preferences and the game's effect-reduction setting always win. Web audio and haptics remain independently controllable.
+- **Meaningful checkpoints instead of random attention traps:** 3, 5, 10, then every 10 consecutive correct answers trigger special combo feedback. Earned titles appear inline below an answered practice question; the learner may equip them with one tap. The home title badge opens the titles collection and its small level bar displays progress toward the next level. No controls or answer content are obstructed by a full-screen correct-answer overlay.
+- **Mission rating:** Completed normal practice displays a letter grade S/A/B/C/D with percentage. This is solely a game performance cue; it is **not** an AWS passing-score estimate. An exam trial remains ungraded except for raw accuracy and answer review. New title rewards and rank promotions during timed exam attempts are deferred to the result view to avoid interruptions or hints.
+- Quality gates in CI: `npm run test:readability`, `npm run test:grade`, and `npm run test:visual`, plus updated UI hierarchy tests.
+
+Progress and all settings remain browser-local. The design never depends on TinyFish or an external browser agent.
