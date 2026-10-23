@@ -5,6 +5,8 @@ const BASE='/certification-study/';
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(PRECACHE)));
 });
+/* Activating an update requires consent so ongoing quizzes are never interrupted. */
+self.addEventListener('message',event=>{if(event.data?.type==='ACTIVATE_UPDATE')void self.skipWaiting()});
 self.addEventListener('activate',event=>{
  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('cert-overdrive-')&&key!==CACHE_NAME).map(key=>caches.delete(key)))));
 });
