@@ -40,7 +40,7 @@ test('do not immediately repeat recently shown scenarios when unseen alternative
  assert.ok(chosen.every(q=>!recent.has(q.id)),chosen.map(x=>x.id).join(','));
 });
 test('themes are extracted to discourage closely related services',()=>{
- assert.ok(serviceTopics(scenarios.find(x=>x.id==='saa-309')).some(s=>s.includes('sqs')));
+ assert.ok(serviceTopics(scenarios.find(x=>x.id==='saa-317')).some(s=>s.includes('cloudfront')));
  const candidates=scenarios.filter(x=>x.domain==='セキュリティ');
  assert.equal(selectVaried(candidates,100,seen,seen,()=>0).length,candidates.length);
  assert.equal(new Set(selectVaried(candidates,100,seen,seen,()=>0).map(x=>x.id)).size,candidates.length);
