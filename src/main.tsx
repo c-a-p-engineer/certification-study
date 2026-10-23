@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Zap, Trophy, Target, RotateCcw, Volume2, VolumeX, Sparkles, BookOpen, Shield, ArrowRight, Flame, Settings2 } from 'lucide-react';
+import { Zap, Trophy, Target, RotateCcw, Volume2, VolumeX, Sparkles, BookOpen, Shield, ArrowRight, Flame, Settings2, Menu, X, ChevronDown, BarChart3, Crown, Gamepad2, Vibrate, Award } from 'lucide-react';
 import './style.css';
 import questionBank from './generated/questions.json';
 import {scheduleReview,rateReview,dueQuestionIds,reviewCounts,type ReviewMap} from './studyScheduler';
@@ -9,6 +9,8 @@ import {findStudyTerms} from './termGuide';
 import {readMissionSave,writeMissionSave,clearMissionSave,restoredMissionIsValid,type MissionSave} from './missionSave';
 import {TOPICS,topicFor,masteryByTopic} from './mastery';
 import {AudioDirector,readAudioSettings,saveAudioSettings,type AudioSettings,type MusicScene,type SoundEffect} from './audioDirector';
+import {gameProfile} from './gameProfile';
+import {readHapticMode,writeHapticMode,triggerHaptic,type HapticEvent,type HapticMode} from './haptics';
 
 type Question = { id: string; domain: string; question: string; choices: string[]; answer?: number; answers?: number[]; difficulty?:number; distractorReasons?:string[]; explanation: string; reference: string };
 const questions: Question[] = questionBank;
@@ -16,16 +18,19 @@ const correctAnswers=(question:Question):number[]=>question.answers??[question.a
 function TermsPanel({question}:{question:Question}){
  const terms=findStudyTerms(question);
  if(terms.length===0)return null;
- const recovery=terms.some(t=>t.title==='RTO'||t.title==='RPO');
- return <details className="term-panel study-terms-panel" aria-label="この問題に出てきた用語とサービスの解説">
-  <summary className="term-panel-heading"><BookOpen size={19}/><strong>用語・サービス解説</strong><span>{terms.length}語 · タップして確認</span></summary>
-  <p className="term-guide-intro">問題文・選択肢・解説に出てきた用語をまとめました。正式名称と、設計問題での使い分けを確認できます。</p>
-  <div className="term-items">{terms.map(term=><div className="term-entry" key={term.id}>
-   <div className="term-entry-title"><strong>{term.title}</strong><span className="term-kind">{term.category}</span></div>
-   {term.english&&<span className="term-english">{term.english}</span>}
-   <b>{term.meaning}</b><p>{term.note}</p>
-  </div>)}</div>
-  {recovery&&<div className="term-compare"><strong>覚え分け</strong><span><b>RTO</b>：いつまでに復旧する？（復旧時間）</span><span><b>RPO</b>：いつのデータまで戻せる？（許容データ損失）</span></div>}
+ return <details className="term-panel study-terms-panel" aria-label="この問題に出てきた用語とサービスの一覧">
+  <summary className="term-panel-heading"><BookOpen size={19}/><strong>用語・サービス図鑑</strong><span>{terms.length}語 · タップして一覧を開く</span></summary>
+  <p className="term-guide-intro">知りたい用語を選ぶと、読み方・正式名称・使いどころが開きます。問題を解く前にも確認できます。</p>
+  <div className="term-picker">{terms.map(term=><details className="term-card" key={term.id}>
+   <summary className="term-card-title"><span className="term-card-name"><strong>{term.title}</strong><small>読み：{term.reading}</small></span><span className="term-kind">{term.category}</span><ChevronDown size={18} className="term-card-chevron" aria-hidden="true"/></summary>
+   <div className="term-card-detail">
+    <p className="term-reading">読み方 <strong>{term.reading}</strong></p>
+    {term.english&&<p className="term-full-name">正式名称 <strong>{term.english}</strong></p>}
+    <p className="term-meaning"><strong>{term.meaning}</strong></p>
+    <p className="term-note">{term.note}</p>
+    {(term.title==='RTO'||term.title==='RPO')&&<p className="term-memory-tip"><b>覚え分け</b>　RTO＝復旧するまでの時間 ／ RPO＝失ってよいデータの時間幅</p>}
+   </div>
+  </details>)}</div>
  </details>;
 }
 const makeChatGPTPrompt=(question:Question,selectedAnswers?:number[]):string=>{
