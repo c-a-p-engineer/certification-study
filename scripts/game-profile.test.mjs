@@ -49,9 +49,9 @@ test('LEGEND requires XP, >=700 answers and >=50 active days',()=>{
  assert.equal(full.nextRank,null);
  assert.equal(full.rankGoal,null);
  assert.ok(full.achievements.some(x=>x.id==='legend'&&x.unlocked));
- assert.equal(gameProfile(progress(119999,700,50),300,NOW).rank,'DIAMOND');
- assert.equal(gameProfile(progress(120000,699,50),300,NOW).rank,'DIAMOND');
- assert.equal(gameProfile(progress(120000,700,49),300,NOW).rank,'DIAMOND');
+ assert.equal(gameProfile(progress(119999,700,50),300,NOW).rank,'MYTHIC');
+ assert.equal(gameProfile(progress(120000,699,50),300,NOW).rank,'MYTHIC');
+ assert.equal(gameProfile(progress(120000,700,49),300,NOW).rank,'MYTHIC');
 });
 
 test('rank status keeps learning coverage, accuracy and milestones',()=>{
