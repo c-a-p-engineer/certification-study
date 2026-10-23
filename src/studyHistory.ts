@@ -63,7 +63,7 @@ export function activitySummary(history:ActivityHistory,totalAnswered:number,tot
   longestStreak=Math.max(longestStreak,currentRun);
   previous=date;
  }
- return {activeDays:keys.length,streak,longestStreak,firstDay:keys[0]??null,lastDay:keys.at(-1)??null,
+ return {activeDays:keys.length,streak,longestStreak,firstDay:keys[0]??null,lastDay:keys[keys.length-1]??null,
   todayAnswered:records[today]?.answered??0,todayCorrect:records[today]?.correct??0,
   loggedAnswered,loggedCorrect,
   unattributedAnswered:Math.max(0,integer(totalAnswered)-loggedAnswered),
