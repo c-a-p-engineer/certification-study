@@ -6263,7 +6263,7 @@
     ],
     "difficulty": 3,
     "explanation": "ALBはレイヤー7のHTTP条件（パスベースルーティング）を評価して、異なるターゲットグループへ要求を振り分けることができる。",
-    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-rules.html",
+    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-rules.html",
     "distractorReasons": [
       "正しい。ALBのリスナールールでURLパスに基づく振り分けができる。",
       "NLBのTCPリスナーはアプリケーション層のURLパスを評価しない。",
@@ -6484,7 +6484,7 @@
     ],
     "difficulty": 3,
     "explanation": "コスト配分タグを有効化するとタグ軸で費用分析しやすくなり、AWS Budgetsでは事前に定めた予算に対する通知を構成できる。どちらもチーム別の支出管理で役割が異なる。",
-    "reference": "https://docs.aws.amazon.com/cost-management/latest/userguide/cost-alloc-tags.html",
+    "reference": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html",
     "distractorReasons": [
       "OU構造だけでリソースごとのコスト配分タグが自動生成されるわけではない。",
       "Cost Explorerの集計だけではチーム別タグ分類とBudgets通知の両機能を代替しない。",
