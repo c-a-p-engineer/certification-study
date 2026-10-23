@@ -13,7 +13,7 @@ test('normal practice drives a persistent campaign and one atomic progress write
  assert.ok(source.includes('enemyCampaign:strike.state'));
  assert.ok(source.includes('xp:p.xp+(ok?100+Math.min(nextCombo,10)*20:15)+strike.bonusXp'));
  assert.ok(source.includes('const strike=applyCampaignAnswer(p.enemyCampaign,campaignEvent)'));
- assert.ok(source.includes('setCampaignHit(examMode||bossMode?null:attack)'));
+ assert.ok(source.includes('setCampaignHit(examMode||bossMode||!ok?null:attack)'));
  assert.ok(source.includes('setCampaignHit(null)'));
 });
 test('campaign is visible on dashboard, quiz and results; exam excludes combat',()=>{
