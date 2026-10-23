@@ -379,3 +379,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
  .quiz .progress-track{margin:16px 0 19px}
  .question-card h2{margin:16px 0 19px}
 }
+
+/* Player title is visible on mobile, not hidden in a desktop-only hover tooltip. */
+.player-title-chip{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 13px;margin:12px 0 0;border:1px solid #cebd78;border-radius:99px;background:#3b3449d9;color:#ffe8b0;font-weight:900;font-size:12px;box-shadow:0 0 17px #edc56b25}
+.player-title-chip>svg{color:#fff0b0}.player-title-chip strong{color:#fff7cc;font-size:14px}
+.player-title-chip span{color:#c4d8f4;font-size:11px;padding-left:10px;border-left:1px solid #cfbf9b88}
+@media(max-width:700px){.player-title-chip{max-width:100%;margin:9px 0 0;padding:7px 10px;gap:6px}.player-title-chip strong{font-size:12px}.player-title-chip span{font-size:10px;padding-left:7px}}
