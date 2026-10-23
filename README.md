@@ -18,6 +18,34 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 332 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## OVERDRIVE 4.1 — Enemy Campaign (SVG)
+
+Every ordinary practice run (missions, scenario study, weakness review and spaced-retrieval study) now contributes to a persistent **nine-monster RPG campaign**. The four existing 10-question domain bosses remain separate challenges with their own medal and relic rewards.
+
+### Continuous progression
+
+| Order | Monster | HP | First clear bonus XP |
+| --- | --- | ---: | ---: |
+| 1 | TRAINING SLIME | 40 | 60 |
+| 2 | MEMORY ZOMBIE | 75 | 100 |
+| 3 | CACHE ARMOR | 120 | 140 |
+| 4 | MULTI-SERVICE CHIMERA | 180 | 220 |
+| 5 | ARCH DRAGON | 260 | 320 |
+| 6 | ZERO TRUST CERBERUS | 320 | 400 |
+| 7 | FAILOVER PHOENIX | 400 | 450 |
+| 8 | LATENCY TITAN | 480 | 500 |
+| 9 | COST LEVIATHAN | 600 | 600 |
+
+Monster HP carries over from one practice session to the next, even across browser reloads. The monster archive records each clear and reveals the next enemy. After defeating the ninth monster, the campaign remains complete and cannot award repeated clear bonuses.
+
+A unique correctly answered question deals **10 base damage**; difficulty 3 adds 3 damage, a review that was due before the answer adds 2, and correcting a prior mistake adds 2. The total is multiplied by **1.2x at 3 combos**, **1.5x at 5**, or **2x at 7+**, then rounded to an integer. A given question ID can only damage a particular monster **once**, regardless of repeated attempts or combo changes. Damage does not spill over into the next enemy. This limits repeated-question XP farming while rewarding knowledge retrieval.
+
+The campaign uses nine original lightweight inline SVG monsters with state-dependent cracks, glow, hit effects, and defeat animation. Four domain-boss selector cards and the in-battle HUD also display distinct monster illustrations. Animations respect `prefers-reduced-motion` and the in-app reduced-motion preference.
+
+The campaign is **disabled in timed exam trials** and **does not stack extra monster hits onto 4.0 domain-boss encounters**. The existing progress localStorage key (`certification-overdrive-progress-v1`), XP history, daily contracts, 4.0 medals and separate mission saves are retained. The new optional `enemyCampaign` value is normalized on load; no wipe or version migration is required.
+
+Run `npm run test:campaign` for combat, escalating HP, combo math, duplicate-answer defense, save/restore, exam isolation, end-of-campaign, visuals and mobile/reduced-motion guard tests. The CI `npm run build` runs these alongside all existing tests.
+
 ## OVERDRIVE 4.0 — The Architect's Trial
 
 The 4.0 dashboard has **four domain-specific bosses**, **nine growing AWS topic nodes** and **seven collectible cosmetic relics**.

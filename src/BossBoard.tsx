@@ -1,6 +1,7 @@
 import React from 'react';
 import {ArrowRight,Flame,Shield,Skull,Trophy} from 'lucide-react';
 import {BOSSES,normalizeBossRecords,bossOutcome,type BossDomain,type BossRecords} from './bossCampaign.ts';
+import MonsterArt from './MonsterArt';
 import './overdrive4.css';
 export default function BossBoard({records,onChallenge}:{records?:BossRecords;onChallenge:(domain:BossDomain)=>void}){
  const saved=normalizeBossRecords(records);
@@ -10,7 +11,7 @@ export default function BossBoard({records,onChallenge}:{records?:BossRecords;on
   <div className="od4-boss-grid">{BOSSES.map((boss,i)=>{
    const record=saved[boss.domain],medal=record?bossOutcome(record.bestCorrect,10).grade:null;
    return <article key={boss.code} className={'od4-boss-card od4-boss-'+i+(record?' od4-cleared':'')}>
-    <div className="od4-boss-crest" aria-hidden="true"><Skull size={36}/><span>{boss.symbol}</span></div>
+    <div className="od4-boss-crest" aria-hidden="true"><MonsterArt id={(['cerberus','phoenix','titan','leviathan'] as const)[i]} hpRatio={record?0.4:1}/></div>
     <div className="od4-boss-meta"><span>DOMAIN {String(i+1).padStart(2,'0')}</span><span>{boss.domain}</span></div>
     <h3>{boss.name}</h3><p>{boss.subtitle}</p>
     <div className="od4-boss-intel"><Shield size={15}/>{boss.weakness}</div>
