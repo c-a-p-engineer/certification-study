@@ -76,6 +76,11 @@ function App(){
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [audioSettings,setAudioSettings]=useState<AudioSettings>(readAudioSettings);
  const [audioOpen,setAudioOpen]=useState(false);
+ const [menuOpen,setMenuOpen]=useState(false);
+ const [menuTab,setMenuTab]=useState<'status'|'achievements'|'settings'>('status');
+ const menuCloseRef=useRef<HTMLButtonElement|null>(null);
+ const [hapticMode,setHapticMode]=useState<HapticMode>(readHapticMode);
+ const [earnedXP,setEarnedXP]=useState(0);
  const audioRef=useRef<AudioDirector|null>(null);
  const [sceneEffect,setSceneEffect]=useState<{type:string;id:number}|null>(null);
  const effectCounter=useRef(0);
@@ -89,6 +94,16 @@ function App(){
  function playCue(effect:SoundEffect,scene?:MusicScene){if(!audioSettings.sfxEnabled&&!audioSettings.bgmEnabled)return;const engine=getAudio();engine.configure(audioSettings);void engine.unlock().then(()=>{engine.setScene(scene??musicScene());engine.play(effect)})}
  function setAudio(patch:Partial<AudioSettings>){const updated={...audioSettings,...patch};setAudioSettings(updated);const engine=getAudio();engine.configure(updated);if(updated.bgmEnabled||updated.sfxEnabled){void engine.unlock().then(()=>engine.setScene(musicScene()))}}
  function toggleAudio(){const enabled=!audioSettings.bgmEnabled&&!audioSettings.sfxEnabled;setAudio({bgmEnabled:enabled,sfxEnabled:enabled})}
+ function haptic(event:HapticEvent,exam=examMode){triggerHaptic(event,hapticMode,reduced,exam)}
+ function changeHaptics(value:HapticMode){setHapticMode(value);writeHapticMode(value);if(value!=='off')triggerHaptic('select',value,reduced)}
+ function showMenu(tab:'status'|'achievements'|'settings'='status'){setAudioOpen(false);setMenuTab(tab);setMenuOpen(true)}
+ useEffect(()=>{if(!menuOpen)return;const previouslyFocused=document.activeElement as HTMLElement|null;menuCloseRef.current?.focus();const onKey=(event:KeyboardEvent)=>{if(event.key==='Escape')setMenuOpen(false);if(event.key==='Tab'){
+  const focusable=Array.from(document.querySelectorAll<HTMLElement>('.command-drawer button:not([disabled]),.command-drawer input:not([disabled])'));
+  const first=focusable[0],last=focusable[focusable.length-1];if(!first||!last)return;
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+ }};document.addEventListener('keydown',onKey);return()=>{document.removeEventListener('keydown',onKey);previouslyFocused?.focus()}},[menuOpen]);
+
  function pulse(type:string){if(reduced)return;effectCounter.current++;setSceneEffect({type,id:effectCounter.current})}
  useEffect(()=>{saveAudioSettings(audioSettings);audioRef.current?.configure(audioSettings)},[audioSettings]);
  useEffect(()=>{audioRef.current?.setScene(musicScene())},[mode,bossMode,examMode,studyMode]);
@@ -114,6 +129,7 @@ function App(){
  const today=localDay();
  const daily=progress.daily?.date===today?progress.daily:{date:today,answered:0,correct:0};
  const rank=rankFor(progress.xp);
+ const profile=gameProfile(progress,questions.length);
  return <div className={`app ${reduced?'reduced':''}`}>
   {sceneEffect&&!reduced&&<div key={sceneEffect.id} className={`impact-layer impact-${sceneEffect.type}`} aria-hidden="true"><div className="impact-ring"/><div className="impact-word">{sceneEffect.type==='boss-win'?'BOSS DOWN!':sceneEffect.type==='combo'?'HYPER COMBO!':sceneEffect.type==='wrong'?'RETRY!':sceneEffect.type==='reward'?'DAILY CLEAR!':sceneEffect.type==='rank'?'RANK UP!':sceneEffect.type==='correct'?'NICE! +XP':sceneEffect.type==='boss-hit'?'CRITICAL HIT!':sceneEffect.type==='boss-start'?'BOSS APPROACHING!':sceneEffect.type==='finish'?'STAGE CLEAR!':'MISSION START!'}</div>{Array.from({length:20},(_,i)=><i key={i} style={{'--fx-a':`${i*18}deg`,'--fx-d':`${80+i%5*35}px`} as React.CSSProperties}/>)}</div>}{rankNotice&&<div className="rank-overlay" role="status" aria-live="polite"><div><Trophy size={38}/><strong>RANK UP!</strong><span>{rankNotice}</span><button onClick={()=>setRankNotice('')}>CONTINUE <ArrowRight size={18}/></button></div></div>}<div className="grid-bg"/><div className="orb orb-a"/><div className="orb orb-b"/>
   <header className="topbar"><button className="brand" onClick={()=>setMode('home')}><Zap size={22} fill="currentColor"/> CERT<span>//</span>OVERDRIVE</button><div className="top-actions"><span className="top-rank"><Trophy size={15}/> {rank}</span><button className="icon-btn" aria-label={audioSettings.bgmEnabled||audioSettings.sfxEnabled?"音をすべてオフ":"音をオン"} aria-pressed={audioSettings.bgmEnabled||audioSettings.sfxEnabled} onClick={toggleAudio}>{audioSettings.bgmEnabled||audioSettings.sfxEnabled?<Volume2 size={19}/>:<VolumeX size={19}/>}</button><button className="icon-btn" aria-label="音楽と演出の設定" aria-expanded={audioOpen} onClick={()=>setAudioOpen(!audioOpen)}><Settings2 size={19}/></button></div></header>{audioOpen&&<section className="sound-settings" aria-label="サウンドと演出の設定"><div className="sound-settings-heading"><Volume2 size={18}/><strong>GAME AUDIO / FX</strong><button onClick={()=>setAudioOpen(false)} aria-label="設定を閉じる">×</button></div><label className="sound-toggle"><input type="checkbox" checked={audioSettings.bgmEnabled} onChange={e=>setAudio({bgmEnabled:e.target.checked})}/><span>BGM · 場面別の音楽</span></label><label className="sound-range">BGM VOLUME <span>{Math.round(audioSettings.bgmVolume*100)}%</span><input type="range" min="0" max="100" step="5" value={Math.round(audioSettings.bgmVolume*100)} onChange={e=>setAudio({bgmVolume:Number(e.target.value)/100})}/></label><label className="sound-toggle"><input type="checkbox" checked={audioSettings.sfxEnabled} onChange={e=>setAudio({sfxEnabled:e.target.checked})}/><span>SE · 正解/コンボ/ボス/報酬</span></label><label className="sound-range">SE VOLUME <span>{Math.round(audioSettings.sfxVolume*100)}%</span><input type="range" min="0" max="100" step="5" value={Math.round(audioSettings.sfxVolume*100)} onChange={e=>setAudio({sfxVolume:Number(e.target.value)/100})}/></label><button className="sound-test" disabled={!audioSettings.sfxEnabled} onClick={()=>playCue('reward')}>効果音を試聴 <Sparkles size={16}/></button><label className="sound-toggle"><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/><span>演出を軽減する（動き・フラッシュ）</span></label><small>音は初期状態でOFF。音源はアプリ内で生成され、外部からBGMを取得しません。</small></section>}
