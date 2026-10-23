@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Zap, Trophy, Target, RotateCcw, Volume2, VolumeX, Sparkles, BookOpen, Shield, ArrowRight, Flame, Settings2, Menu, ChevronDown } from 'lucide-react';
+import { Zap, Trophy, RotateCcw, Volume2, VolumeX, BookOpen, ArrowRight, Flame, Menu, ChevronDown } from 'lucide-react';
 import './style.css';
 import questionBank from './generated/questions.json';
 import {scheduleReview,rateReview,dueQuestionIds,reviewCounts,type ReviewMap} from './studyScheduler';
