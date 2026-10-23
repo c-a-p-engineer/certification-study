@@ -8,13 +8,25 @@ export type ProfileInput={
  activity?:ActivityHistory;
 };
 export const RANKS=[
- {name:'ROOKIE',minXP:0,minAnswers:0,minDays:0},
- {name:'BRONZE',minXP:1000,minAnswers:8,minDays:1},
- {name:'SILVER',minXP:4500,minAnswers:30,minDays:3},
- {name:'GOLD',minXP:12000,minAnswers:90,minDays:7},
- {name:'PLATINUM',minXP:26000,minAnswers:180,minDays:14},
- {name:'DIAMOND',minXP:55000,minAnswers:350,minDays:28},
- {name:'LEGEND',minXP:120000,minAnswers:700,minDays:50}
+ {name:'ROOKIE',subtitle:'駆け出しの探究者',minXP:0,minAnswers:0,minDays:0},
+ {name:'SPARK',subtitle:'覚醒の火花',minXP:300,minAnswers:3,minDays:1},
+ {name:'SCOUT',subtitle:'クラウド斥候',minXP:700,minAnswers:6,minDays:1},
+ {name:'BRONZE',subtitle:'青銅の挑戦者',minXP:1000,minAnswers:8,minDays:1},
+ {name:'SEEKER',subtitle:'知識の探索者',minXP:1700,minAnswers:12,minDays:2},
+ {name:'NAVIGATOR',subtitle:'雲路の航海士',minXP:2600,minAnswers:18,minDays:2},
+ {name:'SILVER',subtitle:'白銀の設計士',minXP:4500,minAnswers:30,minDays:3},
+ {name:'VANGUARD',subtitle:'先陣のエンジニア',minXP:6500,minAnswers:45,minDays:4},
+ {name:'STRATEGIST',subtitle:'戦略の立案者',minXP:9000,minAnswers:65,minDays:5},
+ {name:'GOLD',subtitle:'黄金の構築者',minXP:12000,minAnswers:90,minDays:7},
+ {name:'ARCHITECT',subtitle:'クラウド建築家',minXP:17000,minAnswers:125,minDays:10},
+ {name:'SENTINEL',subtitle:'障害を防ぐ番人',minXP:22000,minAnswers:155,minDays:12},
+ {name:'PLATINUM',subtitle:'白金の守護者',minXP:26000,minAnswers:180,minDays:14},
+ {name:'PHANTOM',subtitle:'冗長化の幻影',minXP:36000,minAnswers:230,minDays:20},
+ {name:'ASCENDANT',subtitle:'極限を越える者',minXP:45000,minAnswers:290,minDays:24},
+ {name:'DIAMOND',subtitle:'金剛の達人',minXP:55000,minAnswers:350,minDays:28},
+ {name:'PARAGON',subtitle:'理想設計の体現者',minXP:70000,minAnswers:450,minDays:35},
+ {name:'MYTHIC',subtitle:'伝説へ挑む者',minXP:90000,minAnswers:575,minDays:42},
+ {name:'LEGEND',subtitle:'雲界の伝説',minXP:120000,minAnswers:700,minDays:50},
 ] as const;
 
 export function gameProfile(progress:ProfileInput,totalQuestions:number,now=Date.now()){
@@ -39,7 +51,7 @@ export function gameProfile(progress:ProfileInput,totalQuestions:number,now=Date
   {id:'scholar',label:'MEMORY MASTER',description:'定着30問',unlocked:learned>=30,icon:'✺'},
   {id:'legend',label:'OVERDRIVE LEGEND',description:'LEGENDランク',unlocked:ranked.name==='LEGEND',icon:'★'}
  ];
- return {xp,answered,level,levelStart,nextLevelXP,levelPct,rank:ranked.name,rankIndex:currentIndex,nextRank:nextRank?.name??null,
+ return {xp,answered,level,levelStart,nextLevelXP,levelPct,rank:ranked.name,rankSubtitle:ranked.subtitle,rankIndex:currentIndex,nextRank:nextRank?.name??null,nextRankSubtitle:nextRank?.subtitle??null,
   rankGoal:nextRank?{xp:nextRank.minXP,answers:nextRank.minAnswers,days:nextRank.minDays}:null,
   xpToNextRank:nextRank?Math.max(0,nextRank.minXP-xp):0,
   answersToNextRank:nextRank?Math.max(0,nextRank.minAnswers-answered):0,
