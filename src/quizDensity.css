@@ -1,0 +1,79 @@
+/* Quiz reading controls: maintain legible opt-in sizes and 44px+ touch targets. */
+.app.reading-compact{--study-question:19px;--study-answer:15px;--study-explanation:14px;--study-support:13px;--study-menu:14px;--study-gap:9px}
+.app.reading-small{--study-question:21px;--study-answer:16px;--study-explanation:15px;--study-support:13px;--study-menu:14px;--study-gap:11px}
+.app.reading-compact .question-card h2{line-height:1.48;letter-spacing:0}
+.app.reading-small .question-card h2{line-height:1.55;letter-spacing:0}
+.app.reading-compact .answer,.app.reading-small .answer{line-height:1.52}
+.app.reading-compact .explanation p,.app.reading-small .explanation p{line-height:1.75!important}
+.app .cq-controls{display:flex;align-items:center;gap:5px;flex-wrap:nowrap}
+.app .cq-controls button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:45px;min-height:45px;padding:7px 8px;border:1px solid #7798b5;border-radius:8px;color:#e9f9ff;background:#283e5a;font-size:14px;font-weight:900;white-space:nowrap;cursor:pointer}
+.app .cq-controls button:disabled{opacity:.38;cursor:not-allowed}
+.app .cq-controls button:focus-visible{outline:3px solid #ffe8a8;outline-offset:2px}
+.app .cq-controls .cq-layout-toggle{padding:7px 10px;font-size:12px}
+.app .cq-controls .cq-scale-indicator{font-size:12px;white-space:nowrap;color:#d3e8f5;font-weight:900;padding:0 2px;min-width:0}
+.app .cq-hud{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:12px;padding:10px 13px;margin:0 0 12px;background:linear-gradient(105deg,#1c3048,#20233f);border:1px solid #809cba;border-radius:12px;color:#f4fbff}
+.app .cq-hud-portrait{min-width:0;width:60px;display:grid;place-items:center}
+.app .cq-hud-portrait .monster-visual{width:60px;height:62px}
+.app .cq-hud-content{min-width:0}
+.app .cq-hud-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff;font-size:13px;font-weight:900}
+.app .cq-hud-top strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Barlow Condensed',system-ui,sans-serif;font-size:clamp(15px,2.5vw,20px);min-width:0}
+.app .cq-hud-top>span{font-size:12px;color:#ffdfa2;white-space:nowrap;font-variant-numeric:tabular-nums}
+.app .cq-hud-meter{height:10px;margin:7px 0;background:#0b192c;border:1px solid #8097ac;border-radius:10px;overflow:hidden}
+.app .cq-hud-meter>div{height:100%;background:linear-gradient(90deg,#70eddf,#ffe3a3);border-radius:inherit;transition:width .25s ease}
+.app .cq-hud-critical .cq-hud-meter>div{background:linear-gradient(90deg,#ff9198,#ffe18a)}
+.app .cq-hud-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px}
+.app .cq-hud-combo,.app .cq-hud-note{display:inline-flex;align-items:center;gap:4px;color:#ffe4a9;font-weight:900}
+.app .cq-hud-combo b{color:#fff4cc}
+.app .cq-hud-note{color:#b8e9f4;white-space:nowrap}
+.app.quiz-compact .quiz{padding-top:12px}
+.app.quiz-compact .quiz-top{padding:11px 13px}
+.app.quiz-compact .progress-track{margin:12px 0 13px;height:6px}
+.app.quiz-compact .question-card{padding:19px 17px}
+.app.quiz-compact .question-card h2{margin:9px 0 14px;line-height:1.48}
+.app.quiz-compact .question-meta{letter-spacing:.03em;line-height:1.5}
+.app.quiz-compact .question-terms{margin-bottom:11px}
+.app.quiz-compact .question-terms .study-terms-panel>summary.term-panel-heading{padding:8px 11px;min-height:45px;gap:7px}
+.app.quiz-compact .question-terms .study-terms-panel>summary.term-panel-heading strong{font-size:var(--study-support)}
+.app.quiz-compact .question-terms .study-terms-panel>summary.term-panel-heading span{font-size:12px}
+.app.quiz-compact .answers{gap:9px}
+.app.quiz-compact .answer{min-height:65px;padding:12px 13px;gap:11px;line-height:1.54}
+.app.quiz-compact .answer .letter{height:38px;min-width:38px;flex-basis:38px;font-size:17px}
+.app.quiz-compact .answer .answer-state{font-size:12px}
+.app.quiz-compact .answer .answer-mark{font-size:17px}
+.app.quiz-compact .explanation{margin-top:14px}
+.app.quiz-compact .explanation .xp-award{margin:10px 0}
+.app.quiz-compact .question-terms + .answer-instructions{margin-top:12px}
+@media(max-width:700px){
+ .app.reading-compact{--study-question:18px;--study-answer:14px;--study-explanation:14px;--study-support:13px;--study-menu:14px;--study-gap:8px}
+ .app.reading-small{--study-question:20px;--study-answer:15px;--study-explanation:15px;--study-support:13px;--study-menu:14px;--study-gap:10px}
+ .app.reading-compact .question-card h2,.app.reading-small .question-card h2{line-height:1.5}
+ .app .quiz-top{flex-wrap:wrap}
+ .app .cq-controls{margin-left:auto}
+ .app .cq-controls button{min-height:44px;min-width:44px;padding:6px 7px}
+ .app .cq-controls .cq-scale-indicator{font-size:11px}
+ .app .quiz-compact .quiz-top{gap:6px}
+ .app.quiz-compact .quiz-stage{font-size:14px;letter-spacing:.03em}
+ .app.quiz-compact .question-card{padding:16px 12px}
+ .app.quiz-compact .question-card h2{margin:8px 0 15px;line-height:1.5}
+ .app.quiz-compact .answer{min-height:62px;padding:10px 11px;gap:9px}
+ .app.quiz-compact .answer .letter{min-width:36px;flex-basis:36px;height:36px}
+ .app.quiz-compact .answer .answer-state{font-size:11px}
+ .app.quiz-compact .cq-hud{padding:8px 11px;gap:9px;grid-template-columns:54px minmax(0,1fr)}
+ .app.quiz-compact .cq-hud-portrait{width:52px}
+ .app.quiz-compact .cq-hud-portrait .monster-visual{width:52px;height:53px}
+ .app .gm-reading-size{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:390px){
+ .app .quiz-top .back{font-size:10px}
+ .app .quiz-stage{font-size:13px}
+ .app .cq-hud-top{gap:5px}
+ .app .cq-hud-top strong{font-size:15px}
+ .app .cq-hud-top>span{font-size:11px}
+ .app .cq-hud-bottom{font-size:11px}
+ .app .cq-hud-note{font-size:11px}
+ .app .cq-controls .cq-scale-indicator{display:none}
+ .app.quiz-compact .question-card{padding:13px 10px}
+ .app.quiz-compact .answer{padding:10px 8px;gap:8px}
+}
+@media(prefers-reduced-motion:reduce){.app .cq-hud-meter>div{transition:none}}
+.app.reduced .cq-hud-meter>div{transition:none}
