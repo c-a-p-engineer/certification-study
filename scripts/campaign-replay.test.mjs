@@ -17,7 +17,7 @@ test('NG+ increases every monster HP without re-granting first-clear XP',()=>{
  assert.equal(restartCampaign(current).hp,campaignMaxHp(ENEMIES[0],2));
 });
 test('corrupt first-run award flags cannot retroactively mark a cleared monster',()=>{
- assert.deepEqual(normalizeEnemyCampaign({stageIndex:0,hp:20,cleared:['slime'],completed:false}),initialEnemyCampaign().hp===20?{}:normalizeEnemyCampaign({stageIndex:0,hp:20,cleared:[],completed:false}));
+ assert.deepEqual(normalizeEnemyCampaign({stageIndex:0,hp:20,cleared:['slime'],completed:false}),normalizeEnemyCampaign({stageIndex:0,hp:20,cleared:[],completed:false}));
 });
 test('HUD and archive display cycle number and an opt-in replay button',()=>{
  const board=readFileSync('src/EnemyCampaignPanel.tsx','utf8');
