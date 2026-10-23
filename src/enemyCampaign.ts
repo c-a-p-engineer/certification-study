@@ -17,7 +17,8 @@ export type HitRecord={enemyId:EnemyId;questionId:string;damage:number;combo:num
 export type DefeatRecord={enemyId:EnemyId;at:number};
 export type EnemyCampaign={
  stageIndex:number;hp:number;cleared:EnemyId[];hitIds:string[];completed:boolean;
- hitHistory?:HitRecord[];defeatHistory?:DefeatRecord[]
+ hitHistory?:HitRecord[];defeatHistory?:DefeatRecord[];
+ cycle?:number;runCleared?:EnemyId[]
 };
 export type CampaignAnswer={
  questionId:string;correct:boolean;exam:boolean;boss:boolean;combo:number;
@@ -27,7 +28,9 @@ export type CampaignHit={
  state:EnemyCampaign;damage:number;multiplier:number;bonusXp:number;
  defeated:typeof ENEMIES[number]|null;credited:boolean;critical:boolean
 };
-export const initialEnemyCampaign=():EnemyCampaign=>({stageIndex:0,hp:ENEMIES[0].hp,cleared:[],hitIds:[],completed:false,hitHistory:[],defeatHistory:[]});
+export const initialEnemyCampaign=():EnemyCampaign=>({stageIndex:0,hp:ENEMIES[0].hp,cleared:[],hitIds:[],completed:false,hitHistory:[],defeatHistory:[],cycle:0,runCleared:[]});
+export function campaignMaxHp(enemy:typeof ENEMIES[number],cycle=0):number{return Math.ceil(enemy.hp*(1+.25*Math.min(4,Math.max(0,cycle))))}
+export function enemyMaxHp(value:unknown):number{const state=normalizeEnemyCampaign(value);return campaignMaxHp(ENEMIES[state.stageIndex],state.cycle)}
 const isEnemyId=(value:unknown):value is EnemyId=>ENEMIES.some(e=>e.id===value);
 const validIds=(value:unknown):string[]=>Array.isArray(value)?[...new Set(value.filter((v):v is string=>typeof v==='string'&&v.length>0&&v.length<=160))].slice(0,500):[];
 /** Invalid, missing or legacy progress data cannot manufacture a cleared monster. */
@@ -36,16 +39,18 @@ export function normalizeEnemyCampaign(value:unknown):EnemyCampaign{
  const raw=value as Partial<EnemyCampaign>;
  const stageIndex=Number.isInteger(raw.stageIndex)&&raw.stageIndex!>=0&&raw.stageIndex!<ENEMIES.length?raw.stageIndex!:0;
  const stage=ENEMIES[stageIndex];
+ const cycle=Number.isSafeInteger(raw.cycle)&&raw.cycle!>=0&&raw.cycle!<=9999?raw.cycle!:0;
+ const maxHp=campaignMaxHp(stage,cycle);
  const expectedCleared=ENEMIES.slice(0,stageIndex).map(e=>e.id);
  const cleared=Array.isArray(raw.cleared)?raw.cleared.filter(isEnemyId):[];
  const hasHistory=expectedCleared.every(id=>cleared.includes(id));
  if(stageIndex>0&&!hasHistory)return initialEnemyCampaign();
  const completed=stageIndex===ENEMIES.length-1&&raw.completed===true&&cleared.includes(stage.id);
- const hp=completed?0:Number.isInteger(raw.hp)&&raw.hp!>0&&raw.hp!<=stage.hp?raw.hp!:stage.hp;
+ const hp=completed?0:Number.isInteger(raw.hp)&&raw.hp!>0&&raw.hp!<=maxHp?raw.hp!:maxHp;
  const hits=Array.isArray(raw.hitHistory)?raw.hitHistory.filter((x):x is HitRecord=>!!x&&isEnemyId(x.enemyId)&&typeof x.questionId==='string'&&Number.isSafeInteger(x.damage)&&x.damage>0&&Number.isSafeInteger(x.combo)&&Number.isFinite(x.at)&&typeof x.attribute==='string').slice(-24):[];
  const defeats=Array.isArray(raw.defeatHistory)?raw.defeatHistory.filter((x):x is DefeatRecord=>!!x&&isEnemyId(x.enemyId)&&typeof x.at==='number'&&Number.isFinite(x.at)&&cleared.includes(x.enemyId)).slice(-ENEMIES.length):[];
- return {stageIndex,hp,cleared:completed?[...new Set([...expectedCleared,stage.id])]:expectedCleared,
-  hitIds:completed?[]:validIds(raw.hitIds),completed,hitHistory:hits,defeatHistory:defeats};
+ return {stageIndex,hp,cleared:completed?[...new Set([...cleared,...expectedCleared,stage.id])]:[...new Set([...cleared,...expectedCleared])],
+  hitIds:completed?[]:validIds(raw.hitIds),completed,hitHistory:hits,defeatHistory:defeats,cycle,runCleared:Array.isArray(raw.runCleared)?raw.runCleared.filter(isEnemyId):[]};
 }
 export function currentEnemy(value:unknown){return ENEMIES[normalizeEnemyCampaign(value).stageIndex]}
 export function comboMultiplier(combo:number):number{
@@ -69,16 +74,24 @@ export function applyCampaignAnswer(value:unknown,event:CampaignAnswer):Campaign
  const attribute=({'セキュリティ':'SHIELD','耐障害性':'RECOVERY','パフォーマンス':'SPEED','コスト最適化':'EFFICIENCY'} as Record<string,string>)[event.domain??'']??'KNOWLEDGE';
  const hit:HitRecord={enemyId:enemy.id,questionId:event.questionId,damage:Math.min(state.hp,damage),combo:event.combo,attribute,at};
  const hitHistory=[...(state.hitHistory??[]),hit].slice(-24);
- const defeatHistory=defeated?[...(state.defeatHistory??[]),{enemyId:enemy.id,at}].slice(-ENEMIES.length):state.defeatHistory;
+ const defeatHistory=defeated?[...(state.defeatHistory??[]),{enemyId:enemy.id,at}].slice(-24):state.defeatHistory;
  const next:EnemyCampaign=defeated
   ?{stageIndex:nextIndex,hp:last?0:ENEMIES[nextIndex].hp,
-    cleared:[...state.cleared,enemy.id],hitIds:[],completed:last,hitHistory,defeatHistory}
+    cleared:[...new Set([...state.cleared,enemy.id])],hitIds:[],completed:last,hitHistory,defeatHistory,runCleared:[...(state.runCleared??[]),enemy.id],cycle:state.cycle}
   :{...state,hp:remaining,hitIds:[...state.hitIds,event.questionId],hitHistory,defeatHistory};
  return {state:next,damage:Math.min(state.hp,damage),multiplier,
-  bonusXp:defeated?enemy.rewardXp:0,defeated:defeated?enemy:null,
+  bonusXp:defeated&&!state.cleared.includes(enemy.id)?enemy.rewardXp:0,defeated:defeated?enemy:null,
   credited:true,critical:event.difficulty===3||!!event.reviewDue||!!event.previouslyIncorrect};
 }
 export function campaignCollection(value:unknown){
  const state=normalizeEnemyCampaign(value);
  return ENEMIES.map((enemy,i)=>({...enemy,discovered:i<=state.stageIndex,cleared:state.cleared.includes(enemy.id)}));
+}
+
+/** NG+ is opt-in after all nine monsters. No new clear XP is available on repeats. */
+export function restartCampaign(value:unknown):EnemyCampaign{
+ const state=normalizeEnemyCampaign(value);
+ if(!state.completed)return state;
+ const cycle=Math.min(9999,(state.cycle??0)+1);
+ return {...state,stageIndex:0,hp:campaignMaxHp(ENEMIES[0],cycle),completed:false,hitIds:[],cycle,runCleared:[]};
 }
