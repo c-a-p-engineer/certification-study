@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-const source='certifications/aws-saa/questions/bank.jsonl';
-const lines=readFileSync(source,'utf8').split(/\r?\n/).filter(x=>x.trim());
+import { writeFileSync, mkdirSync } from 'node:fs';
+import {loadSourceLines} from './question-source.mjs';
+const lines=loadSourceLines();
 const ids=new Set(); const stems=new Set(); const questions=[];
 for(let i=0;i<lines.length;i++){
  let q; try{q=JSON.parse(lines[i])}catch(e){throw new Error('Invalid JSONL at line '+(i+1)+': '+e.message)}
