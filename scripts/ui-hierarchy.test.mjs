@@ -10,7 +10,7 @@ test('one prominent launch and one menu for advanced options',()=>{
  assert.ok(source.includes('className="quick-start"'));
  assert.ok(source.includes('className="game-menu-trigger"'));
  assert.ok(source.includes('onClick={toggleAudio}'));
- assert.ok(source.includes('<GameMenu tab={menuTab}'));
+ assert.ok(source.includes('<GameMenu titles={titleCollection}'));
  assert.equal(source.includes('audioOpen'),false);
  assert.equal(source.includes('sound-settings'),false);
  assert.equal(source.includes('className="mission-go"'),false);
