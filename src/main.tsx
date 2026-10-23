@@ -111,7 +111,7 @@ function App(){
  useEffect(()=>()=>{audioRef.current?.dispose();audioRef.current=null},[]);
  useEffect(()=>{if(!sceneEffect)return;const id=window.setTimeout(()=>setSceneEffect(null),1450);return()=>window.clearTimeout(id)},[sceneEffect]);
  useEffect(()=>{localStorage.setItem(key,JSON.stringify(progress))},[progress]);
- useEffect(()=>{const current=rankFor(progress.xp);if(previousRank.current!==current){setRankNotice(current);audioRef.current?.play('rank');pulse('rank')}previousRank.current=current},[progress.xp]);
+ useEffect(()=>{const current=rankFor(progress.xp);if(previousRank.current!==current){setRankNotice(current);audioRef.current?.play('rank');triggerHaptic('rank',hapticMode,reduced,false);pulse('rank')}previousRank.current=current},[progress.xp]);
  useEffect(()=>{if(!examMode||mode!=='quiz')return;const tick=()=>setTimeLeft(Math.max(0,Math.ceil((examDeadline-Date.now())/1000)));tick();const id=window.setInterval(tick,1000);return()=>window.clearInterval(id)},[examMode,mode,examDeadline]);
  useEffect(()=>{if(!examMode||mode!=='quiz')return;const save:ExamSave={ids:pool.map(q=>q.id),index,selected,multiChoices,choiceOrder,answers:sessionAnswers,session,deadline:examDeadline};localStorage.setItem(examSaveKey,JSON.stringify(save));setExamSave(save)},[examMode,mode,pool,index,selected,multiChoices,choiceOrder,sessionAnswers,session,examDeadline]);
  useEffect(()=>{if(mode==='result'&&examMode){localStorage.removeItem(examSaveKey);setExamSave(null)}},[mode,examMode]);
