@@ -5,8 +5,8 @@ import {loadQuestions} from './question-source.mjs';
 import {EXAM_WEIGHTS,coverageVsGuide,qualitySignals,similarity,nearDuplicateCandidates,SIMILARITY_CANDIDATE_THRESHOLD} from './quality-metrics.mjs';
 const bank=loadQuestions(),byId=new Map(bank.map(q=>[q.id,q]));
 const ledger=JSON.parse(readFileSync('reports/editorial-evidence-2026-10-24.json','utf8'));
-test('340 AWS original questions remain stable; 19 targeted corrections have complete rationale',()=>{
- assert.equal(bank.length,340);
+test('348 AWS original questions remain stable; 19 targeted corrections have complete rationale',()=>{
+ assert.equal(bank.length,348);
  assert.equal(new Set(bank.map(q=>q.id)).size,340);
  assert.equal(ledger.entries.length,19);
  const ids=new Set(ledger.entries.map(x=>x.id));assert.equal(ids.size,19);
@@ -47,13 +47,13 @@ test('lower fuzzy threshold produces review candidates, but no automatic deletio
  assert.equal(found.length,1);assert.deepEqual([found[0].a,found[0].b],['a','b']);
  assert.ok(SIMILARITY_CANDIDATE_THRESHOLD<.36);
  const all=nearDuplicateCandidates(bank);
- assert.ok(all.length>0);assert.ok(all.some(x=>x.a==='saa-144'&&x.b==='saa-230'));
- assert.equal(bank.length,340);
+ assert.ok(all.length>0);assert.ok(all.some(x=>x.a==='saa-141'&&x.b==='saa-225'));
+ assert.equal(bank.length,348);
 });
 test('exam guide target weights correctly expose bank imbalance',()=>{
  assert.deepEqual(EXAM_WEIGHTS,{'セキュリティ':30,'耐障害性':26,'パフォーマンス':24,'コスト最適化':20});
  const gap=coverageVsGuide(bank);
- assert.equal(gap['セキュリティ'].total,89);
+ assert.equal(gap['セキュリティ'].total,95);
  assert.equal(gap['コスト最適化'].total,81);
  assert.ok(gap['セキュリティ'].deltaPoints<0);
  assert.ok(gap['コスト最適化'].deltaPoints>0);
