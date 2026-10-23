@@ -35,3 +35,10 @@ test('reject option count change or corrupted saved option order',()=>{
 test('snapshot reader is safe in runtimes without browser storage',()=>{
  assert.equal(readMissionSave(),null);
 });
+
+test('case-only mission resumes without breaking old v1 snapshots',()=>{
+ assert.equal(isMissionSave({...base(),scenario:true}),true);
+ assert.equal(isMissionSave({...base(),scenario:false}),true);
+ assert.equal(isMissionSave(base()),true);
+ assert.equal(isMissionSave({...base(),scenario:'on'}),false);
+});
