@@ -33,6 +33,6 @@ test('profile selection persists separately and old mission data remains legal',
  const main=readFileSync('src/main.tsx','utf8');
  assert.ok(main.includes('planSmartQuest(subset'));
  assert.ok(main.includes('setSmartWhy(saved.smartWhy??{})'));
- assert.ok(main.includes('出題理由'));
+ assert.ok(main.includes('選出理由'));
  const mission=readFileSync('src/missionSave.ts','utf8');assert.ok(mission.includes('smartWhy?:Record<string,string>'));
 });
