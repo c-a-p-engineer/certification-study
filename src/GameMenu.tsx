@@ -3,13 +3,15 @@ import {Award,BarChart3,Crown,Flame,Home,Settings2,Shield,Trophy,Vibrate,Volume2
 import type {AudioSettings} from './audioDirector';
 import {getHapticEnvironment,type HapticMode,type HapticTestResult,type HapticTestKind} from './haptics';
 import type {gameProfile} from './gameProfile';
+import type {Title} from './titleSystem';
 import './gameMenu.css';
 
 type Profile=ReturnType<typeof gameProfile>;
-type Tab='status'|'achievements'|'settings';
+type Tab='status'|'titles'|'achievements'|'settings';
 type DomainStats=Record<string,{correct:number;answered:number}>;
 export type GameMenuProps={
  tab:Tab;onTab:(tab:Tab)=>void;onClose:()=>void;onHome:()=>void;
+ titles:Title[];equippedTitle:string;onEquipTitle:(id:string)=>void;
  closeRef:React.RefObject<HTMLButtonElement>;
  profile:Profile;domains:DomainStats;totalQuestions:number;
  session:{mode:'home'|'quiz'|'result';exam:boolean;boss:boolean;index:number;total:number;correct:number};
@@ -26,6 +28,7 @@ export default function GameMenu(p:GameMenuProps){
  function runHapticTest(kind:HapticTestKind){setFelt(null);setTestResult(p.onVibrationTest(kind))}
  const labels:{id:Tab;label:string;icon:typeof BarChart3}[]=[
   {id:'status',label:'STATUS',icon:BarChart3},
+  {id:'titles',label:'TITLES',icon:Crown},
   {id:'achievements',label:'BADGES',icon:Award},
   {id:'settings',label:'OPTIONS',icon:Settings2}
  ];
@@ -36,7 +39,7 @@ export default function GameMenu(p:GameMenuProps){
    <nav className="game-menu-tabs" role="tablist" aria-label="ゲームメニューの項目">{labels.map(({id,label,icon:Icon})=><button key={id} id={'menu-tab-'+id} type="button" role="tab" aria-controls="menu-active-panel" aria-selected={p.tab===id} className={p.tab===id?'active':''} onClick={()=>p.onTab(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
    <section id="menu-active-panel" className="game-menu-content" role="tabpanel" aria-labelledby={'menu-tab-'+p.tab} key={p.tab}>
     {p.tab==='status'&&<>
-     <div className="gm-character"><div className="gm-avatar"><Crown size={42}/></div><div className="gm-character-info"><h3>{p.profile.rank}</h3><strong>LEVEL {p.profile.level} <span>／ {p.profile.xp.toLocaleString()} XP</span></strong></div></div>
+     <div className="gm-character"><div className="gm-avatar"><Crown size={42}/></div><div className="gm-character-info"><h3>{p.profile.rank}</h3><span className="gm-rank-subtitle">{p.profile.rankSubtitle}</span><span className="gm-equipped-title">{p.titles.find(t=>t.id===p.equippedTitle)?.name}</span><strong>LEVEL {p.profile.level} <span>／ {p.profile.xp.toLocaleString()} XP</span></strong></div></div>
      <div className="gm-level"><div><strong>NEXT LEVEL</strong><span>{Math.max(0,p.profile.nextLevelXP-p.profile.xp).toLocaleString()} XP TO GO</span></div><div className="gm-level-track" role="progressbar" aria-label="次のレベルまでの経験値" aria-valuemin={0} aria-valuemax={100} aria-valuenow={p.profile.levelPct}><div style={{width:p.profile.levelPct+'%'}}/></div></div>
      {p.profile.rankGoal?<div className="gm-next-rank"><strong>NEXT RANK · {p.profile.nextRank}</strong><div className="gm-rank-gates"><span className={p.profile.xpToNextRank===0?'complete':''}>XP <b>{p.profile.xp.toLocaleString()}/{p.profile.rankGoal.xp.toLocaleString()}</b></span><span className={p.profile.answersToNextRank===0?'complete':''}>回答 <b>{p.profile.answered}/{p.profile.rankGoal.answers}問</b></span><span className={p.profile.daysToNextRank===0?'complete':''}>活動 <b>{p.profile.activeDays}/{p.profile.rankGoal.days}日</b></span></div></div>:<div className="gm-next-rank maxed"><Crown size={17}/> LEGEND · 全条件達成</div>}
      {p.session.mode==='quiz'&&<div className="gm-live"><Flame size={20}/><div><strong>{p.session.exam?'EXAM TRIAL':p.session.boss?'BOSS RUSH':'MISSION IN PROGRESS'}</strong><span>{p.session.index+1} / {p.session.total} 問 · 正解 {p.session.correct} 問</span></div></div>}
@@ -54,6 +57,12 @@ export default function GameMenu(p:GameMenuProps){
      <h4 className="gm-section-title">DOMAIN CLEAR RATE <small>累計正答率</small></h4>
      <div className="gm-domains">{domainNames.map(name=>{const item=p.domains?.[name];const accuracy=item?.answered?Math.round(item.correct/item.answered*100):0;return <div key={name}><div><span>{name}</span><strong>{accuracy}% <small>({item?.answered||0}回)</small></strong></div><div className="gm-domain-track"><div style={{width:accuracy+'%'}}/></div></div>})}</div>
      <p className="gm-caveat">活動日数は日付が記録されている分のみです。LEGENDはXP・回答数・活動日のすべてが必要。AWS試験の予測スコアではありません。</p>
+    </>}
+    {p.tab==='titles'&&<>
+     <div className="gm-titles-heading"><strong>{p.titles.filter(item=>item.unlocked).length} / {p.titles.length} 解放済み</strong><span>獲得した称号を選んで装備できます。</span></div>
+     <div className="gm-title-list">{p.titles.map(item=><button key={item.id} type="button" className={'gm-title-item '+(item.unlocked?'unlocked':'locked')+(p.equippedTitle===item.id?' equipped':'')} aria-pressed={p.equippedTitle===item.id} disabled={!item.unlocked} onClick={()=>p.onEquipTitle(item.id)}>
+      <Crown size={20}/><span><strong>{item.name}</strong><small>{item.description}</small></span><b>{p.equippedTitle===item.id?'装備中':item.unlocked?'装備':'未解放'}</b>
+     </button>)}</div>
     </>}
     {p.tab==='achievements'&&<>
      <div className="gm-badge-heading"><Trophy size={35}/><div><strong>{p.profile.unlockedAchievements} / {p.profile.allAchievements} UNLOCKED</strong></div></div>
