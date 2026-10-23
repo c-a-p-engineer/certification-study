@@ -18,6 +18,21 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 340 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## OVERDRIVE 5.6 — Editorial Evidence and Quality Triage
+
+**5.6 is the first documented review tranche, not a claim that all 340 answers have been independently approved.**
+
+- **19 questions clarified** after targeted comparison with specific current AWS documentation. Fixes cover RDS Multi-AZ DB instances versus readable DB clusters, Aurora reader endpoint corner cases, S3 Lifecycle versus Intelligent-Tiering and its 128KB behavior, S3 versioning, Object Lock, Route 53 DNS failover, SCP permission boundaries, and S3 replication prerequisites. Three repetitive knowledge questions were rewritten into more concrete architecture cases. All IDs and correct-choice indices were retained to preserve local progress.
+- Source-by-source findings are maintained in [editorial evidence ledger](reports/editorial-evidence-2026-10-24.json). Evidence level is `targeted_official_document_cross_check`, not independent review; none of these questions received an invented `reviewedAt` timestamp.
+- The quality audit now uses two similarity thresholds: **0.22 for textual review candidates**, and **0.36 for strong lexical overlap**. This is triage, not semantic-duplicate proof. The audit does not automatically delete questions or rewrite answers.
+- The audit also compares the 340-question bank with the [AWS official SAA-C03 exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html): Security **30%**, Resilience **26%**, Performance **24%**, Cost **20%**. Bank representation does not imply matching difficulty or exam format.
+- Each PR's GitHub Actions run now uploads **`question-quality-audit`**, containing `reports/question-audit.json`, a readable `reports/question-audit.md`, and the targeted evidence ledger. `npm run test:editorial` verifies stable answer keys, source evidence, fuzz-candidate detection, coverage calculations and the lack of false editorial stamps; `npm run build` runs the full existing battery.
+- **Outstanding:** independently verify stems, all answer options and alternatives across the remaining bank; reference link validity alone is not factual QA. Browser E2E remains explicitly deferred.
+
+### Editorial backlog
+
+Continue from [Issue #7](https://github.com/c-a-p-engineer/certification-study/issues/7), and use the 5.7+ issues opened after this release for content quality, non-repetitive scenario authoring and learning-effectiveness evaluation. No automated changes to existing user data are necessary.
+
 ## OVERDRIVE 5.1–5.5
 
 All enhancements are designed around **existing browser-local progress and optional v1 fields**, preserving XP, earned medals, historical quest data, daily contracts and saved practice runs.
