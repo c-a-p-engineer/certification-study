@@ -6530,5 +6530,215 @@
       "dynamodb-on-demand-economics"
     ],
     "reviewedAt": "2026-10-23"
+  },
+  {
+    "id": "saa-333",
+    "domain": "セキュリティ",
+    "question": "グループ会社30アカウントのCloudTrail操作ログを監査チームの専用S3バケットへ集約する。今後AWS Organizationsに新規アカウントを追加しても自動的に対象とし、メンバーアカウントの管理者には証跡の削除や変更を許したくない。運用負荷を最小化する設計はどれか。",
+    "choices": [
+      "各メンバーアカウントでCloudTrail証跡を個別作成し、設定を手順書で統一する",
+      "管理アカウントからOrganizationsの組織証跡を作り、集中保存先と適切なアクセス制御を設定する",
+      "各アカウントのCloudWatch Logsを毎日手動エクスポートする",
+      "全アカウントに同じアクセスキーを配布し、ログを同期する"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "Organizationsの組織証跡は既存および追加のメンバーアカウントを対象にでき、メンバー側から組織証跡を変更・削除できない。保存先のS3ポリシー、暗号化、保持設定は別途設計する必要がある。",
+    "reference": "https://docs.aws.amazon.com/organizations/latest/userguide/services-that-can-integrate-cloudtrail.html",
+    "distractorReasons": [
+      "個別作成では新規アカウントへの展開漏れが生じやすい。",
+      "適切。組織全体への適用と集中管理ができる。",
+      "定期手動処理ではリアルタイム性と証跡設定の統制が不足する。",
+      "長期アクセスキーの共用は最小権限と監査分離に反する。"
+    ],
+    "tags": [
+      "cloudtrail-organizations",
+      "監査",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-334",
+    "domain": "セキュリティ",
+    "question": "数百の開発チームがSecrets Managerに保管した秘密情報をプロジェクト単位で管理する。人員の異動や新規プロジェクトが多く、リソースARNごとにIAMポリシーを更新する運用は避けたい。秘密情報と利用者のプロジェクト属性が一致した場合だけアクセスを許可する設計はどれか。",
+    "choices": [
+      "全Secrets Managerシークレットへの読み取りを全員に許可する",
+      "個々のシークレットごとに固定のIAMユーザーアクセスキーを発行する",
+      "プリンシパルタグとリソースタグを条件キーで比較するABACポリシーを採用する",
+      "シークレットを共通の公開S3バケットへ複製してURLで配る"
+    ],
+    "answer": 2,
+    "difficulty": 3,
+    "explanation": "属性ベースのアクセス制御（ABAC）はIAMプリンシパルとリソースのタグ値を条件として比較できる。タグ付け変更権限も厳格に制御し、追加のAllowが意図せず広げないようにすることが重要。",
+    "reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html",
+    "distractorReasons": [
+      "全社閲覧はプロジェクト単位の情報分離を満たせない。",
+      "固定キー配布はキー管理の増大と漏えいリスクを招く。",
+      "適切。タグ条件によりリソース増加時のポリシー変更を減らせる。",
+      "公開配布は機密情報の取り扱い要件を満たさない。"
+    ],
+    "tags": [
+      "iam-abac",
+      "secrets-manager",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-335",
+    "domain": "耐障害性",
+    "question": "EC2アプリとAmazon RDS for PostgreSQLの単一DBインスタンスで通販を運用している。読み取り負荷の増加への対応に加え、単一AZ障害時に書き込み処理も再開できる高可用性が必要である。読み取り拡張と自動フェイルオーバーの両方を満たす構成はどれか。",
+    "choices": [
+      "リードレプリカだけを1台作り、プライマリ障害時に自動フェイルオーバーされると想定する",
+      "Multi-AZ DBインスタンス配置と、アプリケーションから参照する別のリードレプリカを組み合わせる",
+      "プライマリのストレージを倍増し、リードレプリカは作成しない",
+      "Read Replicaを複数作り、書き込みを各レプリカへ均等に送信する"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "RDSのMulti-AZ DBインスタンス配置は可用性と自動フェイルオーバーのため同期スタンバイを維持する。スタンバイは通常の読み取り分散先ではないため、読み取り性能の拡張には別のリードレプリカを用いる。",
+    "reference": "https://docs.aws.amazon.com/AmazonRDS/latest/gettingstartedguide/scaling-ha.html",
+    "distractorReasons": [
+      "リードレプリカは非同期複製であり、通常のMulti-AZ自動フェイルオーバーと同一ではない。",
+      "適切。書き込みの可用性と読み取りのスケールを別の機能で満たす。",
+      "ストレージ増量は読み取り負荷分散やAZ障害の自動復旧を保証しない。",
+      "リードレプリカは読み取り専用であり、通常の書き込み分散先にはならない。"
+    ],
+    "tags": [
+      "rds-multi-az-read-replica",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-336",
+    "domain": "耐障害性",
+    "question": "Webアプリを2つのAZに分散してApplication Load Balancer配下で運用する。片方のAZのEC2がHTTP 500を返し続ける障害が発生したとき、そのターゲットへの新規振り分けを停止して正常側へ誘導したい。監視対象と切り替えの設定を最も直接的に満たす方法はどれか。",
+    "choices": [
+      "ALBターゲットグループにアプリケーション用ヘルスチェックパスを設定し、正常判定に失敗したターゲットを振り分けから外す",
+      "ALBヘルスチェックを無効にして全インスタンスへ均等にリクエストを転送する",
+      "CloudTrailの管理イベント数だけを利用して障害を判定する",
+      "S3のライフサイクルポリシーで障害インスタンスを削除する"
+    ],
+    "answer": 0,
+    "difficulty": 3,
+    "explanation": "Application Load Balancerのターゲットグループは設定したHTTPヘルスチェックを定期実行し、不健康と判定したターゲットへのルーティングを外す。全ターゲットが不健康な場合のフェイルオープンなど例外挙動も考慮して設計する。",
+    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html",
+    "distractorReasons": [
+      "適切。アプリケーションの健全性をヘルスチェックパスで評価できる。",
+      "ヘルスチェック無効では不健康なターゲットを排除できない。",
+      "CloudTrail管理イベントはHTTPの健全性の代用にならない。",
+      "S3ライフサイクルはEC2のヘルスチェックに関係しない。"
+    ],
+    "tags": [
+      "alb-target-health",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-337",
+    "domain": "パフォーマンス",
+    "question": "数十台のEC2インスタンスを使ってMPIベースのHPC解析を行う。主要な通信は同一AZ内のインスタンス間に集中し、外部配信よりもインスタンス間の低レイテンシーと高スループットが重要である。EC2の配置戦略として最も適切なのはどれか。",
+    "choices": [
+      "スプレッドプレイスメントグループでインスタンスをできるだけ別ラックへ配置する",
+      "各インスタンスを別リージョンへ分散し、Route 53のレイテンシールーティングを用いる",
+      "クラスター プレイスメントグループでインスタンスを高帯域ネットワークセグメントに集約する",
+      "各インスタンスのAMIサイズだけを増やす"
+    ],
+    "answer": 2,
+    "difficulty": 3,
+    "explanation": "Cluster placement groupは同一AZでインスタンス間の低遅延・高スループットを求める密結合型ワークロードに適する。耐障害性のための分散配置とは目標が異なるため、ネットワーク最適化と障害ドメインのトレードオフを明示する。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-strategies.html",
+    "distractorReasons": [
+      "スプレッド配置は障害分離を主目的とし、密結合通信の低遅延最適化とは異なる。",
+      "リージョン間通信は通常レイテンシーを増やし要件と逆方向。",
+      "適切。クラスター配置は通信がインスタンス間に集中するHPC向け。",
+      "AMIの容量は配置戦略やネットワーク遅延に影響しない。"
+    ],
+    "tags": [
+      "cluster-placement-hpc",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-338",
+    "domain": "パフォーマンス",
+    "question": "TCPトラフィックをNetwork Load Balancerから複数のIPターゲットへ転送している。バックエンドアプリのアクセス制御が実クライアントIPv4アドレスを必要とするが、ログにはNLBのプライベートIPが記録されている。ターゲットグループのタイプとプロトコルを変更せずに解決する手段はどれか。",
+    "choices": [
+      "NLBをApplication Load Balancerに全面置換し、クライアントIPは必ず同一形式で直接見えると考える",
+      "NLBターゲットグループのpreserve_client_ip.enabledを有効化し、サポートされる構成条件を確認する",
+      "CloudFrontのTTLを0にしてNLBの送信元IPを変える",
+      "VPCフローログを停止するとクライアントIPが復元される"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "NLBのTCP/TLS IPターゲットグループではクライアントIP保持が既定で無効な構成がある。条件を確認したうえでpreserve_client_ip.enabled属性を変更できる。ただし制約とターゲットネットワークの対応要件を検証する。",
+    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/network/edit-target-group-attributes.html",
+    "distractorReasons": [
+      "ALBでは通信やヘッダーの扱いが異なり、TCPの要件をそのまま満たすとは限らない。",
+      "適切。IPターゲットのTCP/TLSにおける属性設定を確認する。",
+      "CDNのTTLはNLBのバックエンド送信元IPの設定に無関係。",
+      "フローログは観測機能であり、パケット送信元IP変換を変更しない。"
+    ],
+    "tags": [
+      "nlb-client-ip-preservation",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-339",
+    "domain": "コスト最適化",
+    "question": "複数リージョンでEC2を動かす企業が、コンテナ処理の一部をFargateへ、イベント処理の一部をLambdaへ移行する予定である。今後インスタンスファミリーやリージョンを変更する可能性が高い一方、一定の時間当たりコンピュート利用額は継続する。柔軟性を維持した費用最適化策はどれか。",
+    "choices": [
+      "特定EC2インスタンスとリージョンに強く紐づく容量予約だけを全処理へ適用する",
+      "予定するサービスの違いを考慮せず、全負荷へEC2 Dedicated Hostsを購入する",
+      "対象サービスを横断して適用できるCompute Savings Plansのコミットメントを検討する",
+      "リザーブドインスタンスだけを契約すればFargateとLambdaにも自動適用されると想定する"
+    ],
+    "answer": 2,
+    "difficulty": 3,
+    "explanation": "Compute Savings Plansは対象のEC2、Fargate、Lambda利用にまたがる時間当たり利用額のコミットメントで割引を受けられ、インスタンスファミリーやリージョン変更にも比較的柔軟。購入前に利用額の下限と期間を分析する。",
+    "reference": "https://docs.aws.amazon.com/savingsplans/latest/userguide/plan-types.html",
+    "distractorReasons": [
+      "容量予約は柔軟な利用額コミットメント型の割引とは目的が異なる。",
+      "専有ホストはライセンスや分離要件向けであり、一般的な混合コンピュート費用削減に不向き。",
+      "適切。複数のコンピュートサービスを横断でき、構成変更への自由度がある。",
+      "EC2リザーブドインスタンスの割引はFargate・Lambdaへそのまま適用されない。"
+    ],
+    "tags": [
+      "compute-savings-plans",
+      "シナリオ",
+      "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-340",
+    "domain": "コスト最適化",
+    "question": "分析基盤が数百万個のS3オブジェクトを保管している。アクセス頻度がアプリケーションによって変動し、次にいつ参照されるか予測できない。低レイテンシーの読み取り要件をできるだけ維持し、手動のストレージクラス変更を減らしたい。監視料金も考慮したうえで最初に検討するストレージクラスはどれか。",
+    "choices": [
+      "アクセス頻度に関係なく全オブジェクトをS3 One Zone-IAへ移してAZ障害リスクを許容する",
+      "S3 Intelligent-Tieringを検討し、アクセス状況による自動階層移動とオブジェクトごとの監視料金を評価する",
+      "即時読み取りが必要でも全オブジェクトをS3 Glacier Deep Archiveに直接固定する",
+      "アクセス状況を無視して全オブジェクトをS3 Standardのまま永久に固定する"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "S3 Intelligent-Tieringはアクセスパターンが不明・変化するデータに対し、アクセス頻度に基づき低遅延な階層へ自動移動する。小さなオブジェクトなど監視課金の条件と、非同期アーカイブ階層を有効化した場合の取り出し遅延は別途考慮する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering.html",
+    "distractorReasons": [
+      "One Zone-IAは単一AZであり耐久性・可用性の前提を変える。",
+      "適切。アクセスが予測しづらい大規模オブジェクト群に適している。",
+      "Deep Archiveは取り出し遅延があるため即時読み取り要件を満たさない。",
+      "Standard固定は自動階層化のコスト最適化機会を逃しやすい。"
+    ],
+    "tags": [
+      "s3-intelligent-tiering",
+      "シナリオ",
+      "複合設計判断"
+    ]
   }
 ]
