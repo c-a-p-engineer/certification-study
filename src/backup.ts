@@ -1,6 +1,7 @@
 /** Portable, schema-checked local backup. Never upload data to a server. */
 import {isMissionSave} from './missionSave.ts';
 import {normalizeEnemyCampaign} from './enemyCampaign.ts';
+import {normalizeReports} from './questionReports.ts';
 export const BACKUP_SCHEMA=1;
 export const MAX_BACKUP_BYTES=8*1024*1024;
 /** Keep this allowlist explicit: importing a file must not replace unrelated origin data. */
@@ -15,7 +16,9 @@ export const BACKUP_KEYS=[
  'cert-overdrive-haptics-v1',
  'cert-overdrive-text-scale-v1',
  'cert-overdrive-visual-power-v1',
- 'cert-overdrive-quiz-layout-v1'
+ 'cert-overdrive-quiz-layout-v1',
+ 'cert-overdrive-smart-profile-v1',
+ 'cert-overdrive-question-reports-v1'
 ] as const;
 type StoragePort=Pick<Storage,'getItem'|'setItem'|'removeItem'>;
 export type BackupData={format:'CERT-OVERDRIVE-BACKUP';version:1;createdAt:string;items:Record<string,string>};
@@ -43,7 +46,8 @@ export function createBackup(store:StoragePort,now=new Date()):BackupData{
 }
 const jsonKeys=new Set([
  'certification-overdrive-progress-v1','cert-overdrive-mission-save-v1','cert-overdrive-exam-save-v1',
- 'certification-overdrive-unlocked-titles-v1','cert-overdrive-recent-questions-v1','cert-overdrive-audio-v1'
+ 'certification-overdrive-unlocked-titles-v1','cert-overdrive-recent-questions-v1','cert-overdrive-audio-v1',
+ 'cert-overdrive-question-reports-v1'
 ]);
 export function parseBackup(input:string):BackupData{
  if(new TextEncoder().encode(input).length>MAX_BACKUP_BYTES)throw new Error('ファイルが大きすぎます（最大8MB）');
@@ -53,11 +57,13 @@ export function parseBackup(input:string):BackupData{
  if(!names.includes(BACKUP_KEYS[0])||names.length>BACKUP_KEYS.length||names.some(k=>!BACKUP_KEYS.includes(k as typeof BACKUP_KEYS[number])))throw new Error('バックアップ項目が不足または不正です');
  for(const [key,value] of Object.entries(x.items)){
   if(typeof value!=='string'||value.length>MAX_BACKUP_BYTES)throw new Error('不正な項目があります');
+  if(key==='cert-overdrive-smart-profile-v1'&&!['balanced','review','explore'].includes(value))throw new Error('SMART QUEST設定が不正です');
   if(jsonKeys.has(key)){let parsed:unknown;try{parsed=JSON.parse(value)}catch{throw new Error('保存値がJSONではありません')};
    if(key===BACKUP_KEYS[0]&&!validProgress(parsed))throw new Error('学習記録の形式が正しくありません');
    if(key==='cert-overdrive-mission-save-v1'&&!isMissionSave(parsed))throw new Error('途中のミッションデータが不正です');
    if(key==='cert-overdrive-exam-save-v1'&&(!isObj(parsed)||!Array.isArray(parsed.ids)||!parsed.ids.every(id=>typeof id==='string')||!isInt(parsed.index)||!Number.isFinite(parsed.deadline)||!integerCount(parsed.session)))throw new Error('試験データが不正です');
    if((key==='certification-overdrive-unlocked-titles-v1'||key==='cert-overdrive-recent-questions-v1')&&(!Array.isArray(parsed)||parsed.some(x=>typeof x!=='string')))throw new Error('履歴データが不正です');
+   if(key==='cert-overdrive-question-reports-v1'&&(!Array.isArray(parsed)||normalizeReports(parsed).length!==parsed.length))throw new Error('問題報告が不正です');
    if(key==='cert-overdrive-audio-v1'&&!isObj(parsed))throw new Error('音声設定が不正です');
   }
  }
