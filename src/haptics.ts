@@ -30,3 +30,34 @@ export function triggerHaptic(event:HapticEvent,mode:HapticMode,reduced=false,ex
  if(typeof navigator==='undefined'||typeof navigator.vibrate!=='function')return false;
  try{return Boolean(navigator.vibrate(hapticPattern(event,mode)))}catch{return false}
 }
+
+/** A browser's true return value only means the request was accepted, not that the motor moved. */
+export type HapticTestResult={
+ status:'accepted'|'rejected'|'unsupported'|'reduced'|'disabled'|'error';
+ message:string;
+ hasGesture:boolean|null;
+};
+export function getHapticEnvironment(){
+ const apiAvailable=typeof navigator!=='undefined'&&typeof navigator.vibrate==='function';
+ const systemReducedMotion=typeof window!=='undefined'&&typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const hasGesture=typeof navigator!=='undefined'&&navigator.userActivation?navigator.userActivation.hasBeenActive:null;
+ const secureContext=typeof window!=='undefined'&&typeof window.isSecureContext==='boolean'?window.isSecureContext:null;
+ return {apiAvailable,systemReducedMotion,hasGesture,secureContext};
+}
+/** Call synchronously inside the user's test-button click handler (not inside a promise). */
+export function testHapticDevice(mode:HapticMode,reduced=false):HapticTestResult{
+ const environment=getHapticEnvironment();
+ const hasGesture=environment.hasGesture;
+ if(mode==='off')return {status:'disabled',message:'振動設定がOFFです。NORMALまたはOVERDRIVEを選択してください。',hasGesture};
+ if(reduced||environment.systemReducedMotion)return {status:'reduced',message:'動きの軽減が有効です。振動は抑制されています。',hasGesture};
+ if(!environment.apiAvailable)return {status:'unsupported',message:'このブラウザではWeb振動APIが利用できません。',hasGesture};
+ try{
+  // Longer than ordinary tap haptics so it can be felt even with weak actuator response.
+  const accepted=navigator.vibrate([180,80,180]);
+  return accepted
+   ?{status:'accepted',message:'ブラウザは振動要求を受理しました。実際に振動したかは端末で確認してください。',hasGesture}
+   :{status:'rejected',message:'ブラウザが振動要求を拒否しました。ページを直接タップしてから再試行してください。',hasGesture};
+ }catch{
+  return {status:'error',message:'振動APIの呼び出しでエラーが発生しました。',hasGesture};
+ }
+}
