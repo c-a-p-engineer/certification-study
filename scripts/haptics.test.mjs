@@ -35,7 +35,10 @@ test('test differentiates API acceptance and refusal and never claims hardware v
   Object.defineProperty(globalThis,'navigator',{configurable:true,value:{vibrate:pattern=>{calledWith=pattern;return true},userActivation:{hasBeenActive:true}}});
   Object.defineProperty(globalThis,'window',{configurable:true,value:{isSecureContext:true,matchMedia:()=>({matches:false})}});
   const accepted=testHapticDevice('normal');
-  assert.deepEqual(calledWith,[180,80,180]);
+  assert.deepEqual(calledWith,[220,100,220]);
+  const single=testHapticDevice('normal',false,'single');
+  assert.equal(single.status,'accepted');
+  assert.equal(calledWith,250);
   assert.equal(accepted.status,'accepted');
   assert.match(accepted.message,/実際に振動したか/);
   assert.equal(accepted.hasGesture,true);
