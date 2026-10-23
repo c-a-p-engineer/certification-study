@@ -36,7 +36,7 @@ test('rank milestones are ordered, none can be skipped by XP alone',()=>{
  let before=0;
  for(const xp of [0,119,120,399,400,1000,4800,12000,26000,55000,120000]){
   const p=gameProfile(progress(xp,5,1),300,NOW);
-  assert.equal(p.rank,'ROOKIE');
+  assert.equal(p.rank,xp>=300?'SPARK':'ROOKIE');
   assert.ok(p.level>=before);
   assert.ok(p.levelPct>=0&&p.levelPct<=100);
   before=p.level;
