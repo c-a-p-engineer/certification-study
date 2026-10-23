@@ -49,7 +49,7 @@ export function normalizeEnemyCampaign(value:unknown):EnemyCampaign{
  const hp=completed?0:Number.isInteger(raw.hp)&&raw.hp!>0&&raw.hp!<=maxHp?raw.hp!:maxHp;
  const hits=Array.isArray(raw.hitHistory)?raw.hitHistory.filter((x):x is HitRecord=>!!x&&isEnemyId(x.enemyId)&&typeof x.questionId==='string'&&Number.isSafeInteger(x.damage)&&x.damage>0&&Number.isSafeInteger(x.combo)&&Number.isFinite(x.at)&&typeof x.attribute==='string').slice(-24):[];
  const defeats=Array.isArray(raw.defeatHistory)?raw.defeatHistory.filter((x):x is DefeatRecord=>!!x&&isEnemyId(x.enemyId)&&typeof x.at==='number'&&Number.isFinite(x.at)&&cleared.includes(x.enemyId)).slice(-ENEMIES.length):[];
- return {stageIndex,hp,cleared:completed?[...new Set([...cleared,...expectedCleared,stage.id])]:[...new Set([...cleared,...expectedCleared])],
+ return {stageIndex,hp,cleared:completed?[...new Set([...cleared,...expectedCleared,stage.id])]:cycle>0?[...new Set([...cleared,...expectedCleared])]:expectedCleared,
   hitIds:completed?[]:validIds(raw.hitIds),completed,hitHistory:hits,defeatHistory:defeats,cycle,runCleared:Array.isArray(raw.runCleared)?raw.runCleared.filter(isEnemyId):[]};
 }
 export function currentEnemy(value:unknown){return ENEMIES[normalizeEnemyCampaign(value).stageIndex]}
