@@ -69,7 +69,7 @@ test('scenario-only challenge is discoverable and survives practice resume',()=>
  assert.ok(source.includes('start(false,false,false,false,true)'));
  assert.ok(source.includes('setCaseMode(!!saved.scenario)'));
  assert.ok(source.includes('scenario:caseMode'));
- assert.ok(source.includes('start(review,examMode,studyMode===\'due\',bossMode,caseMode)'));
+ assert.ok(source.includes('start(review,examMode,studyMode===\'due\',bossMode,caseMode,bossDomain??undefined,skillFocus??undefined)'));
 });
 
 test('gamified progress and title unlocks are discoverable without extra overlays',()=>{
@@ -84,7 +84,7 @@ test('gamified progress and title unlocks are discoverable without extra overlay
 test('timed exam holds new badges and rank promotions until the result screen',()=>{
  assert.ok(source.includes("if(examMode&&mode==='quiz'){setDeferredRankNotice(current)}"));
  assert.ok(source.includes("if(examMode&&mode==='result'&&deferredRankNotice)"));
- assert.ok(source.includes("if(!examMode)setNewTitleIds([])"));
+ assert.ok(source.includes("if(!examMode){setNewTitleIds([]);setNewRelicIds([])}"));
  assert.ok(source.includes("examMode&&newTitleIds.length>0&&"));
  assert.ok(!source.includes('selected!==null&&examMode&&<div className="explanation"'));
 });
