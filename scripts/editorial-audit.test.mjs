@@ -7,7 +7,7 @@ const bank=loadQuestions(),byId=new Map(bank.map(q=>[q.id,q]));
 const ledger=JSON.parse(readFileSync('reports/editorial-evidence-2026-10-24.json','utf8'));
 test('348 AWS original questions remain stable; 19 targeted corrections have complete rationale',()=>{
  assert.equal(bank.length,348);
- assert.equal(new Set(bank.map(q=>q.id)).size,340);
+ assert.equal(new Set(bank.map(q=>q.id)).size,348);
  assert.equal(ledger.entries.length,19);
  const ids=new Set(ledger.entries.map(x=>x.id));assert.equal(ids.size,19);
  for(const e of ledger.entries){
