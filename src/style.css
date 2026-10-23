@@ -316,3 +316,66 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
 }
 @media(prefers-reduced-motion:reduce){.fever-meter.charged,.xp-award{animation:none!important}.fever-track>div,.term-card-chevron{transition:none!important}}
 .app.reduced .fever-meter.charged,.app.reduced .xp-award{animation:none!important}
+
+/* Clear hierarchy: information from placement and component weight, not duplicate helper text. */
+.hero{padding:30px 0 42px}
+.hero h1{font-size:clamp(58px,8.5vw,112px);margin:23px 0 18px}
+.quick-start{margin:14px 0 28px;padding:14px;border-radius:14px;box-shadow:0 12px 48px #0005,0 0 26px #5deefa20}
+.quick-start .hero-actions{margin:0;gap:10px}
+.quick-start .resume-row+.hero-actions,.quick-start>.resume-session+.hero-actions{margin-top:13px}
+.mission-setup{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin:13px 0 22px}
+.mission-setup .domain-controls{margin:0;gap:7px}
+.mission-setup .mission-length{margin:0;padding-left:17px;border-left:1px solid #65799970;gap:7px}
+.mission-setup button{min-height:42px;font-weight:800}
+.mission-setup button[aria-pressed="true"]{box-shadow:0 0 19px #64ecf641}
+.exam-cta,.study-due,.boss-cta{min-height:80px;gap:16px;margin-top:12px}
+.exam-cta>div,.study-due>div,.boss-cta>div{flex:1;min-width:min(220px,100%);padding:0}
+.exam-cta>div>strong,.study-due>div>strong,.boss-cta>div>strong{line-height:1.25}
+.daily-quest{margin:22px 0 24px}
+.daily-quest-track{margin:17px 0 18px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-radius:12px;overflow:hidden}
+.stats .stat{min-width:0;padding:22px 21px}
+.stats .stat strong{font-size:clamp(33px,4.5vw,52px);line-height:1.1}
+.stats .stat small{font-size:11px;letter-spacing:.03em}
+.mastery-section{margin:38px 0 38px}
+.mastery-section h2,.coverage-panel h2{margin:0 0 17px;font-size:clamp(28px,4vw,38px)}
+.mastery-grid{gap:12px}
+.coverage-panel{margin:42px 0 0}
+.metric-method{margin:14px 0 0;color:#b5d7e9;font-size:12px}
+.metric-method>summary{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:7px 3px;cursor:pointer;font-weight:800}
+.metric-method>summary:focus-visible{outline:3px solid #ffe1a5;outline-offset:2px}
+.metric-method>p{line-height:1.7;color:#c8dcef;margin:3px 0 0}
+.quiz{padding:30px 0 92px}
+.quiz-top{gap:10px}
+.quiz-stage{font-size:clamp(15px,3vw,19px)}
+.quiz .progress-track{height:8px;border-radius:10px;margin:18px 0 24px}
+.quiz .progress-track div{border-radius:10px}
+.fever-meter{margin-bottom:15px}
+.question-card h2{margin:17px 0 25px}
+.question-meta{justify-content:flex-start;letter-spacing:1px;font-size:11px}
+.answer-instructions{background:transparent;border:0;border-bottom:1px solid #5879a588;border-radius:0;padding:0 2px 12px;margin-bottom:17px;color:#deefff}
+.answer-instructions strong{background:#564c42;border-color:#ffcf79;color:#fff2bd}
+.recall-gate strong{font-size:17px}
+.question-terms .study-terms-panel>summary.term-panel-heading span{font-weight:800;color:#a7e7fa}
+.term-card-detail .term-full-name{padding-top:4px}
+.term-card-detail .term-full-name strong{font-weight:600}
+@media(max-width:700px){
+ .hero{padding:17px 0 36px}
+ .hero h1{font-size:clamp(55px,13vw,88px);margin:18px 0 20px}
+ .quick-start{margin:10px 0 24px;padding:12px}
+ .quick-start .hero-actions{margin:0}
+ .mission-setup{margin:10px 0 17px;gap:8px}
+ .mission-setup .domain-controls{gap:6px}
+ .mission-setup .mission-length{border-left:0;border-top:1px solid #52648266;padding:11px 0 0;width:100%;justify-content:flex-start}
+ .mission-setup button{min-height:42px;padding:9px 10px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats .stat{padding:18px 14px}
+ .stats .stat:nth-child(2){border-right:0}
+ .stats .stat:nth-child(-n+2){border-bottom:1px solid #ffffff18}
+ .stats .stat strong{font-size:clamp(32px,8vw,46px)}
+ .exam-cta,.study-due,.boss-cta{padding:16px;gap:14px}
+ .exam-cta>button,.study-due>button,.boss-cta>button{flex:1;min-height:48px}
+ .quiz{padding:22px 0 80px}
+ .quiz .progress-track{margin:16px 0 19px}
+ .question-card h2{margin:16px 0 19px}
+}
