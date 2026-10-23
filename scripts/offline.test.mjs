@@ -23,7 +23,9 @@ test('offline shell preloads only built app assets and never caches another orig
  assert.ok(template.includes("url.pathname.startsWith(BASE)"));
  assert.ok(template.includes("request.mode==='navigate'"));
  assert.ok(template.includes('caches.match(BASE+\'index.html\')'));
- assert.ok(!template.includes('skipWaiting()'));
+ assert.ok(template.includes("event.data?.type==='ACTIVATE_UPDATE'"));
+ assert.ok(template.includes('void self.skipWaiting()'));
+ assert.ok(main.includes('watchOfflineUpdates('));
  assert.ok(builder.includes("createHash('sha256')"));
  assert.ok(builder.includes('precache=allowed.map'));
  assert.ok(builder.includes("endsWith('.js')"));
