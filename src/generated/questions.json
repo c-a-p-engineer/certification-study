@@ -10,8 +10,14 @@
       "EC2インスタンスのサイズを大きくする"
     ],
     "answer": 1,
-    "explanation": "複数のAZへワークロードを分散し、ALBのヘルスチェックで正常なターゲットへルーティングすることで、単一AZ障害に対する可用性を高めます。",
-    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html"
+    "explanation": "ALBターゲットグループに複数AZのEC2を登録し、ヘルスチェックで正常なサーバーへ振り分ける。サービス利用AZを適切に有効化し、状態をインスタンス外へ保持する設計も必要。",
+    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html",
+    "distractorReasons": [
+      "同一AZ内で冗長台数を増やしてもAZ全体の障害から復旧できない。",
+      "正解。障害ドメインを分けた複数AZとALBの健全性監視を使う。",
+      "EBS容量を増やしてもEC2が停止したAZのサービスを継続できない。",
+      "単一EC2を大型化しても別AZに代替実行環境は作られない。"
+    ]
   },
   {
     "id": "saa-002",
@@ -24,8 +30,14 @@
       "S3バケットを公開する"
     ],
     "answer": 0,
-    "explanation": "EC2インスタンスプロファイルにIAMロールを設定すると、一時的な認証情報を利用でき、長期アクセスキーの埋め込みを避けられます。",
-    "reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html"
+    "explanation": "EC2のIAMロールはインスタンスプロファイルを介して一時認証情報を提供する。S3バケットと必要APIだけに許可を限定し、アプリへ長期アクセスキーを埋め込まない。",
+    "reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html",
+    "distractorReasons": [
+      "正解。インスタンスロールから短期認証情報を取得できる。",
+      "AMI内の秘密キーはコピー先に漏えいし得る。",
+      "ルートユーザーの長期認証情報共有は過剰権限と漏えいリスクを持つ。",
+      "バケット公開ではEC2のみへの安全なアクセス制御ができない。"
+    ]
   },
   {
     "id": "saa-003",
@@ -38,8 +50,14 @@
       "Amazon SQS"
     ],
     "answer": 1,
-    "explanation": "CloudFrontはエッジロケーションを使ってコンテンツをキャッシュし、グローバルな配信遅延を減らします。",
-    "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
+    "explanation": "CloudFrontのCDNは世界中のエッジ拠点へ配信対象をキャッシュし、ユーザーからオリジンまでの往復を減らす。TTLとキャッシュキーを調整して鮮度とヒット率を管理する。",
+    "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+    "distractorReasons": [
+      "CloudTrailはAPI操作の監査証跡記録でコンテンツ配信網ではない。",
+      "正解。CloudFrontはエッジキャッシュを利用したグローバルCDNである。",
+      "Configはリソース構成履歴を記録するサービスで静的サイト配信を担当しない。",
+      "SQSは非同期メッセージキューでHTTPコンテンツをキャッシュしない。"
+    ]
   },
   {
     "id": "saa-004",
@@ -52,8 +70,14 @@
       "常に最大サイズのインスタンス"
     ],
     "answer": 2,
-    "explanation": "スポットインスタンスは中断される可能性があるため、中断許容型のバッチワークロードで費用削減に適しています。",
-    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html"
+    "explanation": "EC2 Spot Instancesは余剰キャパシティを割引で使うが中断の可能性がある。チェックポイントや冪等な再試行を備えたバッチ処理に向き、単純な継続可用性保証には不向き。",
+    "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html",
+    "distractorReasons": [
+      "オンデマンドだけではSpotの大きな割引を活用できない。",
+      "Dedicated Hostsは専有ホストやライセンス要件向けで中断許容バッチの第一候補ではない。",
+      "正解。中断可能なバッチにはSpotの余剰容量を安く利用できる。",
+      "常に最大サイズのインスタンスを使うと過剰な計算コストが生じ得る。"
+    ]
   },
   {
     "id": "saa-005",
@@ -120,8 +144,14 @@
       "Amazon EFSのみ"
     ],
     "answer": 1,
-    "explanation": "S3 Standard-IAはアクセス頻度が低く、必要時にミリ秒単位で取得したいデータ向けです。取り出し料金などの条件を確認します。",
-    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+    "explanation": "S3 Standard-IAはアクセス頻度が低くてもミリ秒取り出しが必要なデータに適する。取り出し料金・最低保存期間・最低オブジェクト課金サイズを含め比較する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html",
+    "distractorReasons": [
+      "Standardは迅速な取得を提供するが低頻度アクセスではIAの割引余地がある。",
+      "正解。Standard-IAは低頻度ながら即時読み取りが必要なデータに適する。",
+      "EC2インスタンスストアはホスト固有の一時ストレージでS3オブジェクト保管に使わない。",
+      "EFSはNFSファイルストレージでS3のクラス選択ではない。"
+    ]
   },
   {
     "id": "saa-009",
@@ -148,8 +178,14 @@
       "Elastic IP"
     ],
     "answer": 2,
-    "explanation": "S3ゲートウェイVPCエンドポイントを利用すると、対応するルートテーブル経由でS3へプライベート接続できます。",
-    "reference": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html"
+    "explanation": "S3ゲートウェイVPCエンドポイントを対象ルートテーブルへ関連付ければS3へのトラフィックをインターネットを通さず送信できる。S3バケット側の権限設定は別途必要。",
+    "reference": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html",
+    "distractorReasons": [
+      "NAT Gatewayは公衆IPを経由するアウトバウンド接続のため、閉域のS3宛経路とは異なる。",
+      "Internet GatewayはVPCからインターネット向けの接続を提供する。",
+      "正解。S3ゲートウェイ型エンドポイントをルートテーブルへ関連付ける。",
+      "Elastic IPは公開IPv4アドレスでS3の閉域経路にはならない。"
+    ]
   },
   {
     "id": "saa-011",
@@ -176,8 +212,14 @@
       "CloudFrontキャッシュポリシー"
     ],
     "answer": 1,
-    "explanation": "AWS OrganizationsのSCPは組織アカウントに許可される権限の上限を制御します。",
-    "reference": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+    "explanation": "SCPはAWS Organizationsのメンバーアカウントに設定する権限上限であり、IAMユーザーやロールへの操作許可は付与しない。組織管理アカウントの主体には適用されない。",
+    "reference": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html",
+    "distractorReasons": [
+      "セキュリティグループはネットワーク通信許可を制御するものでIAM上限ではない。",
+      "正解。SCPは組織単位の操作ガードレールに使用する。",
+      "パスワードポリシーは認証強度を調整するもので各AWS API操作の上限ではない。",
+      "CloudFrontキャッシュポリシーはHTTPキャッシュ動作を管理する。"
+    ]
   },
   {
     "id": "saa-013",
@@ -232,8 +274,14 @@
       "単一AZの構成でリージョン障害を回避できる"
     ],
     "answer": 1,
-    "explanation": "AZを跨ぐ設計とリージョンを跨ぐDR設計は異なります。リージョン障害を想定するなら別リージョンでの復旧戦略を検討します。",
-    "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html"
+    "explanation": "複数AZは1つのリージョン内での障害分離であり、リージョン全体の災害には別リージョンにデータと復旧手順が必要。RPOとRTOによってDR方式を選択する。",
+    "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
+    "distractorReasons": [
+      "Multi-AZとMulti-Regionでは対象とする障害ドメインが異なる。",
+      "正解。リージョン規模の障害を想定するなら他リージョンを使う。",
+      "EBSボリュームは自動的にすべてのリージョンへ複製されない。",
+      "単一AZではリージョンだけでなくAZ規模の障害にも弱い。"
+    ]
   },
   {
     "id": "saa-017",
@@ -246,8 +294,14 @@
       "Amazon VPC"
     ],
     "answer": 0,
-    "explanation": "Amazon SQSはコンポーネント間のメッセージをキューに蓄積して疎結合化します。",
-    "reference": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html"
+    "explanation": "Amazon SQSはメッセージをキューに保存して送信側と処理側を疎結合にする。標準キューでは少なくとも1回配信を考慮し、コンシューマー処理を冪等に設計する。",
+    "reference": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html",
+    "distractorReasons": [
+      "正解。メッセージバッファが受信側の一時停止やスケール差を吸収する。",
+      "EBSはEC2ブロックストレージで処理待ちキューの配信を提供しない。",
+      "IAMは権限管理で非同期メッセージバッファは提供しない。",
+      "VPCはネットワーク分離の仕組みでメッセージ処理の再試行キューではない。"
+    ]
   },
   {
     "id": "saa-018",
@@ -314,8 +368,14 @@
       "AWS Organizations"
     ],
     "answer": 0,
-    "explanation": "ElastiCacheはキャッシュをメモリ上で提供し、繰り返し読み取りのレイテンシーを減らせます。",
-    "reference": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html"
+    "explanation": "ElastiCacheはValkeyやRedis OSS等のインメモリデータストアとして頻繁に読むデータをキャッシュする。キャッシュTTL・更新戦略・データ整合性の要件も設計する。",
+    "reference": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html",
+    "distractorReasons": [
+      "正解。ElastiCacheはインメモリ読み取りによりDB負荷とレイテンシーを減らす。",
+      "CloudTrailは監査証跡サービスでアプリデータの読み取りキャッシュではない。",
+      "Deep Archiveは長期アーカイブ用でミリ秒アクセスのキャッシュ要件を満たさない。",
+      "Organizationsはアカウントとポリシーの組織管理機能である。"
+    ]
   },
   {
     "id": "saa-022",
@@ -342,8 +402,14 @@
       "AWS KMS"
     ],
     "answer": 0,
-    "explanation": "Amazon EFSは複数クライアントからアクセスできるマネージドな共有ファイルシステムです。",
-    "reference": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+    "explanation": "Amazon EFSはNFSベースのマネージドファイルシステムで、複数EC2から同時マウントできる。Regional型は複数AZのアプリから共有ファイルへアクセスする用途にも対応する。",
+    "reference": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html",
+    "distractorReasons": [
+      "正解。EFSは複数Linuxクライアントから共有可能なNFSファイルストレージ。",
+      "EBSはAZおよびMulti-Attach制約があり任意AZの複数EC2から共有できない。",
+      "インスタンスストアはEC2ホスト固有で複数インスタンスに共有提供されない。",
+      "KMSは暗号鍵管理でありファイルシステムの共有機能ではない。"
+    ]
   },
   {
     "id": "saa-024",
@@ -356,8 +422,14 @@
       "Amazon S3 Glacier Deep Archive"
     ],
     "answer": 0,
-    "explanation": "DynamoDBは低レイテンシーのキーバリュー・ドキュメントアクセスを提供するNoSQLデータベースです。",
-    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"
+    "explanation": "DynamoDBはキーバリュー・ドキュメントワークロードを低遅延で処理するフルマネージドNoSQL。キー設計とアクセスパターンの分散が性能に影響する。",
+    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html",
+    "distractorReasons": [
+      "正解。DynamoDBはミリ秒単位の高スループットNoSQLワークロードに適する。",
+      "AthenaはS3データへの分析SQL向けで低遅延トランザクションDBではない。",
+      "CloudTrailはAPI監査証跡でアプリのキーバリューDBではない。",
+      "Deep Archiveは取り出しに時間がかかる保存クラスでDB処理には不向き。"
+    ]
   },
   {
     "id": "saa-025",
@@ -384,8 +456,14 @@
       "Amazon SQS"
     ],
     "answer": 0,
-    "explanation": "NLBはL4でTCP/UDPなどの接続を処理するロードバランサーです。",
-    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html"
+    "explanation": "Network Load BalancerはL4でTCP/UDPなどのトラフィックを転送する。HTTPパス別ルーティングはALBのL7機能でありトランスポートプロトコルの条件で選ぶ。",
+    "reference": "https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html",
+    "distractorReasons": [
+      "正解。NLBはTCP/UDPなどのネットワークトラフィック分散に適する。",
+      "ALBはL7 HTTP(S)に向くがUDPトラフィックの分散要件を満たさない。",
+      "CloudTrailはAPIイベント監査でL4ロードバランシングとは別機能。",
+      "SQSはアプリのメッセージキューでTCPセッションの転送はしない。"
+    ]
   },
   {
     "id": "saa-027",
@@ -398,8 +476,14 @@
       "毎回手動でインスタンスを作り直す"
     ],
     "answer": 0,
-    "explanation": "Savings Plansは対象コンピューティング使用量への一定のコミットメントと引き換えに割引を提供します。",
-    "reference": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"
+    "explanation": "Savings Plansは1年または3年の時間当たり利用額へのコミットメントを条件に対象コンピュート料金を割引する。ComputeとEC2 Instanceで適用対象と柔軟性が異なる。",
+    "reference": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html",
+    "distractorReasons": [
+      "正解。安定した継続利用に対して時間単位の支出コミットを検討できる。",
+      "オンデマンドのみだと継続利用へのコミット割引を得られない。",
+      "Dedicated Hostsは専有ホストの必要性がない場合は基本的な割引手段ではない。",
+      "毎回の手動再作成は自動的な長期料金割引を生まない。"
+    ]
   },
   {
     "id": "saa-028",
@@ -446,8 +530,14 @@
       "Amazon ECR"
     ],
     "answer": 0,
-    "explanation": "AWS Budgetsはコストや使用量の予算を設定し、しきい値に基づくアラートを提供します。",
-    "reference": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"
+    "explanation": "AWS Budgetsは実績・予測コストや使用量にしきい値を設定して通知できるが、メール通知だけでリソースの自動停止を保証するわけではない。",
+    "reference": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+    "distractorReasons": [
+      "正解。予算の実績や予測に基づく通知を実装できる。",
+      "EBSはブロックストレージで予算超過の予測通知機能ではない。",
+      "CloudTrailは監査ログでコスト予測予算の管理サービスではない。",
+      "ECRはコンテナイメージ保管サービスで予算設定を行わない。"
+    ]
   },
   {
     "id": "saa-031",
@@ -494,8 +584,14 @@
       "ルートテーブル"
     ],
     "answer": 0,
-    "explanation": "ネットワークACLはサブネット単位のステートレスな許可・拒否ルールです。",
-    "reference": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"
+    "explanation": "ネットワークACLはサブネットに適用されるステートレスな許可・拒否ルール。戻りトラフィックも別途許可する必要があり、ステートフルなセキュリティグループと区別する。",
+    "reference": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html",
+    "distractorReasons": [
+      "正解。サブネット境界で双方向のステートレス評価を行う。",
+      "セキュリティグループは通常ENIに関連しステートフルな許可を管理する。",
+      "IAMポリシーはAPIのアクセス権限でIPパケットのルールではない。",
+      "ルートテーブルはパケットの経路を決めるが許可・拒否フィルタとは異なる。"
+    ]
   },
   {
     "id": "saa-034",
@@ -522,8 +618,14 @@
       "S3 Select"
     ],
     "answer": 2,
-    "explanation": "Block Public AccessはS3リソースの公開につながる設定を制限します。",
-    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html"
+    "explanation": "S3 Block Public AccessはS3バケットやアカウントで公開ACL・公開ポリシーによる意図しない公開を防止する設定。必要な非公開アクセスは別のIAM/バケットポリシーで管理する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
+    "distractorReasons": [
+      "S3 Inventoryはオブジェクト一覧の生成機能で公開を直接遮断しない。",
+      "Transfer Accelerationは転送速度改善機能で公開アクセスの防御ではない。",
+      "正解。公開アクセス設定を制限する予防的な保護層として機能する。",
+      "S3 Selectは特定データの選択取得用でバケット公開の制限には使わない。"
+    ]
   },
   {
     "id": "saa-036",
@@ -564,8 +666,14 @@
       "長いポーリング"
     ],
     "answer": 1,
-    "explanation": "デッドレターキューは正常処理できないメッセージを分離します。",
-    "reference": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html"
+    "explanation": "SQSデッドレターキュー（DLQ）へ繰り返し失敗したメッセージを隔離するにはリドライブポリシーのmaxReceiveCountを設定する。失敗内容の監査と再投入の計画も必要。",
+    "reference": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+    "distractorReasons": [
+      "FIFOキューは順序や重複制御のためで失敗隔離キューではない。",
+      "正解。指定回数受信して処理できないメッセージを専用キューに移す。",
+      "遅延キューは可視化までの時刻を遅らせるが失敗回数で隔離しない。",
+      "長いポーリングは空受信リクエストを減らす機能で失敗の隔離は行わない。"
+    ]
   },
   {
     "id": "saa-039",
@@ -592,8 +700,14 @@
       "インスタンスを置換する"
     ],
     "answer": 3,
-    "explanation": "EC2 Auto Scalingは異常インスタンスを置換して希望容量を維持します。",
-    "reference": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-health-checks.html"
+    "explanation": "EC2 Auto Scalingはインスタンスやロードバランサーのヘルスチェック結果に応じて不健康なインスタンスを置換し、希望容量を保つ。データ永続性は別途設計する。",
+    "reference": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-health-checks.html",
+    "distractorReasons": [
+      "Auto Scalingによる異常判定はRDSデータベース削除を意味しない。",
+      "DNSの停止はAuto Scalingのインスタンス置換とは関係しない。",
+      "S3への退避は希望容量の維持動作ではなく別途設定が必要。",
+      "正解。不健康なインスタンスを置換してグループ容量を維持する。"
+    ]
   },
   {
     "id": "saa-041",
@@ -606,8 +720,14 @@
       "Amazon Macie"
     ],
     "answer": 0,
-    "explanation": "DAXはDynamoDBの読み取りを高速化するインメモリキャッシュです。",
-    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html"
+    "explanation": "DAXはDynamoDBに特化したインメモリキャッシュとして繰り返し読み取りの遅延を減らす。結果整合性やキャッシュ無効化によるデータ鮮度への影響に注意する。",
+    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html",
+    "distractorReasons": [
+      "正解。DynamoDB AcceleratorはDynamoDBアクセスのインメモリ高速化に対応する。",
+      "AthenaはSQL分析サービスでDynamoDBのキャッシュエンジンではない。",
+      "AWS Backupは復旧データの保護向けで読み取りの低レイテンシー化に使わない。",
+      "MacieはS3機密データ検出でDynamoDBキャッシュを提供しない。"
+    ]
   },
   {
     "id": "saa-042",
@@ -690,8 +810,14 @@
       "S3 One Zone-IA"
     ],
     "answer": 2,
-    "explanation": "Glacier Deep Archiveはアクセス頻度が非常に低い長期アーカイブ向けです。",
-    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+    "explanation": "S3 Glacier Deep Archiveは非常に低頻度の長期アーカイブ向けで即時アクセスはできない。取り出しに時間がかかることや最低保存期間と料金を設計時に確認する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html",
+    "distractorReasons": [
+      "Standardはミリ秒アクセス向けで長期アーカイブ特化の低保存単価ではない。",
+      "Express One Zoneは高性能な単一AZアクセス向けで長期低頻度アーカイブではない。",
+      "正解。Deep Archiveは長期低頻度保存と復元遅延許容の条件に適する。",
+      "One Zone-IAは即時アクセス用の低頻度クラスで長期アーカイブとは用途が異なる。"
+    ]
   },
   {
     "id": "saa-048",
@@ -718,11 +844,17 @@
       "AWS Config"
     ],
     "answer": 0,
-    "explanation": "IAM Identity Centerは複数AWSアカウントなどへの従業員アクセスを一元管理します。",
+    "explanation": "IAM Identity Centerは従業員のSSOとAWSアカウントへの権限セットを統合管理できる。外部IDプロバイダーと統合可能で、各アカウントへのIAMユーザー作成が必須ではない。",
     "reference": "https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html",
     "difficulty": 2,
     "tags": [
       "セキュリティ"
+    ],
+    "distractorReasons": [
+      "正解。複数AWSアカウントへの従業員SSOと権限セットを提供する。",
+      "Inspectorはワークロードの脆弱性を検出するサービスでSSOには使わない。",
+      "ACMはTLS証明書管理で利用者のSSOは提供しない。",
+      "ConfigはAWSリソース設定記録やルール評価のサービスである。"
     ]
   },
   {
@@ -826,11 +958,17 @@
       "MTTR"
     ],
     "answer": 2,
-    "explanation": "RPOは障害発生時に許容するデータ損失を時間で表した目標です。",
+    "explanation": "RPOは災害復旧の復旧地点目標で、失ってもよいデータの期間を示す。バックアップやレプリケーション頻度で満たせるかを評価し、復旧所要時間のRTOと区別する。",
     "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
     "difficulty": 2,
     "tags": [
       "耐障害性"
+    ],
+    "distractorReasons": [
+      "RTOは障害発生からサービス復旧までの目標時間である。",
+      "SLAは提供側が約束するサービス水準でデータ消失時間の指標ではない。",
+      "正解。RPOは障害前のデータ損失を許容できる時間量の目標を表す。",
+      "MTTRは故障からの平均復旧時間の計測でデータ損失許容量ではない。"
     ]
   },
   {
@@ -844,17 +982,17 @@
       "RTO"
     ],
     "answer": 3,
-    "explanation": "RTOは障害から復旧してサービスを再開するまでの目標時間です。",
+    "explanation": "RTOは障害からシステムを復旧しサービス再開するまでの許容時間。RPOはデータ損失の目標時間であり、復旧目標を設計する際は双方を定義する。",
     "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
     "difficulty": 2,
     "tags": [
       "耐障害性"
     ],
     "distractorReasons": [
-      "Recovery Point Objectiveは許容可能なデータ損失時間を示し、復旧時間そのものではありません。",
-      "Service Level Objectiveはサービス品質目標であり、復旧までの所要時間そのものではありません。",
-      "Mean Time Between Failuresは故障間隔の平均であり、目標復旧時間ではありません。",
-      "Recovery Time Objectiveは障害から業務再開までの目標時間です。"
+      "RPOはデータの復旧地点を表す目標で、サービス停止から再開までの時間ではない。",
+      "SLOは性能や可用性を含むサービス目標でDR再開時間という名称ではない。",
+      "MTBFは故障の平均間隔であり、障害後に許容される復旧時間ではない。",
+      "正解。RTOはサービス再開までに必要な復旧目標時間である。"
     ]
   },
   {
@@ -892,11 +1030,17 @@
       "Point-in-Time Recovery"
     ],
     "answer": 1,
-    "explanation": "グローバルセカンダリインデックスは別のキー構成でクエリするための仕組みです。",
+    "explanation": "DynamoDBグローバルセカンダリインデックスは別のパーティションキー・ソートキーで効率的にクエリできる。GSIへの更新反映は非同期であり、強整合性読み取りには対応しない。",
     "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GSI.html",
     "difficulty": 2,
     "tags": [
       "パフォーマンス"
+    ],
+    "distractorReasons": [
+      "DynamoDB Streamsは変更イベントの処理用で新しいクエリキーを定義しない。",
+      "正解。GSIを追加すると代替のキーアクセスパターンでクエリできる。",
+      "TTLは期限切れアイテム削除用でクエリのセカンダリキーを提供しない。",
+      "PITRはバックアップ・復元用でオンラインの新規索引にはならない。"
     ]
   },
   {
@@ -946,11 +1090,17 @@
       "固定のリザーブドインスタンスのみ"
     ],
     "answer": 0,
-    "explanation": "短期で予測しにくい利用では事前コミット不要のオンデマンドが選択肢になります。",
+    "explanation": "EC2オンデマンドは事前の利用額や年数のコミットメントが不要で、短期実験のような予測しにくい用途に柔軟に利用できる。ただし中断を許容する用途ではSpotの適用可能性も評価し、需要が安定すればSavings Plansとの費用比較を行う。",
     "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html",
     "difficulty": 2,
     "tags": [
       "コスト最適化"
+    ],
+    "distractorReasons": [
+      "正解。短時間実験で長期コミットなしに実行できる。",
+      "3年コミットは短期実験では利用しない期間も支出を固定しかねない。",
+      "Dedicated Hostsの長期占有は専有ハードウェア要件がない実験で過剰。",
+      "固定RIだけでは短時間で変動する利用形態に柔軟に対応しづらい。"
     ]
   },
   {
@@ -1000,11 +1150,17 @@
       "不要時間帯にEC2を停止する"
     ],
     "answer": 3,
-    "explanation": "EC2インスタンスを停止するとインスタンスのコンピューティング料金は止まりますがEBSなどの料金は残ります。",
+    "explanation": "EC2を停止すると通常コンピュート料金は発生しなくなるがEBSやパブリックIPv4等の料金は継続する場合がある。インスタンスストアや停止・起動時のアドレス変更にも注意する。",
     "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Stop_Start.html",
     "difficulty": 2,
     "tags": [
       "コスト最適化"
+    ],
+    "distractorReasons": [
+      "EBS容量の追加はデータ保管料金を増やし得る。",
+      "Elastic IPなどのIPアドレス追加は費用削減の直接策ではない。",
+      "サイズ拡大は未使用計算量を増やしコスト増の恐れがある。",
+      "正解。使用していない時間のEC2計算料金を直接抑制する。"
     ]
   },
   {
@@ -1018,11 +1174,17 @@
       "AWS Budgets"
     ],
     "answer": 0,
-    "explanation": "Amazon MacieはS3に格納された機密データの検出と可視化に利用できます。",
+    "explanation": "Amazon MacieはAmazon S3にあるオブジェクトの機密データを検出・分類する。機械学習とパターン照合を利用し、IAMの操作権限設定とは異なる役割を持つ。",
     "reference": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html",
     "difficulty": 2,
     "tags": [
       "セキュリティ"
+    ],
+    "distractorReasons": [
+      "正解。S3内の個人情報などの機密データの検出に利用できる。",
+      "CloudFormationはリソース構築のIaCサービスで機密データ分類ではない。",
+      "Route 53はDNSとヘルスチェックなどを扱いS3内容の検査はしない。",
+      "AWS Budgetsは費用の予算・予測通知で機密データ検出とは無関係。"
     ]
   },
   {
@@ -1054,11 +1216,17 @@
       "EC2ユーザーデータ"
     ],
     "answer": 2,
-    "explanation": "EFSは複数AZからアクセス可能なファイルシステムを構成できます。",
+    "explanation": "Regional Amazon EFSで複数AZにファイルデータを保持し、各AZのマウントターゲット経由で共有できる。単一AZストレージとの障害分離・レイテンシー設計が異なる。",
     "reference": "https://docs.aws.amazon.com/efs/latest/ug/manage-fs-access-create-delete-mount-targets.html",
     "difficulty": 2,
     "tags": [
       "耐障害性"
+    ],
+    "distractorReasons": [
+      "インスタンスストアはEC2ホストに固有の一時ストレージで複数AZ間共有はできない。",
+      "単一AZのEBSだけではAZ間で共有マウントできずAZ障害に耐えにくい。",
+      "正解。Regional EFSとAZごとのマウントターゲットで共有アクセスを設計できる。",
+      "EC2ユーザーデータは起動時のスクリプトなどに使い共有ファイルシステムではない。"
     ]
   },
   {
@@ -1114,11 +1282,17 @@
       "デフォルトVPC"
     ],
     "answer": 1,
-    "explanation": "クラスタープレイスメントグループはインスタンスを近接配置し低レイテンシー通信に適しています。",
+    "explanation": "クラスター配置グループは密結合アプリのEC2間通信を最適化する同一AZの配置方針。障害分離を重視するスプレッド配置とは設計トレードオフが異なる。",
     "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html",
     "difficulty": 2,
     "tags": [
       "パフォーマンス"
+    ],
+    "distractorReasons": [
+      "スプレッド配置は障害ドメインを分ける目的で通信近接最適化とは違う。",
+      "正解。Cluster placement groupはEC2間の低レイテンシー通信に適する。",
+      "パーティション配置は障害分離グループへ分ける戦略である。",
+      "デフォルトVPCは論理ネットワーク設定で近接配置を制御しない。"
     ]
   },
   {
@@ -1132,11 +1306,17 @@
       "中断は絶対に起きないと仮定する"
     ],
     "answer": 2,
-    "explanation": "スポットは中断されるため、処理再試行やチェックポイントで影響を小さくします。",
+    "explanation": "Spotは空きキャパシティの回収で中断されるため、中間状態を永続化しチェックポイントから再試行できる設計が重要。中断通知だけでは中断自体を回避できない。",
     "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html",
     "difficulty": 2,
     "tags": [
       "コスト最適化"
+    ],
+    "distractorReasons": [
+      "ローカルストアのみに状態を置くと中断時にデータを失う場合がある。",
+      "単一インスタンスへの固定は中断後に処理を継続する代替先がない。",
+      "正解。再実行可能なチェックポイントを作りSpot中断の影響を減らす。",
+      "Spotの中断はサービス仕様上起こり得るため無中断前提は不適切。"
     ]
   },
   {
@@ -1206,12 +1386,18 @@
       "単一リージョンのMulti-AZだけ"
     ],
     "answer": 1,
-    "explanation": "ウォームスタンバイは別環境に縮小版ワークロードを常時稼働させて復旧時間を短縮します。",
+    "explanation": "ウォームスタンバイは縮小版のサービス環境を別リージョンなどで常時稼働させるDR方式。障害発生時は待機先を拡張・切り替えるため、即時無停止を保証するわけではない。",
     "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html",
     "difficulty": 3,
     "tags": [
       "耐障害性",
       "シナリオ"
+    ],
+    "distractorReasons": [
+      "バックアップ＆リストアは待機稼働環境を持たず復元起動に時間を要することが多い。",
+      "正解。別リージョンに縮小稼働環境を維持し復旧時間を短縮する。",
+      "単一AZ構成は元環境のAZ障害にも弱くリージョンDRとはならない。",
+      "単一リージョン内のMulti-AZだけではリージョン全体の災害に対応できない。"
     ]
   },
   {
@@ -1326,12 +1512,18 @@
       "全ユーザーへAdministratorAccess"
     ],
     "answer": 1,
-    "explanation": "クロスアカウントIAMロールを信頼ポリシーと最小権限で構成し、STSの一時認証情報で委任します。",
+    "explanation": "クロスアカウントのAssumeRoleでは信頼ポリシーで委任先を指定し、S3へのロール権限は最小限に絞る。外部委託ではExternalIdを併用して代理人混同を減らせる。",
     "reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_aws-accounts.html",
     "difficulty": 3,
     "tags": [
       "シナリオ",
       "セキュリティ"
+    ],
+    "distractorReasons": [
+      "ルートの認証情報を外部共有すると権限分離と監査が破綻する。",
+      "正解。STSの一時認証情報で外部委託先へ必要な権限だけを渡せる。",
+      "公開バケットへの変更は利用者を委託先だけに絞れない。",
+      "AdministratorAccessを一律配布すると最小権限を満たさない。"
     ]
   },
   {
@@ -1402,12 +1594,18 @@
       "Route 53 Resolver"
     ],
     "answer": 0,
-    "explanation": "CloudTrailログファイル整合性検証を有効化すると配信されたログファイルの変更を検証できます。",
+    "explanation": "CloudTrailログファイル整合性検証は署名付きダイジェストファイルから配信済みログの改変・削除を検査できる。ただし検証を有効化するだけで検証処理が自動完了するわけではない。",
     "reference": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html",
     "difficulty": 3,
     "tags": [
       "シナリオ",
       "セキュリティ"
+    ],
+    "distractorReasons": [
+      "正解。配信したログをダイジェストと照合し改ざんの兆候を確認できる。",
+      "S3 Transfer Accelerationは転送高速化でログ署名検証ではない。",
+      "Auto ScalingはEC2容量管理でログファイル検証とは別機能。",
+      "Route 53 ResolverはDNS処理で監査ログの整合性を調べない。"
     ]
   },
   {
@@ -1484,12 +1682,18 @@
       "EC2インスタンスプロファイル"
     ],
     "answer": 0,
-    "explanation": "CloudFront OACはサポート対象のS3オリジンへのアクセスをCloudFront経由に制限できます。",
+    "explanation": "CloudFront Origin Access ControlとS3バケットポリシーの許可条件を組み合わせ、プライベートS3オリジンをCloudFrontからだけ読めるよう制約する。S3 Website EndpointではOACは利用できない。",
     "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html",
     "difficulty": 3,
     "tags": [
       "シナリオ",
       "セキュリティ"
+    ],
+    "distractorReasons": [
+      "正解。署名付きのCloudFrontオリジンリクエストだけをS3へ許可できる。",
+      "S3の公開ウェブサイトエンドポイントは直接アクセス禁止の要求に反する。",
+      "アクセスログ削除はアクセス権を変更せず監査性も悪化させる。",
+      "EC2インスタンスプロファイルはCloudFrontとS3の信頼関係を構成しない。"
     ]
   },
   {
@@ -1742,11 +1946,17 @@
       "Glacier Deep Archive"
     ],
     "answer": 1,
-    "explanation": "io2は高いIOPSを必要とするワークロード向けです。",
+    "explanation": "EBS io2 Provisioned IOPS SSDは高いIOPSと低レイテンシーを要求するブロックI/Oに適する。インスタンスのEBS帯域制約、プロビジョンドIOPSと容量も合わせて評価する。",
     "reference": "https://docs.aws.amazon.com/ebs/latest/userguide/provisioned-iops.html",
     "difficulty": 2,
     "tags": [
       "性能"
+    ],
+    "distractorReasons": [
+      "S3 Standard-IAはオブジェクト保管クラスでEC2ブロックデバイスではない。",
+      "正解。io2はProvisioned IOPSを指定する高性能EBS SSDタイプ。",
+      "EFS One Zoneは共有ファイルストレージでEBSブロックボリュームではない。",
+      "Glacier Deep Archiveはアーカイブ保存用でオンラインDBのIOPS要求に不適切。"
     ]
   },
   {
@@ -1892,11 +2102,17 @@
       "S3公開アクセス"
     ],
     "answer": 1,
-    "explanation": "Budgetsでコスト予算のアラートを設定すると費用変化に気付きやすくなります。",
+    "explanation": "AWS Budgetsの予算通知はLambdaの利用増加による請求変化を把握するのに役立つが、データ更新遅延があるためリアルタイム上限保証ではない。",
     "reference": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
     "difficulty": 2,
     "tags": [
       "コスト"
+    ],
+    "distractorReasons": [
+      "IAMアクセスキーを共有すると機密情報の漏えいリスクが増えるだけで予算監視にはならない。",
+      "正解。予算実績や予測額のアラートにより費用増加を検知できる。",
+      "インスタンスストアはEC2ローカルの一時ストレージでLambdaコストアラートではない。",
+      "S3公開アクセスはセキュリティリスクが高く予算通知の代替ではない。"
     ]
   },
   {
@@ -4174,7 +4390,7 @@
   {
     "id": "saa-226",
     "domain": "セキュリティ",
-    "question": "AWS Organizations配下の本番アカウントで、権限の乱用を防ぎたい。適切な対策をすべて選んでください。",
+    "question": "新規事業の本番AWSアカウントをOrganizationsのOU配下へ追加する。開発者にはアプリのIAMロール操作を最小権限で許可しつつ、特定サービスの禁止操作をアカウント横断で制約する必要がある。事故が発生したときには誰がAPI操作したか追跡したい。三つの対策を選べ。",
     "choices": [
       "SCPで許容操作の上限を定める",
       "IAMポリシーを最小権限で設計する",
@@ -4187,13 +4403,20 @@
       1,
       4
     ],
-    "explanation": "SCPは上限、IAMポリシーは個々の許可、CloudTrailは監査の役割を持ちます。これらを組み合わせます。",
+    "explanation": "SCPはOrganizations配下のメンバーアカウントの許可上限を設定し、IAM許可ポリシーは個人やワークロードに具体的な操作権限を与える。CloudTrailはAPI操作の記録・監査に利用する。SCPだけで操作権限は付与されず、ルート資格情報の共有も避ける。",
     "reference": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html",
     "difficulty": 3,
     "tags": [
       "本試験形式",
       "複数選択",
       "シナリオ"
+    ],
+    "distractorReasons": [
+      "正解。SCPでOU/アカウントの操作上限を設け、権限拡大のガードレールとする。",
+      "正解。IAMの必要最小限の許可により開発者の操作を限定する。",
+      "SCPはAllow権限を与えないためIAMやリソースポリシーによる許可が別途必要。",
+      "ルートユーザーの共有は個人の追跡可能性と最小権限を損なう。",
+      "正解。CloudTrailで管理操作の証跡を取得できる。"
     ]
   },
   {
@@ -4249,7 +4472,7 @@
   {
     "id": "saa-229",
     "domain": "パフォーマンス",
-    "question": "大量の静的コンテンツをCloudFrontで配信している。キャッシュヒット率を改善する方法をすべて選んでください。",
+    "question": "数万人の利用者へJavaScriptとCSSをCloudFrontで配信する。更新のたびに新しい内容が必要だが、内容に関係しないランダムなURLパラメータが発生し、古いキャッシュの扱いも整理したい。配信効率と更新の両立に有効な3施策を選べ。",
     "choices": [
       "キャッシュキーの不要なクエリパラメータを除く",
       "オブジェクト特性に合ったTTLを設定する",
@@ -4262,19 +4485,26 @@
       1,
       3
     ],
-    "explanation": "不要なキャッシュキー要素を減らし適切なTTLとバージョニングを利用すると、コンテンツの鮮度とキャッシュ効率を調整できます。",
+    "explanation": "CloudFrontのキャッシュキーから不要なクエリ文字列を除外し、オブジェクトの更新頻度と必要な鮮度からTTLを設計する。静的アセットにはバージョン付きURLを使うと新旧オブジェクトのキャッシュを共存させつつ更新できる。無条件のキャッシュ回避や利用者単位のランダムキーはヒット率を悪化させる。",
     "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html",
     "difficulty": 3,
     "tags": [
       "本試験形式",
       "複数選択",
       "シナリオ"
+    ],
+    "distractorReasons": [
+      "正解。表示内容に無関係なクエリ文字列をキャッシュキーに含めない。",
+      "正解。変更頻度に合わせたTTLでヒット率と鮮度を調整できる。",
+      "毎回オリジンへアクセスするとCDNキャッシュの効果が失われる。",
+      "正解。ファイル名やURLを版管理すると更新済みファイルを新しいキャッシュキーで提供できる。",
+      "利用者ごとのランダムなキャッシュキーはキャッシュ分断を招く。"
     ]
   },
   {
     "id": "saa-230",
     "domain": "パフォーマンス",
-    "question": "DynamoDBの高負荷テーブルで一部パーティションにアクセスが偏る。適切な改善案をすべて選んでください。",
+    "question": "DynamoDBのイベント集約テーブルで、月末だけ特定の顧客IDへ書き込みが集中してスロットリングが起きる。同時に別の人気顧客IDへの読み取りも集中している。高トラフィック時のCloudWatchメトリクスを保ちながら読み取りと書き込みの両方を改善する設計上の候補を三つ選べ。",
     "choices": [
       "分散しやすいパーティションキーへ設計変更を検討する",
       "読取ホットキーには適切なキャッシュを検討する",
@@ -4287,13 +4517,20 @@
       1,
       3
     ],
-    "explanation": "DynamoDBのホットキー問題にはキー分散、キャッシュ、シャーディングを活用し、メトリクスによる検証を続けます。",
+    "explanation": "DynamoDBではテーブル全体のWCU/RCUが十分でも一部パーティションへの負荷偏在でスロットリングが起こる。キー分布の検証、書き込みシャーディング、読取ホットキーのキャッシュを別々に検討する。既存クエリのアクセスパターンと整合性への影響を確認し、監視を継続する。",
     "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html",
     "difficulty": 3,
     "tags": [
       "本試験形式",
       "複数選択",
       "シナリオ"
+    ],
+    "distractorReasons": [
+      "正解。キーへのアクセス分布を見直し、集中したパーティションを分散させる。",
+      "正解。繰り返し参照するホットキーにはキャッシュの有効性を検討する。",
+      "全アイテムを単一キーへ集中させるとホットパーティションを悪化させる。",
+      "正解。必要に応じて書き込みシャーディングでホットキー負荷を分散できる。",
+      "スロットリングの監視停止では性能問題の発見や改善効果の検証ができない。"
     ]
   },
   {
@@ -4553,12 +4790,18 @@
       "CloudTrailをファイルサーバーとして利用"
     ],
     "answer": 1,
-    "explanation": "EFS Regionalは複数AZにデータを保持でき、AZ別マウントターゲットを用意した共有ファイルシステムとして利用できます。",
+    "explanation": "EFS Regionalは複数AZにファイルデータを複製して可用性を高め、各AZにマウントターゲットを構成できる。EC2インスタンスストアはホスト固有であり共有用途に不向き。",
     "reference": "https://docs.aws.amazon.com/efs/latest/ug/what-is-efs.html",
     "difficulty": 2,
     "tags": [
       "サービス比較",
       "実務判断"
+    ],
+    "distractorReasons": [
+      "EC2インスタンスストアはホスト停止時に保持できず複数AZの共有領域ではない。",
+      "正解。Regional EFSの共有ファイルシステムと複数AZマウントターゲットを使う。",
+      "単一AZの固定ストレージは障害AZに依存し複数AZの継続利用に不向き。",
+      "CloudTrailはAPI操作の監査サービスでファイルサーバーとしては利用できない。"
     ]
   },
   {
@@ -4616,12 +4859,18 @@
       "VPCのCIDRを拡張する"
     ],
     "answer": 1,
-    "explanation": "Lambdaでは設定したメモリ量に比例してCPU能力も増えるため、メモリを調整して処理性能を改善できる場合があります。",
+    "explanation": "Lambda関数のメモリ設定を増やすと割り当てられるCPU能力も増える。実行時間の短縮と料金の変化を測定して、CPUバウンドな変換処理に適した値を選択する。",
     "reference": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html",
     "difficulty": 2,
     "tags": [
       "サービス比較",
       "実務判断"
+    ],
+    "distractorReasons": [
+      "CloudTrail保存期間は監査ログの保持期間でLambdaのCPU割当を変えない。",
+      "正解。メモリの増量に伴ってCPUリソースも増える。",
+      "タイムアウト値の変更だけでは処理できるCPU能力は増えない。",
+      "VPCのCIDR範囲を広げてもLambdaコンピューティング性能には影響しない。"
     ]
   },
   {
@@ -4730,12 +4979,18 @@
       "Amazon EBS st1"
     ],
     "answer": 1,
-    "explanation": "Standard-IAは低頻度アクセスながらミリ秒単位の取り出しが必要なデータ向けで、取り出し料金等に注意します。",
+    "explanation": "S3 Standard-IAは低頻度のオブジェクトでもミリ秒で取得できる。最低保存期間・最小オブジェクト課金サイズと取り出し料金を合算し、アーカイブクラスとは区別する。",
     "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html",
     "difficulty": 2,
     "tags": [
       "サービス比較",
       "実務判断"
+    ],
+    "distractorReasons": [
+      "Glacier Deep Archiveは復元処理が必要でミリ秒の即時アクセスに不適切。",
+      "正解。Standard-IAは低頻度ながら即時取得を必要とするデータに適する。",
+      "Glacier Flexible Retrievalは即時取り出しの通常クラスではない。",
+      "EBS st1はEC2ブロックストレージでS3保存クラスではない。"
     ]
   },
   {
@@ -4902,7 +5157,7 @@
   {
     "id": "saa-260",
     "domain": "耐障害性",
-    "question": "複数AZのステートレスWebシステムを障害に強くしたい。正しい施策をすべて選んでください。",
+    "question": "毎週の販促キャンペーンでトラフィックが急増する予約WebサービスをALBとEC2で運用している。1つのAZが消失し一部EC2も障害状態になっても、セッションを失わず残りの正常AZで処理を継続したい。既存システムを段階的に改善するための適切な三つの対策は？",
     "choices": [
       "複数AZへサービスを配置する",
       "ALBヘルスチェックを使う",
@@ -4915,12 +5170,19 @@
       1,
       2
     ],
-    "explanation": "複数AZ分散、ヘルスチェック、Auto Scalingを組み合わせ、ステートを単一ホストへ閉じ込めないようにします。",
+    "explanation": "AZを跨いだインスタンス分散、ALBのヘルスチェックとAuto Scalingによる置換を組み合わせる。ステートレス運用ではセッションを個々のEC2ローカルディスクに保持せず共有セッションストアへ切り出す必要もある。正答選択肢は高可用性に役立つ要素であり、それだけでセッションの完全無停止を保証しない。",
     "reference": "https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html",
     "difficulty": 3,
     "tags": [
       "複数選択",
       "設計判断"
+    ],
+    "distractorReasons": [
+      "正解。異なるAZへEC2を分散して単一AZ障害の影響を小さくする。",
+      "正解。ALBのヘルスチェックで障害ターゲットへのルーティングを抑制できる。",
+      "正解。Auto Scalingで不健康なEC2を置換し必要な稼働数を維持できる。",
+      "セッションを単一EC2へ閉じ込めるとそのEC2やAZの障害で継続できない。",
+      "ワーカーを単一AZに集中させるとAZ障害時のワークロードが停止する。"
     ]
   },
   {
@@ -6855,6 +7117,214 @@
       "s3-intelligent-tiering",
       "シナリオ",
       "複合設計判断"
+    ]
+  },
+  {
+    "id": "saa-341",
+    "domain": "セキュリティ",
+    "question": "全社のIAMロールが長期間未使用の権限を保持している可能性がある。既に外部公開されたS3バケットを検出するAccess Analyzerは稼働しているが、過去90日間使われていないロールや権限を組織全体で洗い出したい。監査対象を追加する適切な方法は？",
+    "choices": [
+      "既存の外部アクセスアナライザーだけが未使用権限も自動検出すると考え、何も変更しない",
+      "IAM Access Analyzerで未使用アクセス用のアナライザーを組織スコープで別途作成する",
+      "CloudTrailをすべて無効化し、IAMポリシーに一時的にAdministratorAccessを付けて再評価する",
+      "S3 Intelligent-Tieringを使い未使用ロールを自動削除する"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "未使用アクセス用のIAM Access Analyzerは、外部アクセス分析とは異なるアナライザーとして作成する。指定した分析期間内のロールやIAM権限の未使用状況を検出できる。利用には対象アカウントや料金の確認が必要で、未使用だからといって監査無しの一括削除は避ける。",
+    "reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-concepts.html",
+    "distractorReasons": [
+      "外部アクセス分析はリソースが信頼境界外へ共有されているかの検査で、ロールの未使用権限を同じ方式で網羅しない。",
+      "正解。未使用権限の検出には別タイプのアナライザーが必要である。",
+      "CloudTrail停止や権限拡大では未使用権限を適切に検査できず監査性を損なう。",
+      "S3の自動階層化は保存クラス管理用でIAM権限の未使用分析ではない。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-342",
+    "domain": "セキュリティ",
+    "question": "AWS Organizationsで数十アカウントと複数リージョンを運用している。本番OUと開発OUで異なるSecurity Hub CSPMセキュリティ標準・コントロールを継続的に適用したい。新しいアカウントが追加された場合も中央管理し、管理アカウントを委任管理者に指定しない構成は？",
+    "choices": [
+      "OrganizationsとSecurity Hub CSPMを統合し、メンバーアカウントを委任管理者に指定して中央設定ポリシーをOUへ関連付ける",
+      "全アカウントで同一のアクセスキーを共有し、作業者が各リージョンへ順次ログインして変更する",
+      "CloudFrontのキャッシュポリシーをOUに適用すればSecurity Hubの標準も一元管理できる",
+      "管理アカウント自体をSecurity Hubの委任管理者に指定し、他アカウントの設定を放置する"
+    ],
+    "answer": 0,
+    "difficulty": 3,
+    "explanation": "Security Hub CSPMの中央設定ではOrganizationsとの統合と委任管理者が必要。委任管理者はメンバーアカウントを指定し、ホームリージョンと連携リージョンに対してOU単位などで設定ポリシーを関連付け、標準やコントロールを管理する。",
+    "reference": "https://docs.aws.amazon.com/securityhub/latest/userguide/start-central-configuration.html",
+    "distractorReasons": [
+      "正解。Organizationsと委任管理者・設定ポリシーの組み合わせでOU別の標準を中央設定できる。",
+      "長期キーの共有は最小権限に反し運用も属人的になる。",
+      "CloudFrontのキャッシュ設定ではSecurity Hub CSPMのコンプライアンス標準を変更できない。",
+      "Organizationsの管理アカウントはSecurity Hub CSPMの委任管理者には指定できない。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-343",
+    "domain": "セキュリティ",
+    "question": "アカウントAのS3バケットにSSE-KMSで暗号化した重要データがある。別アカウントBの分析IAMロールに最小権限で読み取りを許可したい。バケットのアクセス許可を付与しても復号できないため、暗号鍵の設計も見直す必要がある。適切な対策は？",
+    "choices": [
+      "S3用のAWSマネージドKMSキーaws/s3だけを使い、アカウントBに復号の権限を付ければ必ず共有できる",
+      "S3バケットを一般公開し、データ暗号化を無効にして共有する",
+      "カスタマーマネージドKMSキーを使用し、キーのポリシーとアカウントBロール側の許可で復号可能な主体を明示する",
+      "CloudTrailイベント数を増やすと暗号化オブジェクトへの復号権限が自動的に追加される"
+    ],
+    "answer": 2,
+    "difficulty": 3,
+    "explanation": "クロスアカウントSSE-KMSではS3のGetObjectなどに加えAWS KMSキーの復号認可が必要となる。AWS管理キーaws/s3はクロスアカウントの任意アクセスを許可するためにキーのポリシーを変更できないため、カスタマーマネージドキーのポリシーとIAM許可を確認する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html",
+    "distractorReasons": [
+      "aws/s3のAWS管理キーは独自キーポリシーを編集して他アカウントへ無条件共有できない。",
+      "バケットの公開はアクセス制御の要件を満たさずデータ漏えいリスクを生む。",
+      "正解。顧客管理KMSキーと適切なクロスアカウント鍵・S3許可が必要。",
+      "CloudTrailは監査ログ記録でKMS暗号鍵への復号権限を付与しない。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-344",
+    "domain": "セキュリティ",
+    "question": "機密レポートはS3バケットへ保存され、会社の指定VPCエンドポイントを経由したワークロードだけに利用を許したい。既にIAMロール側の適切なS3許可が存在する。指定エンドポイント以外の経路をバケットポリシーで拒否する場合、重要な設定上の注意点を含む正しい方法は？",
+    "choices": [
+      "バケットポリシーでaws:SourceVpce条件を用いた明示的Denyを設け、コンソール経由のアクセスが拒否され得る影響も確認する",
+      "S3のバケットを公開しRefererヘッダーの値だけで接続元を判定する",
+      "CloudTrailのログ記録を無効にすると指定エンドポイント以外のS3接続が拒否される",
+      "S3 Lifecycleの有効期限設定でVPC外のPutObjectとGetObjectを拒否する"
+    ],
+    "answer": 0,
+    "difficulty": 3,
+    "explanation": "バケットポリシーではaws:SourceVpce条件を使い特定のVPCエンドポイントから来ないS3操作を明示的にDenyできる。ただしAWSコンソール等の接続はそのVPCEを経由しないため運用者のアクセスも閉じる可能性があり、変更前に管理経路と復旧計画を確認する。",
+    "reference": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies-vpc-endpoint.html",
+    "distractorReasons": [
+      "正解。aws:SourceVpceで経路を制限できる一方、コンソール経由のアクセス阻害リスクがある。",
+      "Refererヘッダーだけでは安全なVPCE経路制限や認可にならない。",
+      "CloudTrailは操作履歴でありネットワーク経路ごとのバケット許可を制御しない。",
+      "Lifecycleはデータの保持・移行設定で接続元VPCEのアクセス制御には使用しない。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-345",
+    "domain": "セキュリティ",
+    "question": "20のAWSアカウントで監査イベントを継続保存する必要がある。Organizationsへアカウントが追加されたときにもCloudTrailの監査対象へ自動的に含め、各メンバーアカウントの管理者には組織の証跡を削除させたくない。最小の運用負荷で適切な選択は？",
+    "choices": [
+      "すべてのAWSアカウントで管理者が日次の手順書に従って証跡を手作成する",
+      "AWS Organizationsの管理アカウントまたは委任管理者からCloudTrail組織の証跡を作り、集中S3へ配信する",
+      "既存メンバーアカウントでCloudTrailを停止し、新規アカウントにだけS3アクセスログを設定する",
+      "全アカウントでルートユーザー資格情報を共有し単一PCから証跡を更新する"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "CloudTrail組織の証跡はOrganizations配下の現在および新規メンバーアカウントに適用され、メンバーからはその設定変更や削除ができない。集中S3保存先のポリシー、暗号化、保持期間と監査ログの改ざん検知を別途設計する。",
+    "reference": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/creating-trail-organization.html",
+    "distractorReasons": [
+      "個別作成だけでは新規参加時の漏れや管理者による変更が発生しやすい。",
+      "正解。組織の証跡は新規メンバーへ自動適用され集中管理できる。",
+      "監査を停止するとアカウントのAPI証跡が取れず要件違反になる。",
+      "ルート資格情報の共用は最小権限・分離統制に違反する。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-346",
+    "domain": "セキュリティ",
+    "question": "CloudFront配下でプライベートS3オリジンを配信している。閲覧者からのS3直接アクセスは禁止し、SSE-KMSで暗号化された画像もCloudFrontから復号して配信できるようにしたい。署名付きオリジンアクセスと鍵権限の両方を満たす設計は？",
+    "choices": [
+      "S3バケットを公開し、閲覧者からの直接アクセスをヘッダーで隠すだけにする",
+      "CloudFront OACを使って特定ディストリビューションからのS3アクセスを許可し、KMSキーポリシーでも必要なCloudFront側権限を許可する",
+      "CloudFrontのキャッシュTTLを0にするだけでSSE-KMSの復号権限も自動で追加される",
+      "S3のWebsite Endpointを公開オリジンとして使い、OAC設定を維持する"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "CloudFront OACはプライベートS3バケットを署名付きリクエストで読み取れる。SSE-KMSオブジェクトに対してはS3側のバケットポリシーだけでなく、CloudFront経由のアクセスを許可するKMSキーポリシーの設定が必要。Website EndpointはS3オリジンとしてOACに対応しない。",
+    "reference": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html",
+    "distractorReasons": [
+      "バケット公開ではCloudFront以外からの直接読取を防げない。",
+      "正解。OACと対象KMSキーの権限を両方設計する。",
+      "TTLはキャッシュ寿命でありKMS Decrypt許可の代替にならない。",
+      "Website EndpointはS3カスタムオリジンでありOACのS3プライベートオリジンとして使えない。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-347",
+    "domain": "耐障害性",
+    "question": "DynamoDBの注文テーブルで過去データの誤削除に備えてPITRを有効化している。オペレーターが誤って多数のアイテムを削除してしまった。稼働中の現行テーブルへの書き込みを止めずに、事故直前の状態を別領域へ復元して差分を調査したい。適切な方法は？",
+    "choices": [
+      "PITRから指定時点のデータを新しいDynamoDBテーブルへリストアし、現行テーブルとの違いを確認する",
+      "PITRを無効化すると削除済みアイテムが現行テーブルに自動で戻る",
+      "Global Secondary Indexを追加すると指定時点のバックアップが復元される",
+      "DynamoDB Streamsのイベント保持を無制限にすればテーブルへの直接時点復元が完了する"
+    ],
+    "answer": 0,
+    "difficulty": 3,
+    "explanation": "DynamoDBのポイントインタイムリカバリ（PITR）は指定時刻の状態を新しいテーブルとして復元する。稼働中テーブルを同じ名前で上書きする方式ではなく、データ比較・切り替えやIAM・ストリーム等の設定確認が必要。復元可能な期間内の時点を指定する。",
+    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/pointintimerecovery_restores.html",
+    "distractorReasons": [
+      "正解。PITRのリストア先は新しいテーブルであり現行テーブルを維持できる。",
+      "PITR無効化は復元可能な履歴を削るので誤削除の回復にはつながらない。",
+      "GSIはクエリキー追加でありテーブルの過去時点復元をしない。",
+      "Streamsは変更イベント取得用でPITRテーブル復元の代わりではない。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
+    ]
+  },
+  {
+    "id": "saa-348",
+    "domain": "パフォーマンス",
+    "question": "DynamoDBのイベントテーブルでアクセスが一つの顧客IDに集中し、テーブル全体のWCUは足りているのに一部のパーティションで書き込みスロットリングが続いている。データアクセス要件を維持したまま根本原因を解決する設計上の最初の検討は？",
+    "choices": [
+      "テーブルの読み取り整合性を強整合性に切り替えるだけでホットキーを解消する",
+      "該当キーへの書き込み分布を確認し、パーティションキーの分散や書き込みシャーディングを設計する",
+      "CloudTrailの保存期間を増やしてDynamoDBのWCU上限を拡張する",
+      "すべてのアイテムへ同一のパーティションキーを設定して書き込みを集中させる"
+    ],
+    "answer": 1,
+    "difficulty": 3,
+    "explanation": "DynamoDBのパーティションごとのスループット制約やホットキーはテーブルの総WCUだけでは解消しない。キーへのアクセスを均等に分散するようキー設計を見直し、必要に応じて書き込みシャーディングを導入する。クエリ方法の変更コストも評価する。",
+    "reference": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html",
+    "distractorReasons": [
+      "読み取り整合性の変更だけでは偏った書き込み要求の分配を改善しない。",
+      "正解。アクセスパターンとキー分布に基づきホットパーティションを緩和する。",
+      "監査ログ保持期間はDynamoDBのパーティション分散に影響しない。",
+      "単一パーティションキーへの集中はホットキーを悪化させる。"
+    ],
+    "tags": [
+      "シナリオ",
+      "複合設計判断",
+      "実務判断"
     ]
   }
 ]

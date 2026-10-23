@@ -21,11 +21,12 @@ export function smartTargets(count:number,profile:SmartProfile):Record<SmartCate
  return {due:floor[0],recovery:floor[1],unseen:floor[2],challenge:floor[3]};
 }
 export function planSmartQuest<T extends SelectableQuestion>(items:readonly T[],count:number,context:AdaptiveContext,profile:SmartProfile='balanced'):SmartPlan<T>{
- const targets=smartTargets(count,profile),now=context.now??Date.now(),reviews=context.reviews??{},mistakes=new Set(context.mistakes);
+ const targets=smartTargets(count,profile),now=context.now??Date.now(),reviews=context.reviews??{},mistakes=new Set(context.mistakes??[]);
+ const unique=[...new Map(items.filter(x=>x&&typeof x.id==='string'&&typeof x.question==='string').map(x=>[x.id,x])).values()];
  const buckets:Record<SmartCategory,T[]>={due:[],recovery:[],unseen:[],challenge:[]};
- const weak=(d:string)=>{const entry=context.domains[d];return !!entry&&entry.answered>=4&&entry.correct/entry.answered<.7};
- for(const item of items){
-  if(reviews[item.id]?.dueAt<=now)buckets.due.push(item);
+ const weak=(d:string)=>{const entry=context.domains?.[d];return !!entry&&Number.isFinite(entry.answered)&&Number.isFinite(entry.correct)&&entry.answered>=4&&entry.correct/entry.answered<.7};
+ for(const item of unique){
+  if(Number.isFinite(reviews[item.id]?.dueAt)&&reviews[item.id].dueAt<=now)buckets.due.push(item);
   else if(mistakes.has(item.id))buckets.recovery.push(item);
   else if(!reviews[item.id])buckets.unseen.push(item);
   if(isScenarioQuestion(item)||weak(item.domain))buckets.challenge.push(item);
@@ -38,12 +39,12 @@ export function planSmartQuest<T extends SelectableQuestion>(items:readonly T[],
  };
  const kinds:SmartCategory[]=['due','recovery','challenge','unseen'];
  for(const kind of kinds)select(kind,Math.max(0,targets[kind]));
- const lacking=Math.max(0,Math.min(count,items.length)-picked.length);
+ const lacking=Math.max(0,Math.min(count,unique.length)-picked.length);
  if(lacking){
-  const extra=selectAdaptive(items.filter(x=>!used.has(x.id)),lacking,{...context,recent:new Set([...context.recent,...used])});
+  const extra=selectAdaptive(unique.filter(x=>!used.has(x.id)),lacking,{...context,recent:new Set([...context.recent,...used])});
   for(const item of extra){
    picked.push(item);used.add(item.id);
-   reasons[item.id]=reviews[item.id]?.dueAt<=now?SMART_LABELS.due:mistakes.has(item.id)?SMART_LABELS.recovery:!reviews[item.id]?SMART_LABELS.unseen:SMART_LABELS.challenge;
+   reasons[item.id]=Number.isFinite(reviews[item.id]?.dueAt)&&reviews[item.id].dueAt<=now?SMART_LABELS.due:mistakes.has(item.id)?SMART_LABELS.recovery:!reviews[item.id]?SMART_LABELS.unseen:SMART_LABELS.challenge;
   }
  }
  const counts={due:0,recovery:0,unseen:0,challenge:0};

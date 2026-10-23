@@ -1,6 +1,6 @@
 /** Analytics from explicit events only: never invent per-question history from aggregate XP. */
 import {localDateKey,parseLocalDate,shiftLocalDate,type ActivityHistory} from './studyHistory.ts';
-export type AnswerEvent={id:string;domain:string;day:string;correct:boolean;firstAttempt:boolean;due:boolean;recovery:boolean;exam:boolean};
+export type AnswerEvent={id:string;domain:string;day:string;correct:boolean;firstAttempt:boolean;due:boolean;recovery:boolean;exam:boolean;mode?:'smart'|'normal'|'exam';at?:number};
 export type AnswerHistory=AnswerEvent[];
 export type AnalyticsWindow=7|30|90;
 export const MAX_EVENTS=3000;
@@ -9,7 +9,9 @@ export function normalizeAnswerHistory(value:unknown):AnswerHistory{
  return value.filter((x):x is AnswerEvent=>!!x&&typeof x==='object'&&typeof x.id==='string'&&x.id.length<=160
   &&typeof x.domain==='string'&&x.domain.length<60&&typeof x.day==='string'&&!!parseLocalDate(x.day)
   &&typeof x.correct==='boolean'&&typeof x.firstAttempt==='boolean'&&typeof x.due==='boolean'
-  &&typeof x.recovery==='boolean'&&typeof x.exam==='boolean').slice(-MAX_EVENTS);
+  &&typeof x.recovery==='boolean'&&typeof x.exam==='boolean'
+  &&(x.mode===undefined||x.mode==='smart'||x.mode==='normal'||x.mode==='exam')
+  &&(x.at===undefined||(typeof x.at==='number'&&Number.isFinite(x.at)&&x.at>=0))).slice(-MAX_EVENTS);
 }
 export function appendAnswerEvent(value:unknown,event:AnswerEvent):AnswerHistory{
  return [...normalizeAnswerHistory(value),event].slice(-MAX_EVENTS);
