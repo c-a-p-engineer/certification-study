@@ -139,3 +139,24 @@
 .gm-rank-gates span.complete b{color:#dcfff0}
 .gm-next-rank.maxed{display:flex;gap:8px;align-items:center;color:#ffebb3;font-weight:900}
 @media(max-width:400px){.gm-rank-gates{gap:5px}.gm-rank-gates span{padding:8px 6px}.gm-rank-gates span b{font-size:11px}}
+
+/* RPG names and unlockable epithets. */
+.game-menu-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px}
+.game-menu-tabs button{flex-direction:column;gap:4px;font-size:11px;min-height:55px;letter-spacing:.2px}
+.gm-rank-subtitle{display:block;margin:-3px 0 6px;color:#e4cbf8;font-size:12px;font-weight:800}
+.gm-equipped-title{display:inline-flex;border:1px solid #eab6a7;border-radius:99px;padding:4px 10px;background:#4a344a;color:#ffead6;font-size:12px;margin-bottom:9px;font-weight:900}
+.gm-titles-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 4px 16px;color:#fff4bb}
+.gm-titles-heading strong{font-size:17px}
+.gm-titles-heading span{font-size:12px;color:#bed1e7}
+.gm-title-list{display:grid;gap:9px}
+.gm-title-item{display:flex;align-items:center;min-height:68px;gap:12px;width:100%;text-align:left;border:1px solid #586985;background:#1b2e47;color:#daeaff;padding:11px 12px;border-radius:9px;cursor:pointer}
+.gm-title-item>svg{color:#ffdc8d;flex-shrink:0}
+.gm-title-item>span{display:flex;flex:1;flex-direction:column;min-width:0;gap:4px}
+.gm-title-item>span strong{font-weight:900;font-size:14px;color:#fff}
+.gm-title-item>span small{font-size:11px;color:#a9c7dc}
+.gm-title-item>b{font-size:11px;color:#aadcef;white-space:nowrap}
+.gm-title-item.equipped{border:2px solid #89f7e8;background:#23483e;box-shadow:0 0 18px #61e9c72e}
+.gm-title-item.equipped>b{color:#b5ffe0}
+.gm-title-item.locked{cursor:default;opacity:.49;filter:saturate(.5)}
+.gm-title-item:focus-visible{outline:3px solid #ffdb9c;outline-offset:2px}
+@media(max-width:700px){.game-menu-tabs{padding:8px;gap:4px}.game-menu-tabs button{font-size:10px;min-height:53px}.gm-titles-heading{flex-wrap:wrap}.gm-title-item{min-height:65px;padding:11px 9px}}
