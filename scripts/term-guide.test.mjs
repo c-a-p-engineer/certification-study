@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {CONCEPTS,findStudyTerms} from '../src/termGuide.ts';
+import {GLOSSARY} from '../src/glossary.ts';
+import {CONCEPT_READINGS,ABBREVIATION_READINGS} from '../src/termReadings.ts';
 
 test('technical terms are contextual and include ordinary AWS concepts, not only acronyms',()=>{
  const q={question:'Amazon S3でキャッシュしたファイルをCloudFrontから配信する。',choices:['S3','Amazon EC2','EBS','Lambda'],explanation:'キャッシュとTTLを設定する。'};
@@ -44,4 +46,22 @@ test('real 300-question bank gets contextual explanations for most items',()=>{
  const covered=bank.filter(q=>findStudyTerms(q).length>0).length;
  console.log('contextual glossary coverage:',covered,'/',bank.length);
  assert.ok(covered>=Math.floor(bank.length*.95));
+});
+
+test('every curated concept and acronym has an explicit Japanese reading',()=>{
+ assert.equal(Object.keys(CONCEPT_READINGS).length,CONCEPTS.length);
+ for(const concept of CONCEPTS){
+  assert.equal(concept.reading,CONCEPT_READINGS[concept.id],concept.id);
+  assert.ok(/[ぁ-んァ-ヶー]/.test(concept.reading),concept.id);
+ }
+ for(const acronym of GLOSSARY){
+  assert.ok(ABBREVIATION_READINGS[acronym.abbr],acronym.abbr);
+ }
+});
+test('term list supports reading, original name, and per-item definitions',()=>{
+ const terms=findStudyTerms({question:'RTOとRPOを短縮するためにS3にバックアップする',choices:['RTO','RPO','S3','EC2'],explanation:'RTOとRPOの違い'});
+ assert.equal(terms.find(t=>t.title==='RTO')?.reading,'アールティーオー');
+ assert.equal(terms.find(t=>t.title==='RPO')?.reading,'アールピーオー');
+ assert.equal(terms.find(t=>t.title==='Amazon S3')?.reading,'エススリー');
+ assert.ok(terms.every(t=>t.meaning&&t.note&&t.reading));
 });
