@@ -48,6 +48,23 @@ const titles:Definition[]=[
 ];
 export const DEFAULT_TITLE_ID='starter';
 export const EQUIPPED_TITLE_KEY='certification-overdrive-equipped-title-v1';
+
+export const UNLOCKED_TITLES_KEY='certification-overdrive-unlocked-titles-v1';
+export function readUnlockedTitles():string[]{
+ try{
+  if(typeof localStorage==='undefined')return [];
+  const data=JSON.parse(localStorage.getItem(UNLOCKED_TITLES_KEY)||'[]');
+  return Array.isArray(data)?data.filter((v:unknown):v is string=>typeof v==='string'&&titles.some(t=>t.id===v)):[];
+ }catch{return []}
+}
+export function saveUnlockedTitles(ids:readonly string[]):void{
+ try{if(typeof localStorage!=='undefined')localStorage.setItem(UNLOCKED_TITLES_KEY,JSON.stringify([...new Set(ids)].filter(id=>titles.some(t=>t.id===id))))}catch{}
+}
+export function persistentTitles(stats:TitleStats,previous:readonly string[]):Title[]{
+ const previousIds=new Set(previous);
+ return earnedTitles(stats).map(title=>({...title,unlocked:title.unlocked||previousIds.has(title.id)}));
+}
+
 export function earnedTitles(stats:TitleStats):Title[]{return titles.map(x=>({id:x.id,name:x.name,description:x.description,unlocked:x.requires(stats)}))}
 export function titleStats(progress:TitleProgress,days:number,streak:number):TitleStats{
  const reviews=Object.values(progress.reviews??{});
