@@ -72,3 +72,21 @@
 .app.reduced .explanation .xp-award::after{animation:none;display:none}
 .app.reduced .title-drop{animation:none}
 .app.reduced .impact-layer{display:none!important}
+
+/* Extra visual reward mode: saturated colors, gentle 1.8s motion, no strobing. */
+.app .gm-visual-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0 22px}
+.app .gm-visual-options button{border:1px solid #7695b9;border-radius:8px;min-height:50px;background:#1e3550;color:#e4f3ff;font-weight:900;font-size:var(--study-menu);cursor:pointer}
+.app .gm-visual-options button.active{border-color:#ffdfa8;background:linear-gradient(110deg,#ffc78d,#fd91c9);color:#282133;box-shadow:0 0 22px #ffb58b3c}
+.app .gm-visual-options button:disabled{opacity:.45;cursor:not-allowed}
+.app .gm-visual-options button:focus-visible{outline:3px solid #b4f9ff;outline-offset:2px}
+.app.visual-overdrive .fever-meter.charged{border-color:#ffc1e9;box-shadow:0 0 24px #f4a0d86b,0 0 45px #b599fb3d}
+.app.visual-overdrive .fever-track>div{box-shadow:0 0 24px #ffaddd,0 0 42px #8eeefd}
+.app.visual-overdrive .explanation .xp-award{border:2px solid #e8ffc1;box-shadow:0 0 19px #8affc748,0 0 30px #b4a6ff20}
+.app.visual-overdrive .explanation .xp-award strong{color:#fff8cb;text-shadow:0 0 19px #ffe9a0,0 0 35px #adf3ff91}
+.app.visual-overdrive .answer.correct{box-shadow:0 0 20px #79f7c94a,0 0 0 1px #b5ffe1}
+.app.visual-overdrive .title-drop{border-color:#fff8cc;box-shadow:0 0 30px #fff1a54f,0 0 45px #ee9edf30}
+.app.visual-overdrive .clear-grade.grade-S{animation:clear-aura 1.8s ease-in-out infinite alternate}
+.app.visual-overdrive .impact-layer{box-shadow:0 0 35px #9afdeea1,0 0 55px #ffbded70,0 12px 36px #000c}
+@keyframes clear-aura{to{box-shadow:0 0 40px #ffea9fb5,0 0 55px #ed9af78c}}
+@media(prefers-reduced-motion:reduce){.app.visual-overdrive .clear-grade.grade-S{animation:none}}
+.app.reduced.visual-overdrive .clear-grade.grade-S{animation:none}
