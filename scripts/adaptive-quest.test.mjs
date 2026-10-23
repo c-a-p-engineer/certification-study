@@ -1,4 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {selectAdaptive,adaptiveReasons} from '../src/adaptiveQuest.ts';
 import {loadQuestions} from './question-source.mjs';
 const bank=loadQuestions();
@@ -33,7 +34,7 @@ test('real AWS question bank supports 10 diverse selections and zero-count edge 
  assert.ok(result.some(q=>q.question.length>85));
 });
 test('SMART QUEST is isolated from 65-question exam and persisted on normal mission saves',()=>{
- const {readFileSync}=await import('node:fs');const src=readFileSync('src/main.tsx','utf8');const mission=readFileSync('src/missionSave.ts','utf8');
+ const src=readFileSync('src/main.tsx','utf8');const mission=readFileSync('src/missionSave.ts','utf8');
  assert.ok(src.includes('adaptive?selectAdaptive('));
  assert.ok(src.includes('adaptiveMode'));assert.ok(src.includes('SMART QUEST'));
  assert.ok(src.includes('exam?examPool('));
