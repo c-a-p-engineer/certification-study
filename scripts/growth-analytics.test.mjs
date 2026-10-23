@@ -18,7 +18,7 @@ test('first-time, review, due and recovery accuracy are measured only from event
 });
 test('malformed entries discarded; history capped without changing aggregate XP',()=>{
  assert.equal(normalizeAnswerHistory([{id:'?',day:'broken'}]).length,0);
- let events=[];for(let i=0;i<MAX_EVENTS+3;i++)events=appendAnswerEvent(events,make('q'+i,true,true));
+ const events=appendAnswerEvent(Array.from({length:MAX_EVENTS+2},(_,i)=>make('q'+i,true,true)),make('q'+(MAX_EVENTS+2),true,true));
  assert.equal(events.length,MAX_EVENTS);assert.equal(events[0].id,'q3');
 });
 test('analytics are visible on home dashboard, not an exam pass prediction',()=>{
