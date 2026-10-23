@@ -41,8 +41,8 @@ const referenceProblems=bank.filter(q=>{try{const u=new URL(q.reference);return 
 const suspiciousExplanations=bank.filter(q=>/(?:必ず|絶対に|すべての場合|常に)/.test(q.explanation||'')&&!q.reviewedAt).map(q=>({id:q.id,reason:'absolute wording; verify exceptions in linked AWS docs'}));
 const unresolvedReviews=bank.filter(q=>!q.reviewedAt).map(q=>({id:q.id,reference:q.reference,domain:q.domain,status:'awaiting independent factual review'}));
 const report={
- 5_7Batch:{count:reviewerBatch.items.length,independentHumanSignoff:'pending'},
- 5_8Content:{total:bank.length,richScenarios:bank.filter(q=>q.tags?.includes('複合設計判断')).length,overlapTriageDecisions:overlapTriage.decisions.length},
+ reviewBatch57:{count:reviewerBatch.items.length,independentHumanSignoff:'pending'},
+ content58:{total:bank.length,richScenarios:bank.filter(q=>q.tags?.includes('複合設計判断')).length,overlapTriageDecisions:overlapTriage.decisions.length},
  generatedAt:new Date().toISOString(),total:bank.length,reviewed:bank.filter(q=>!!q.reviewedAt).length,
  reviewDateOnlyCaveat:'reviewedAt is a recorded editorial date, not proof of an independent claim-by-claim review.',
  nearDuplicateThreshold:SIMILARITY_STRONG_THRESHOLD,nearDuplicateCandidates:suspects,
@@ -109,4 +109,4 @@ const rows=[
  '- E2E/browser automation remains deferred per project request.'
 ];
 writeFileSync('reports/question-audit.md',rows.join('\n')+'\n');
-console.log(JSON.stringify({total:bank.length,reviewed:report.reviewed,missingReview:unresolvedReviews.length,nearDuplicateCandidates:suspects.length,similarityCandidates:candidates.length,editorialQueue:issues.length,crossChecked:ledger.entries.length,optionAuditDrafts:reviewerBatch.items.length,scenarios:report['5_8Content'].richScenarios}));
+console.log(JSON.stringify({total:bank.length,reviewed:report.reviewed,missingReview:unresolvedReviews.length,nearDuplicateCandidates:suspects.length,similarityCandidates:candidates.length,editorialQueue:issues.length,crossChecked:ledger.entries.length,optionAuditDrafts:reviewerBatch.items.length,scenarios:report.content58.richScenarios}));
