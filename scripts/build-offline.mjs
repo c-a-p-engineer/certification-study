@@ -5,7 +5,8 @@ const root='dist',base='/certification-study/';
 const walk=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(item=>item.isDirectory()?walk(join(dir,item.name)):[join(dir,item.name)]);
 const assets=walk(root).map(file=>relative(root,file).replaceAll('\\','/')).filter(x=>x!=='sw.js'&&!x.endsWith('.map'));
 // Avoid huge/mutable caches: only files emitted from our build (JS, CSS, HTML, manifest, icons).
-const allowed=assets.filter(x=>/^(?:index\.html|manifest\.webmanifest|assets\/.*\.(?:js|css)|icons\/.*\.svg)$/.test(x));
+const allowed=assets.filter(x=>/^(?:index\.html|manifest\.webmanifest|assets\/.*\.(?:js|css)|icons\/.*\.(?:svg|png))$/.test(x));
+if(!allowed.includes('icons/overdrive-192.png')||!allowed.includes('icons/overdrive-512.png')||!allowed.includes('icons/overdrive-maskable-512.png'))throw new Error('Missing Android PNG icons');
 if(!allowed.includes('index.html')||!allowed.some(x=>x.endsWith('.js'))||!allowed.some(x=>x.endsWith('.css'))||!allowed.includes('manifest.webmanifest'))throw new Error('Missing required offline app shell');
 const precache=allowed.map(x=>base+x);
 const version=createHash('sha256').update(allowed.map(x=>x+':'+createHash('sha256').update(readFileSync(join(root,x))).digest('hex')).join('|')).digest('hex').slice(0,16);
