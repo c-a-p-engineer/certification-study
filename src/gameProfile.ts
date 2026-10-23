@@ -39,7 +39,7 @@ export function gameProfile(progress:ProfileInput,totalQuestions:number,now=Date
   {id:'scholar',label:'MEMORY MASTER',description:'定着30問',unlocked:learned>=30,icon:'✺'},
   {id:'legend',label:'OVERDRIVE LEGEND',description:'LEGENDランク',unlocked:ranked.name==='LEGEND',icon:'★'}
  ];
- return {xp,answered,level,levelStart,nextLevelXP,levelPct,rank:ranked.name,nextRank:nextRank?.name??null,
+ return {xp,answered,level,levelStart,nextLevelXP,levelPct,rank:ranked.name,rankIndex:currentIndex,nextRank:nextRank?.name??null,
   rankGoal:nextRank?{xp:nextRank.minXP,answers:nextRank.minAnswers,days:nextRank.minDays}:null,
   xpToNextRank:nextRank?Math.max(0,nextRank.minXP-xp):0,
   answersToNextRank:nextRank?Math.max(0,nextRank.minAnswers-answered):0,
