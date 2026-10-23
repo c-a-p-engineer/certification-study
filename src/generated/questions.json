@@ -1090,7 +1090,7 @@
       "固定のリザーブドインスタンスのみ"
     ],
     "answer": 0,
-    "explanation": "EC2オンデマンドは事前の利用額や年数のコミットメントが不要で、短期実験のような予測しにくい用途に柔軟に利用できる。",
+    "explanation": "EC2オンデマンドは事前の利用額や年数のコミットメントが不要で、短期実験のような予測しにくい用途に柔軟に利用できる。ただし中断を許容する用途ではSpotの適用可能性も評価し、需要が安定すればSavings Plansとの費用比較を行う。",
     "reference": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html",
     "difficulty": 2,
     "tags": [
