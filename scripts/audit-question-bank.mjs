@@ -1,5 +1,6 @@
-import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
-const bank=readFileSync('certifications/aws-saa/questions/bank.jsonl','utf8').trim().split(/\r?\n/).map(JSON.parse);
+import {writeFileSync,mkdirSync} from 'node:fs';
+import {loadQuestions} from './question-source.mjs';
+const bank=loadQuestions();
 const norm=x=>String(x).normalize('NFKC').toLowerCase().replace(/[\s、。？！?!「」『』\-]/g,'');
 const grams=s=>new Set([...Array(Math.max(0,s.length-2))].map((_,i)=>s.slice(i,i+3)));
 const sim=(a,b)=>{const A=grams(norm(a)),B=grams(norm(b));let shared=0;for(const x of A)if(B.has(x))shared++;return shared/Math.max(1,A.size+B.size-shared)};
