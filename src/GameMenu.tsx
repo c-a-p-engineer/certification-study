@@ -1,7 +1,7 @@
 import React from 'react';
 import {Award,BarChart3,Crown,Flame,Gamepad2,Home,Settings2,Shield,Trophy,Vibrate,Volume2,X,Zap} from 'lucide-react';
 import type {AudioSettings} from './audioDirector';
-import {getHapticEnvironment,type HapticMode,type HapticTestResult} from './haptics';
+import {getHapticEnvironment,type HapticMode,type HapticTestResult,type HapticTestKind} from './haptics';
 import type {gameProfile} from './gameProfile';
 import './gameMenu.css';
 
@@ -15,7 +15,7 @@ export type GameMenuProps={
  session:{mode:'home'|'quiz'|'result';exam:boolean;boss:boolean;index:number;total:number;correct:number};
  audio:AudioSettings;onAudio:(patch:Partial<AudioSettings>)=>void;
  haptics:HapticMode;onHaptics:(mode:HapticMode)=>void;
- onVibrationTest:()=>HapticTestResult;canVibrate:boolean;
+ onVibrationTest:(kind:HapticTestKind)=>HapticTestResult;canVibrate:boolean;
  reduced:boolean;onReduced:(value:boolean)=>void;onSoundTest:()=>void;
 };
 const domainNames=['セキュリティ','耐障害性','パフォーマンス','コスト最適化'];
@@ -23,7 +23,7 @@ export default function GameMenu(p:GameMenuProps){
  const [testResult,setTestResult]=React.useState<HapticTestResult|null>(null);
  const [felt,setFelt]=React.useState<'yes'|'no'|null>(null);
  const environment=getHapticEnvironment();
- function runHapticTest(){setFelt(null);setTestResult(p.onVibrationTest())}
+ function runHapticTest(kind:HapticTestKind){setFelt(null);setTestResult(p.onVibrationTest(kind))}
  const labels:{id:Tab;label:string;icon:typeof BarChart3}[]=[
   {id:'status',label:'STATUS',icon:BarChart3},
   {id:'achievements',label:'BADGES',icon:Award},
@@ -62,10 +62,10 @@ export default function GameMenu(p:GameMenuProps){
      <div className="gm-haptic-diagnostics">
       <strong>VIBRATION CHECK <small>端末診断</small></strong>
       <div className="gm-haptic-facts"><span>Web振動API</span><b>{p.canVibrate?'検出':'未対応'}</b><span>OSの動き軽減</span><b>{environment.systemReducedMotion?'有効（振動OFF）':'無効'}</b><span>ゲーム内の動き軽減</span><b>{p.reduced?'有効（振動OFF）':'無効'}</b><span>ページのタップ履歴</span><b>{environment.hasGesture===null?'判定不可':environment.hasGesture?'あり':'なし'}</b></div>
-      <button type="button" className="gm-vibration-test" disabled={!p.canVibrate||p.haptics==='off'||p.reduced||environment.systemReducedMotion} onClick={runHapticTest}>振動テスト · 強めの2パルス <Vibrate size={17}/></button>
+      <div className="gm-vibration-tests"><button type="button" className="gm-vibration-test" onClick={()=>runHapticTest('single')}>単発テスト · 250ms <Vibrate size={17}/></button><button type="button" className="gm-vibration-test" onClick={()=>runHapticTest('pattern')}>連続テスト · 2パルス <Vibrate size={17}/></button></div>
       {testResult&&<div className={'gm-haptic-result '+(testResult.status==='accepted'?'maybe':'blocked')} role="status"><strong>{testResult.status==='accepted'?'ブラウザが要求を受理':testResult.status==='rejected'?'ブラウザが要求を拒否':'振動できない状態'}</strong><p>{testResult.message}</p>{testResult.status==='accepted'&&<><span>実際にスマホは振動しましたか？</span><div className="gm-felt-buttons"><button type="button" aria-pressed={felt==='yes'} onClick={()=>setFelt('yes')}>振動した</button><button type="button" aria-pressed={felt==='no'} onClick={()=>setFelt('no')}>振動しない</button></div></>}</div>}
       {felt==='no'&&<p className="gm-haptic-advice"><strong>要求は受理されたが振動しない場合</strong>：Androidの「設定 → 音とバイブレーション → バイブレーションと触覚」などで振動を確認してください。サイレント・おやすみモードも確認し、同じページをChromeでも開いて比較してください。Braveや端末側が振動を止める場合、Webサイトから強制的に有効にはできません。</p>}
-      <p className="gm-haptic-note">APIの「検出」やテストの「受理」は、実際の振動を保証しません。対応しない場合も正解・不正解の光、音、XP演出は利用できます。</p>
+      <p className="gm-haptic-note">単発と連続テストをそれぞれ試せます。APIの「検出」や「受理」は実際の振動を保証しません。OVERDRIVEは振動時間・回数を変えるもので、モーターの物理的な強さは変更できません。</p>
      </div>
      <h4 className="gm-section-title"><Volume2 size={18}/> GAME AUDIO</h4>
      <label className="gm-toggle"><input type="checkbox" checked={p.audio.bgmEnabled} onChange={e=>p.onAudio({bgmEnabled:e.target.checked})}/> BGMを再生</label>
