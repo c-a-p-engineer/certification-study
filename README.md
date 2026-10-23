@@ -18,6 +18,21 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 332 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## DAILY CONTRACTS — mastery-driven missions
+
+The dashboard now features four independent **daily learning contracts**, awarded for distinct correct answers in ordinary practice:
+
+| Contract | Requirement | One-time daily XP |
+| --- | --- | ---: |
+| POWER UP | Correctly answer 3 different questions | 80 |
+| NEW FRONTIER | Correctly answer 3 previously unseen questions | 120 |
+| COMEBACK | Correctly revisit 2 questions that had been answered incorrectly | 160 |
+| MEMORY RAID | Correctly answer 2 questions whose scheduled review was already due | 180 |
+
+Each contract requires an explicit reward claim; reward claims are idempotent. A question ID can only count once per contract per local calendar day, so repeatedly answering the same problem cannot fill a contract. Practice exam answers do not advance contracts, and no progress information is shown during the timed trial. A new local day resets the contract board without deleting accumulated XP or the learning timeline. All data stays in the browser's existing local progress store.
+
+Run `npm run test:contracts` for regression coverage of new-day resets, duplicate answers, reward claims, review/recovery classification, and exam exclusion. Contract goals are motivational, not exam score or readiness measures.
+
 ## Development
 ```sh
 npm install
