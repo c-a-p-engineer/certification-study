@@ -54,6 +54,7 @@ const initial:Progress={xp:0,best:0,answered:0,correct:0,mistakes:[],domains:{},
 function load():Progress{try{const old={...initial,...JSON.parse(localStorage.getItem(key)||'{}')};return {...old,activity:migrateActivity(old)}}catch{return {...initial,activity:{}}}}
 function App(){
  const [progress,setProgress]=useState<Progress>(load);
+ const [equippedTitle,setEquippedTitle]=useState(readEquippedTitle);
  const profile=gameProfile(progress,questions.length);
  const titleCollection=earnedTitles(titleStats(progress,profile.activeDays,profile.currentStreak));
  const validTitleId=validEquippedTitle(equippedTitle,titleCollection);
@@ -83,7 +84,6 @@ function App(){
  const [audioSettings,setAudioSettings]=useState<AudioSettings>(readAudioSettings);
  const [menuOpen,setMenuOpen]=useState(false);
  const [menuTab,setMenuTab]=useState<'status'|'titles'|'achievements'|'settings'>('status');
- const [equippedTitle,setEquippedTitle]=useState(readEquippedTitle);
  const menuCloseRef=useRef<HTMLButtonElement|null>(null);
  const [hapticMode,setHapticMode]=useState<HapticMode>(readHapticMode);
  const [earnedXP,setEarnedXP]=useState(0);
