@@ -18,6 +18,33 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 332 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## OVERDRIVE 4.0 — The Architect's Trial
+
+The 4.0 dashboard has **four domain-specific bosses**, **nine growing AWS topic nodes** and **seven collectible cosmetic relics**.
+
+### Four domain encounters
+
+| Domain | Boss | Clear | Medal |
+| --- | --- | --- | --- |
+| Security | ZERO TRUST CERBERUS | 7 of 10 correct | B: 7–8 / A: 9 / S: 10 |
+| Resilience | FAILOVER PHOENIX | 7 of 10 correct | B / A / S |
+| Performance | LATENCY TITAN | 7 of 10 correct | B / A / S |
+| Cost optimization | COST LEVIATHAN | 7 of 10 correct | B / A / S |
+
+Each encounter draws **10 different difficulty-3 questions from its own exam domain**. A correct answer removes one shield point from the 7-hit boss shield, and remaining questions can raise the grade. The first clear of each boss awards 400 XP, while improving the best medal to a higher grade awards 120 XP; repeated clears at the same grade do not grant extra boss XP. Ordinary answer XP is unchanged. Rewards are recorded only at mission completion; the boss state is stored under the existing browser-local progress key.
+
+### Nine topic-based learning branches
+
+Topic nodes are derived from the **existing** per-question review records, not added proficiency scores or fabricated historical activity. Their heuristic stages are 0: unseen, 1: 1 distinct question seen, 2: 4 distinct questions seen plus 1 question with at least three consecutive correct retrievals, 3: 8 distinct questions seen plus 4 repeated-correct questions. A node launches a 10-question (or shorter where necessary) focused topic practice run. This is **not** a calibrated readiness rating or an AWS exam pass prediction.
+
+### Seven earned relics
+
+Four EPIC boss cores are earned through domain clears. MEMORY PRISM requires three branches at tier 2, ARCHITECT HALO requires all four bosses, and MYTHIC ASCENDANT CROWN requires all nine branches at tier 3 and all four bosses. Relics are deterministic cosmetics, not randomized gambling drops or paid power-ups. Players can equip any unlocked relic, stored alongside the existing study progress.
+
+Existing progress and mission save keys remain unchanged. New optional fields are backward compatible; older practice snapshots still load. The timed 65-question exam retains deferred feedback and does not show combat or reward interruptions.
+
+Verification: `npm run test:overdrive4` runs boss award/idempotence tests, derived skill stage tests, relic unlock tests and UI integration safeguards. `npm run build` runs the complete suite and TypeScript validation.
+
 ## DAILY CONTRACTS — mastery-driven missions
 
 The dashboard now features four independent **daily learning contracts**, awarded for distinct correct answers in ordinary practice:
