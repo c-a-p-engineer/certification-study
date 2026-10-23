@@ -10,6 +10,10 @@ test('PWA is scoped to our Pages repository, and manifest has valid install sett
  assert.equal(manifest.scope,'/certification-study/');
  assert.equal(manifest.display,'standalone');
  assert.ok(manifest.icons.some(x=>x.purpose==='maskable'));
+ assert.ok(manifest.icons.some(x=>x.sizes==='192x192'&&x.type==='image/png'));
+ assert.ok(manifest.icons.some(x=>x.sizes==='512x512'&&x.type==='image/png'));
+ assert.ok(builder.includes('icons/overdrive-192.png'));
+ assert.ok(builder.includes('icons/overdrive-512.png'));
  assert.ok(html.includes('rel="manifest"'));
  assert.ok(main.includes('registerOffline()'));
 });
