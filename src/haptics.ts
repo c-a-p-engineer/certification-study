@@ -26,6 +26,7 @@ export function hapticPattern(event:HapticEvent,mode:HapticMode):number[]{
 }
 export function triggerHaptic(event:HapticEvent,mode:HapticMode,reduced=false,exam=false):boolean{
  if(mode==='off'||reduced||(exam&&event!=='select'))return false;
+ if(typeof window!=='undefined'&&typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return false;
  if(typeof navigator==='undefined'||typeof navigator.vibrate!=='function')return false;
  try{return Boolean(navigator.vibrate(hapticPattern(event,mode)))}catch{return false}
 }
