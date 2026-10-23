@@ -1,24 +1,51 @@
-/** Arcade stats computed from saved progress, not estimated AWS pass probabilities. */
-export type ProfileInput={xp:number;answered:number;correct:number;best:number;reviews:Record<string,{streak:number;dueAt:number;lapses:number}>;mistakes:string[];daily?:{answered:number;correct:number;claimed?:boolean}};
-export const RANKS=[{name:'ROOKIE',min:0},{name:'GOLD',min:400},{name:'PLATINUM',min:1000},{name:'DIAMOND',min:2500},{name:'LEGEND',min:5000}] as const;
+/** Local-only RPG progression; rank reflects sustained answers AND active study days. */
+import {activitySummary,migrateActivity,localDateKey,type ActivityHistory} from './studyHistory.ts';
+export type ProfileInput={
+ xp:number;answered:number;correct:number;best:number;
+ reviews:Record<string,{streak:number;dueAt:number;lapses:number}>;
+ mistakes:string[];
+ daily?:{date:string;answered:number;correct:number;claimed?:boolean};
+ activity?:ActivityHistory;
+};
+export const RANKS=[
+ {name:'ROOKIE',minXP:0,minAnswers:0,minDays:0},
+ {name:'BRONZE',minXP:1000,minAnswers:8,minDays:1},
+ {name:'SILVER',minXP:4500,minAnswers:30,minDays:3},
+ {name:'GOLD',minXP:12000,minAnswers:90,minDays:7},
+ {name:'PLATINUM',minXP:26000,minAnswers:180,minDays:14},
+ {name:'DIAMOND',minXP:55000,minAnswers:350,minDays:28},
+ {name:'LEGEND',minXP:120000,minAnswers:700,minDays:50}
+] as const;
+
 export function gameProfile(progress:ProfileInput,totalQuestions:number,now=Date.now()){
  const xp=Math.max(0,Math.floor(progress.xp||0));
+ const answered=Math.max(0,Math.floor(progress.answered||0));
  const level=Math.floor(Math.sqrt(xp/120))+1;
  const levelStart=120*(level-1)**2,nextLevelXP=120*level**2;
  const levelPct=Math.min(100,Math.round((xp-levelStart)/(nextLevelXP-levelStart)*100));
- const ranked=[...RANKS].reverse().find(rank=>xp>=rank.min)??RANKS[0];
- const nextRank=RANKS.find(rank=>rank.min>xp);
- const seen=Object.keys(progress.reviews||{}).filter(id=>typeof id==='string').length;
+ const activity=activitySummary(progress.activity??migrateActivity(progress),answered,progress.correct,localDateKey(new Date(now)));
+ const ranked=[...RANKS].reverse().find(t=>xp>=t.minXP&&answered>=t.minAnswers&&activity.activeDays>=t.minDays)??RANKS[0];
+ const currentIndex=RANKS.findIndex(t=>t.name===ranked.name);
+ const nextRank=RANKS[currentIndex+1]??null;
+ const seen=Object.keys(progress.reviews||{}).length;
  const learned=Object.values(progress.reviews||{}).filter(r=>r.streak>=3).length;
  const due=Object.values(progress.reviews||{}).filter(r=>r.dueAt<=now).length;
- const accuracy=progress.answered?Math.round(progress.correct/progress.answered*100):0;
+ const accuracy=answered?Math.round(progress.correct/answered*100):0;
  const achievements=[
-  {id:'first',label:'FIRST BLOOD',description:'1問解答',unlocked:progress.answered>=1,icon:'✦'},
+  {id:'first',label:'FIRST BLOOD',description:'1問解答',unlocked:answered>=1,icon:'✦'},
   {id:'combo',label:'COMBO BREAKER',description:'5連続正解',unlocked:progress.best>=5,icon:'⚡'},
-  {id:'grind',label:'GRIND MACHINE',description:'累計50問',unlocked:progress.answered>=50,icon:'◆'},
+  {id:'grind',label:'GRIND MACHINE',description:'累計50問',unlocked:answered>=50,icon:'◆'},
   {id:'explorer',label:'KNOWLEDGE HUNTER',description:'初見50問',unlocked:seen>=50,icon:'◈'},
   {id:'scholar',label:'MEMORY MASTER',description:'定着30問',unlocked:learned>=30,icon:'✺'},
-  {id:'legend',label:'OVERDRIVE LEGEND',description:'5000 XP',unlocked:xp>=5000,icon:'★'}
+  {id:'legend',label:'OVERDRIVE LEGEND',description:'LEGENDランク',unlocked:ranked.name==='LEGEND',icon:'★'}
  ];
- return {xp,level,levelStart,nextLevelXP,levelPct,rank:ranked.name,nextRank:nextRank?.name??null,xpToNextRank:nextRank?nextRank.min-xp:0,seen,learned,due,accuracy,questionCoverage:totalQuestions?Math.min(100,Math.round(seen/totalQuestions*100)):0,achievements,unlockedAchievements:achievements.filter(x=>x.unlocked).length,allAchievements:achievements.length};
+ return {xp,answered,level,levelStart,nextLevelXP,levelPct,rank:ranked.name,nextRank:nextRank?.name??null,
+  rankGoal:nextRank?{xp:nextRank.minXP,answers:nextRank.minAnswers,days:nextRank.minDays}:null,
+  xpToNextRank:nextRank?Math.max(0,nextRank.minXP-xp):0,
+  answersToNextRank:nextRank?Math.max(0,nextRank.minAnswers-answered):0,
+  daysToNextRank:nextRank?Math.max(0,nextRank.minDays-activity.activeDays):0,
+  activity,activeDays:activity.activeDays,currentStreak:activity.streak,
+  seen,learned,due,accuracy,questionCoverage:totalQuestions?Math.min(100,Math.round(seen/totalQuestions*100)):0,
+  achievements,unlockedAchievements:achievements.filter(x=>x.unlocked).length,allAchievements:achievements.length
+ };
 }
