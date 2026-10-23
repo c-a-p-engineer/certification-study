@@ -127,3 +127,15 @@
 .gm-haptic-diagnostics[open] .gm-vibration-tests,.gm-haptic-diagnostics[open] .gm-haptic-result,.gm-haptic-diagnostics[open] .gm-haptic-advice,.gm-haptic-diagnostics[open] .gm-haptic-note{margin-left:13px!important;margin-right:13px!important}
 .gm-haptic-diagnostics[open] .gm-haptic-note{margin-bottom:15px!important}
 @media(max-width:700px){.gm-avatar{height:80px;min-width:80px}.game-menu-content{padding:16px}}
+
+/* Sustainable rank progression: XP, solved questions, and days are separate gates. */
+.gm-level{padding-bottom:12px}
+.gm-next-rank{padding:13px 14px 15px;margin:2px 0 18px;border-radius:10px;border:1px solid #657d9d;background:#1b304a}
+.gm-next-rank>strong{display:block;font-size:13px;letter-spacing:.7px;color:#ffe4a4;margin-bottom:12px}
+.gm-rank-gates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.gm-rank-gates span{display:flex;min-width:0;flex-direction:column;gap:6px;border-radius:8px;border:1px solid #4b637e;background:#16253f;padding:10px 8px;font-size:11px;font-weight:900;color:#b4d5eb}
+.gm-rank-gates span b{font-size:12px;color:#fff;line-height:1.4;overflow-wrap:anywhere}
+.gm-rank-gates span.complete{border-color:#57ceab;background:#1c423f;color:#b6f9db}
+.gm-rank-gates span.complete b{color:#dcfff0}
+.gm-next-rank.maxed{display:flex;gap:8px;align-items:center;color:#ffebb3;font-weight:900}
+@media(max-width:400px){.gm-rank-gates{gap:5px}.gm-rank-gates span{padding:8px 6px}.gm-rank-gates span b{font-size:11px}}
