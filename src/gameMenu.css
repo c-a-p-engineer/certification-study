@@ -84,3 +84,23 @@
  .game-menu-footer{padding:12px 14px calc(13px + env(safe-area-inset-bottom,0px))}
 }
 @media(prefers-reduced-motion:reduce){.game-menu-drawer{animation:none}}
+
+/* Browser haptics diagnostics: API presence is not hardware vibration proof. */
+.gm-haptic-diagnostics{margin:12px 0 20px;padding:16px;border:1px solid #85b9d3;border-radius:11px;background:linear-gradient(130deg,#22334e,#15283b);color:#edfaff}
+.gm-haptic-diagnostics>strong{display:flex;justify-content:space-between;align-items:center;color:#aefcff;font-size:14px;letter-spacing:.6px}
+.gm-haptic-diagnostics>strong small{font-size:11px;font-weight:600;color:#cee5f5}
+.gm-haptic-facts{display:grid;grid-template-columns:1fr auto;gap:11px 10px;padding:15px 3px;color:#bfcfe1;font-size:12px;line-height:1.6}
+.gm-haptic-facts b{text-align:right;font-weight:800;color:#fff2bd}
+.gm-vibration-test{width:100%;min-height:49px;display:flex;gap:10px;align-items:center;justify-content:center;background:linear-gradient(105deg,#6ddcef,#b29afa);color:#17213b;border:1px solid #a4f7f9;border-radius:8px;font-size:13px;font-weight:900;cursor:pointer}
+.gm-vibration-test:disabled{cursor:not-allowed;opacity:.42;filter:saturate(.3)}
+.gm-haptic-result{padding:12px 14px;border:1px solid #c6b787;border-radius:8px;margin-top:13px;background:#263851}
+.gm-haptic-result.maybe{border-color:#9ae7de}
+.gm-haptic-result>strong{display:block;color:#ffe5a1;font-size:13px;margin-bottom:7px}
+.gm-haptic-result p,.gm-haptic-advice,.gm-haptic-note{font-size:12px!important;line-height:1.85!important;color:#dceafa!important;margin:7px 0!important}
+.gm-haptic-result>span{display:block;font-size:13px;margin:12px 0 9px;font-weight:900;color:#fff}
+.gm-felt-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gm-felt-buttons button{min-height:45px;border:1px solid #89d2de;border-radius:7px;color:#fff;background:#294b62;font-size:12px;font-weight:900;cursor:pointer}
+.gm-felt-buttons button[aria-pressed="true"]{color:#1c2e3f;background:#a6f6e2;border-color:#fff}
+.gm-haptic-advice{padding:13px;background:#3c3150;border-left:3px solid #ffc58f;border-radius:6px;margin-top:12px!important}
+.gm-haptic-advice strong{color:#ffe4a5}
+.gm-haptic-note{font-size:11px!important;color:#bacbdd!important;margin-top:13px!important}
