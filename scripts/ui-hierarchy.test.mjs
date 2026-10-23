@@ -85,6 +85,6 @@ test('timed exam holds new badges and rank promotions until the result screen',(
  assert.ok(source.includes("if(examMode&&mode==='quiz'){setDeferredRankNotice(current)}"));
  assert.ok(source.includes("if(examMode&&mode==='result'&&deferredRankNotice)"));
  assert.ok(source.includes("if(!examMode){setNewTitleIds([]);setNewRelicIds([])}"));
- assert.ok(source.includes("examMode&&newTitleIds.length>0&&"));
+ assert.ok(source.includes("examMode&&(newTitleIds.length>0||newRelicIds.length>0)&&"));
  assert.ok(!source.includes('selected!==null&&examMode&&<div className="explanation"'));
 });
