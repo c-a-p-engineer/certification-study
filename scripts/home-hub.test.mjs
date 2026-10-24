@@ -16,9 +16,9 @@ test('home offers daily five, regular mission and useful progress before optiona
  assert.ok(index('<DailyFiveBoard ')>=0);
  assert.ok(index('START MISSION')>index('<DailyFiveBoard '));
  assert.ok(index('className="daily-quest"')>index('START MISSION'));
- assert.ok(index('className="stats"')>index('className="daily-quest"'));
- assert.ok(index('data-section="adventure"')>index('className="stats"'));
- assert.ok(index('<OfflineStatus ')>index('className="stats"'));
+ assert.ok(index('<HomeProgressSummary ')>index('className="daily-quest"'));
+ assert.ok(index('data-section="adventure"')>index('<HomeProgressSummary '));
+ assert.ok(index('<OfflineStatus ')>index('<HomeProgressSummary '));
 });
 
 test('all secondary home modes are reachable from closed-by-default native disclosures',()=>{
