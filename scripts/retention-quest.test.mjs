@@ -58,6 +58,6 @@ test('optional retention flag saves without breaking old v1 missions and appears
  assert.ok(reducer.includes('recordDelayedRecallReward('));
  assert.ok(main.includes('setRetentionMode(!!saved.retention)'));
  assert.ok(main.includes('setSmartWhy(dailySelection?.reasons??retentionSelection?.reasons'));
- assert.ok(main.includes('mode:examMode?\'exam\':retentionMode?\'retention\''));
+ assert.ok(main.includes('mode:examMode?\'exam\':dailyFocus?\'daily\':retentionMode?\'retention\''));
  assert.ok(reducer.includes("event.mode==='retention'&&!event.boss"));
 });
