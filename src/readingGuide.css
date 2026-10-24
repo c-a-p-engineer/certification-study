@@ -1,11 +1,11 @@
 /* Reading ergonomics: preserve original content and compact choices; reduce excessively bold continuous text. */
 .app .question-card h2{
- font-weight:620;
+ font-weight:500;
  letter-spacing:.015em;
- max-inline-size:36ch;
+ max-inline-size:36em;
 }
 .app .answer .answer-body{
- font-weight:560;
+ font-weight:500;
  line-height:1.78;
  letter-spacing:.01em;
 }
@@ -26,9 +26,9 @@
  outline:3px solid #fff0ad;outline-offset:3px
 }
 .app .question-card h2.question-readable{
- font-weight:570;
+ font-weight:500;
  line-height:1.94;
- max-inline-size:29ch;
+ max-inline-size:29em;
  letter-spacing:.025em;
 }
 .app .reading-sentences{display:block}
@@ -42,13 +42,13 @@
 .app .reading-sentence:nth-child(even){border-left-color:#8cbbb6}
 .app .question-card h2.question-readable + .question-terms{margin-top:4px}
 @media(max-width:700px){
- .app .question-card h2{max-inline-size:100%;font-weight:600;letter-spacing:.012em}
- .app .question-card h2.question-readable{max-inline-size:27ch;line-height:1.94;font-weight:560}
+ .app .question-card h2{max-inline-size:100%;font-weight:500;letter-spacing:.012em}
+ .app .question-card h2.question-readable{max-inline-size:27em;line-height:1.94;font-weight:560}
  .app .study-reading-toggle{min-width:110px;font-size:12px;padding:7px 8px}
  .app .answer .answer-body{line-height:1.8}
 }
 @media(max-width:370px){
- .app .question-card h2.question-readable{max-inline-size:25ch}
+ .app .question-card h2.question-readable{max-inline-size:25em}
  .app .study-reading-toggle{min-width:100px}
 }
 @media(prefers-reduced-motion:reduce){.app .study-reading-toggle{transition:none}}
