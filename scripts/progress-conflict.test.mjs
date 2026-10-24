@@ -82,6 +82,9 @@ test('React blocks stale quiz answers and autosave and displays accessible recov
  assert.ok(main.includes('このタブの記録をJSONで退避'));
  assert.ok(main.includes('保存済みの最新データを読み直す'));
  assert.ok(!main.includes('localStorage.setItem(key,JSON.stringify(progress))'));
+ assert.ok(main.includes("mode!=='quiz'||examMode||syncBlocked.current||restoreBlocked"));
+ assert.ok(main.includes("mode==='result'&&!examMode&&!syncBlocked.current&&!restoreBlocked"));
+ assert.ok(main.includes("mode==='result'&&examMode&&!syncBlocked.current&&!restoreBlocked"));
  assert.ok(hook.includes("window.addEventListener('storage',onStorage)"));
  assert.ok(hook.includes('guardedProgressSave('));
  assert.ok(css.includes('@media(max-width:400px)'));
