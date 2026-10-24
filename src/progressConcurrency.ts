@@ -40,7 +40,7 @@ export function observeExternalWrite(session:ProgressSession,currentRaw:string|n
  if(session.expectedRaw===currentRaw)return false;
  session.blocked=true;session.reason='external-change';return true;
 }
-export function saveProgressIfCurrent<P extends Record<string,unknown>>(store:ReadWritePort,key:string,progress:P,session:ProgressSession):GuardResult{
+export function saveProgressIfCurrent<P extends object>(store:ReadWritePort,key:string,progress:P,session:ProgressSession):GuardResult{
  if(session.blocked)return {status:'blocked',reason:session.reason??'external-change'};
  let current:string|null;
  try{current=store.getItem(key)}catch{
