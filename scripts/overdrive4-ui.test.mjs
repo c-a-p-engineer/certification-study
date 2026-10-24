@@ -9,7 +9,7 @@ const css=readFileSync('src/overdrive4.css','utf8');
 test('boss challenge selects a domain and draws damage from correct answers, not answer count',()=>{
  assert.ok(main.includes('<BossBoard records={progress.bossRecords}'));
  assert.ok(main.includes('x.difficulty===3&&x.domain===target'));
- assert.ok(main.includes('<BossBattleHUD domain={bossDomain} correct={session.correct}'));
+ assert.ok(readFileSync('src/QuizCombatStatus.tsx','utf8').includes('<BossBattleHUD domain={bossDomain} correct={session.correct}'));
  assert.ok(main.includes('recordBossVictory(p.bossRecords,bossDomain,session.correct,pool.length)'));
  assert.ok(board.includes('aria-label={boss.domain'));
 });

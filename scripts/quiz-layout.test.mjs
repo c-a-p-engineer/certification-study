@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {defaultQuizLayout,isQuizLayout,QUIZ_LAYOUT_KEY,readQuizLayout,saveQuizLayout} from '../src/quizLayout.ts';
+const combat=readFileSync('src/QuizCombatStatus.tsx','utf8');
 const main=readFileSync('src/main.tsx','utf8'),menu=readFileSync('src/GameMenu.tsx','utf8'),css=readFileSync('src/quizDensity.css','utf8'),hud=readFileSync('src/CompactQuizHUD.tsx','utf8');
 test('responsive initial layout prefers compact on narrow devices, not fixed globally',()=>{
  assert.equal(defaultQuizLayout(true),'compact');
@@ -36,8 +37,8 @@ test('quiz controls are immediately accessible, saved and can switch density',()
  assert.ok(menu.includes('READING SIZE'));
 });
 test('mobile compact view combines HUD instead of stacking two gameplay cards',()=>{
- assert.ok(main.includes("quizLayout==='compact'&&!examMode?<CompactQuizHUD"));
- assert.ok(main.includes("!examMode&&quizLayout==='detailed'&&<div className={'fever-meter '"));
+ assert.ok(combat.includes("quizLayout==='compact'&&!examMode?<CompactQuizHUD"));
+ assert.ok(combat.includes("!examMode&&quizLayout==='detailed'&&<div className={'fever-meter '"));
  assert.ok(main.includes("mode==='quiz'&&quizLayout!=='detailed'?'quiz-compact':''"));
  assert.ok(hud.includes('<MonsterArt'));
  assert.ok(hud.includes('comboMultiplier(combo)'));
@@ -49,7 +50,7 @@ test('mobile compact view combines HUD instead of stacking two gameplay cards',(
  assert.ok(css.includes('.app.quiz-compact .answers'));
 });
 test('exam excludes enemy and combo hints and layouts never overlay answers',()=>{
- assert.ok(main.includes("quizLayout==='compact'&&!examMode?"));
+ assert.ok(combat.includes("quizLayout==='compact'&&!examMode?"));
  assert.ok(main.includes("quizLayout==='detailed'&&!examMode&&<div className=\"combo\""));
  assert.ok(hud.includes('role="progressbar"'));
  assert.equal(css.includes('position:fixed'),false);

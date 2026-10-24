@@ -1,6 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {isQuizLayout,readQuizLayout,saveQuizLayout,QUIZ_LAYOUT_KEY} from '../src/quizLayout.ts';
 const main=readFileSync('src/main.tsx','utf8');
+const combat=readFileSync('src/QuizCombatStatus.tsx','utf8');
 const css=readFileSync('src/nextPhase.css','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 test('focus preference persists using the existing key with no new migration',()=>{
@@ -13,7 +14,7 @@ test('focus preference persists using the existing key with no new migration',()
  }finally{if(original)Object.defineProperty(globalThis,'localStorage',original);else delete globalThis.localStorage}
 });
 test('focus mode hides monster portrait but leaves readable compact combat progress and restores a status control',()=>{
- assert.ok(main.includes('quizLayout===\'focus\'&&!examMode?<div className="focus-battle-line"'));
+ assert.ok(combat.includes('quizLayout===\'focus\'&&!examMode?<div className="focus-battle-line"'));
  assert.ok(main.includes('className="cq-focus-toggle"'));
  assert.ok(main.includes("quizLayout==='focus'?'compact':'focus'"));
  assert.ok(main.includes("mode==='quiz'&&quizLayout==='focus'?'quiz-focus':''"));

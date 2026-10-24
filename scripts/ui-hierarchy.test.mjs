@@ -9,6 +9,7 @@ const examReview=readFileSync('src/ExamReviewPanel.tsx','utf8');
 const quizIntro=readFileSync('src/StudyQuestionIntro.tsx','utf8');
 const homeSummary=readFileSync('src/HomeProgressSummary.tsx','utf8');
 const resultOverview=readFileSync('src/ResultOverview.tsx','utf8');
+const combatView=readFileSync('src/QuizCombatStatus.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
  assert.equal((source.match(/START MISSION/g)||[]).length,1);
@@ -28,7 +29,7 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
  assert.equal(source.includes('className="overdrive-banner"'),false);
  assert.equal(source.includes('className="instruction-icon"'),false);
  assert.ok(source.includes('{q.answers&&<div className="answer-instructions"'));
- assert.ok(source.includes("className={'fever-meter '"));
+ assert.ok(combatView.includes("className={'fever-meter '"));
  assert.ok(source.includes('className="xp-award"'));
  assert.ok(!source.includes('PERFECT! +XP'));
 });
@@ -83,7 +84,7 @@ test('gamified progress and title unlocks are discoverable without extra overlay
  assert.ok(source.includes('className="hero-level-hud"'));
  assert.ok(source.includes('aria-label="次のレベルまでの進行度"'));
  assert.ok(source.includes("onClick={()=>showMenu('titles')}"));
- assert.ok(source.includes('className="fever-milestones"'));
+ assert.ok(combatView.includes('className="fever-milestones"'));
  assert.ok(resultOverview.includes('className="clear-judgement"'));
  assert.ok(source.includes('<ResultOverview correct={session.correct}'));
  assert.ok(resultOverview.includes('grade.letter'));

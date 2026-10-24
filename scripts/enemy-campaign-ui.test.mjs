@@ -8,6 +8,7 @@ const panel=readFileSync('src/EnemyCampaignPanel.tsx','utf8');
 const css=readFileSync('src/enemyVisual.css','utf8');
 const boss=readFileSync('src/BossBoard.tsx','utf8');
 const battle=readFileSync('src/BossBattleHUD.tsx','utf8');
+const combat=readFileSync('src/QuizCombatStatus.tsx','utf8');
 test('normal practice drives a persistent campaign and one atomic progress write',()=>{
  assert.ok(source.includes('enemyCampaign?:EnemyCampaign'));
  assert.ok(source.includes('enemyCampaign:normalizeEnemyCampaign(old.enemyCampaign)'));
@@ -21,7 +22,7 @@ test('normal practice drives a persistent campaign and one atomic progress write
 test('campaign is visible on dashboard, quiz and results; exam excludes combat',()=>{
  assert.ok(source.includes('<EnemyCampaignPanel campaign={enemyCampaign} onStart={()=>start(false)} onReplay='));
  assert.ok(source.includes('restartCampaign(p.enemyCampaign)'));
- assert.ok(source.includes('!examMode?<EnemyCampaignPanel campaign={enemyCampaign} compact attack={campaignHit}/>:null'));
+ assert.ok(combat.includes('!examMode?<EnemyCampaignPanel campaign={enemyCampaign} compact attack={campaignHit}/>:null'));
  assert.ok(source.includes('!examMode&&!bossMode&&<EnemyCampaignPanel campaign={enemyCampaign} compact attack={campaignHit}/>'));
  assert.equal(source.includes('className="boss-health"'),false);
  assert.ok(panel.includes('role="progressbar"'));
