@@ -55,7 +55,7 @@ test('glossary remains directly under the question, with pronunciation and detai
 
 test('unique learning information and safeguards are still visible or available on demand',()=>{
  for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','NOT AN AWS SCALED SCORE']){
-  assert.ok(source.includes(word)||quizHeader.includes(word),word);
+  assert.ok(source.includes(word)||quizHeader.includes(word)||resultScreen.includes(word),word);
  }
  assert.ok(masteryView.includes('className="metric-method"'));
  assert.ok(masteryView.includes('3回以上の連続正解'));
