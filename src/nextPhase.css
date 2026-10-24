@@ -1,0 +1,76 @@
+/* 6.4–6.6: optional arcade and decision panels prioritize readable actions over effects. */
+.app .expedition-board,.app .ds-board{margin:18px 0;padding:16px;border-radius:14px;border:1px solid #75b8c5;background:linear-gradient(135deg,#162d44,#222a47);color:#effaff;min-width:0}
+.app .expedition-head>span,.app .ds-heading>span{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:900;letter-spacing:.06em;color:#a9fbe4}
+.app .expedition-head h2,.app .ds-heading h2{font:900 clamp(22px,4vw,29px) 'Barlow Condensed',system-ui,sans-serif;margin:7px 0 5px;color:#fff}
+.app .expedition-head p,.app .ds-heading p,.app .expedition-caveat,.app .ds-caveat{font-size:13px;line-height:1.7;color:#e0eefa;margin:8px 0}
+.app .expedition-totals{display:flex;gap:10px;flex-wrap:wrap}
+.app .expedition-totals strong{display:inline-flex;align-items:center;gap:6px;border-radius:8px;padding:7px 9px;background:#244859;color:#e2ffca;font-size:13px}
+.app .expedition-collection{margin-top:12px;border-top:1px solid #547d99}
+.app .expedition-collection>summary{display:flex;align-items:center;gap:7px;min-height:46px;cursor:pointer;font-size:14px;font-weight:900;color:#e5fff8}
+.app .expedition-collection>summary svg:last-child{margin-left:auto}
+.app .expedition-grid,.app .ds-cases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0}
+.app .expedition-item{display:grid;grid-template-columns:64px minmax(0,1fr);gap:7px;align-items:center;border:1px solid #608ca5;border-radius:10px;padding:9px;background:#223f52;min-width:0}
+.app .expedition-monster{width:62px;overflow:hidden}
+.app .expedition-monster svg{height:66px;width:62px;max-width:100%}
+.app .expedition-copy{display:grid;gap:4px;min-width:0}
+.app .expedition-copy strong{font:900 17px 'Barlow Condensed',system-ui,sans-serif;color:#fff6d9}
+.app .expedition-copy small,.app .expedition-copy span{font-size:12px;line-height:1.45;color:#d2e7f8;overflow-wrap:anywhere}
+.app .expedition-item button,.app .ds-case button,.app .ds-session button,.app .ds-next,.app .ds-result button{display:flex;gap:8px;align-items:center;justify-content:center;min-height:44px;padding:9px 12px;border-radius:8px;border:1px solid #b7ebd8;background:#31625f;color:#fff;font-weight:900;font-size:13px;cursor:pointer}
+.app .expedition-item button{grid-column:1/-1}
+.app .expedition-item button:disabled{opacity:.48;cursor:not-allowed}
+.app .expedition-caveat{display:flex;align-items:flex-start;gap:8px;font-size:12px}
+.app .expedition-caveat svg{flex-shrink:0;margin-top:4px}
+.app .expedition-result{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:16px 0;padding:13px;background:#264e4c;border:1px solid #9bf5ce;border-radius:9px;color:#faffdf}
+.app .expedition-result strong,.app .expedition-result span{font-size:13px}
+.app .ds-launcher>summary{cursor:pointer;min-height:48px;display:flex;align-items:center;gap:9px;font-weight:900;color:#dffbed;border-top:1px solid #628e9d;margin-top:12px}
+.app .ds-case{display:grid;gap:10px;border:1px solid #6b8eaf;background:#203b55;border-radius:10px;padding:13px;min-width:0}
+.app .ds-case strong{font:900 20px 'Barlow Condensed',system-ui,sans-serif;color:#fff0bf}
+.app .ds-case span{font-size:14px;line-height:1.5}
+.app .ds-case small{font-size:12px;color:#bddae9}
+.app .ds-case button{justify-self:start}
+.app .ds-session{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.app .ds-session strong{font-size:15px;color:#fff0b8}
+.app .ds-sketch{margin:11px 0;border-radius:8px;border:1px solid #567d93;padding:9px;background:#193043}
+.app .ds-sketch svg{display:block;width:100%;height:auto;max-width:560px;min-height:75px;color:#a5f5df}
+.app .ds-sketch figcaption{font-size:12px;line-height:1.6;color:#c8e2e9;overflow-wrap:anywhere;margin:7px 0 1px}
+.app .ds-step small{font-size:12px;font-weight:900;color:#baf6dd}
+.app .ds-step h3{font-size:20px;margin:9px 0;color:#fff}
+.app .ds-step p,.app .ds-feedback p{font-size:14px;line-height:1.85;margin:8px 0;color:#e3f1fc}
+.app .ds-options{display:grid;gap:8px;margin:13px 0}
+.app .ds-options button{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;min-height:52px;padding:12px 11px;border:1px solid #86abc2;border-radius:9px;color:#eff9ff;background:#244457;cursor:pointer;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.app .ds-options button>span{flex-shrink:0;display:grid;place-items:center;width:28px;height:28px;border-radius:5px;background:#355d72;font-weight:900}
+.app .ds-options button.ds-selected{background:#346250;border-color:#acf9dc}
+.app .ds-options button:disabled:not(.ds-selected){opacity:.7}
+.app .ds-feedback,.app .ds-result{padding:15px;border:1px solid #a0e2d5;border-radius:9px;background:#1d494d}
+.app .ds-feedback strong{font-size:16px;color:#fff0b5}
+.app .ds-feedback a{display:inline-flex;gap:7px;align-items:center;min-height:44px;color:#c5f5ff;font-size:13px;font-weight:800}
+.app .ds-next{margin:10px 0 0}
+.app .ds-result h3{font-size:18px;margin:10px 0}
+.app .ds-result>strong{display:block;font-size:28px;color:#ffe4a0}
+.app .ds-result>small{display:block;font-size:12px;line-height:1.6;color:#d3e7f6}
+.app .ds-result>div{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}
+.app .expedition-board :focus-visible,.app .ds-board :focus-visible{outline:3px solid #fff1a7;outline-offset:2px}
+/* Mobile first: the question and answer controls win the available vertical space. */
+.app.quiz-focus .quiz-top{row-gap:7px}
+.app.quiz-focus .progress-track{margin:7px 0 8px;height:5px}
+.app.quiz-focus .question-card{padding-top:12px}
+.app.quiz-focus .question-card h2{margin:6px 0 12px}
+.app.quiz-focus .question-terms{margin-bottom:5px}
+.app.quiz-focus .answer{min-height:57px}
+.app .focus-battle-line{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 9px;border:1px solid #6686a4;border-radius:7px;background:#1f354b;color:#d6f2f6;font-size:12px;margin-bottom:8px}
+.app .focus-battle-line strong{color:#ffe6a5;white-space:nowrap;font-size:12px}
+.app .quiz-top,.app .cq-controls,.app .question-card,.app .answers,.app .answer,.app .answer-body{min-width:0;max-width:100%}
+.app .question-card h2,.app .answer-body,.app .expanded-explanation,.app .ds-step p{overflow-wrap:anywhere}
+.app .cq-controls{flex-wrap:wrap;justify-content:flex-end}
+.app .cq-controls .cq-focus-toggle{border-color:#c5ffdf;background:#315e55}
+.app .cq-controls .cq-focus-toggle[aria-pressed=true]{background:#dbffe4;color:#18372b}
+.app .question-card:focus{outline:none}
+.app .question-card:focus-visible{outline:3px solid #ffe9ad;outline-offset:4px}
+.app .backup-recovery ol{padding-left:22px;line-height:1.7;font-size:13px}
+.app .backup-recovery li{margin:6px 0}
+@media(max-width:700px){.app .expedition-grid,.app .ds-cases{grid-template-columns:minmax(0,1fr)}.app .expedition-board,.app .ds-board{padding:12px}.app .ds-step h3{font-size:18px}}
+@media(max-width:400px){.app .quiz-top{display:flex;flex-wrap:wrap;gap:5px;padding:8px!important}.app .quiz-top .back{min-height:44px}.app .cq-controls{width:100%;justify-content:space-between;margin-left:0;gap:4px}.app .cq-controls button{min-height:44px;min-width:44px;flex:1;padding:6px 5px;font-size:13px}.app .cq-controls .cq-layout-toggle,.app .cq-controls .cq-focus-toggle{flex:1.15;font-size:12px}.app .quiz-stage{white-space:normal;min-width:0;overflow-wrap:anywhere}.app .answer-state{white-space:normal}.app .answer .answer-body{flex:1;line-height:1.53}.app .answer .letter{min-width:30px;flex-basis:30px;height:34px}.app .answer{gap:6px;padding:9px}.app .ds-sketch{padding:6px}.app .expedition-copy strong{font-size:16px}}
+@media(max-width:360px){.app .question-card{padding-inline:9px}.app .expedition-totals{gap:6px}.app .ds-board,.app .expedition-board{padding:10px}.app .cq-controls .cq-scale-indicator{display:none}.app .quiz-top .exam-clock{font-variant-numeric:tabular-nums;letter-spacing:0}}
+@media(max-width:320px){.app .quiz-top .back{font-size:11px}.app .cq-controls button{min-width:44px;padding:5px 2px}.app .answer .answer-mark{min-width:16px}.app .question-card h2{line-height:1.6}.app .expedition-item{grid-template-columns:54px minmax(0,1fr)}.app .expedition-monster,.app .expedition-monster svg{width:52px}}
+@media(prefers-reduced-motion:reduce){.app .expedition-board *, .app .ds-board *, .app .focus-battle-line{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.app.reduced .ds-board *,.app.reduced .expedition-board *{animation:none!important;transition:none!important}
