@@ -40,5 +40,5 @@ test('SMART QUEST is isolated from 65-question exam and persisted on normal miss
  assert.ok(src.includes('exam?examPool('));
  assert.ok(src.includes('adaptive:adaptiveMode'));
  assert.ok(mission.includes('adaptive?:boolean'));
- assert.ok(src.includes("window.requestAnimationFrame(()=>questionRef.current?.scrollIntoView"));
+ assert.ok(src.includes("questionRef.current?.scrollIntoView({block:'start',behavior:'auto'})"));
 });
