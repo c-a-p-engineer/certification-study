@@ -44,7 +44,7 @@ test('quota exception triggers rollback without losing existing progress',()=>{
 });
 test('real UI requires explicit preview and confirmation before reload',()=>{
  const ui=readFileSync('src/BackupPanel.tsx','utf8');const menu=readFileSync('src/GameMenu.tsx','utf8');
- assert.ok(ui.includes('parseBackup(await file.text())'));
+ assert.ok(ui.includes('readPortableBackup(await file.text())'));
  assert.ok(ui.includes('window.confirm('));assert.ok(ui.includes('restoreBackup(incoming,localStorage)'));
  assert.ok(ui.includes('window.location.reload()'));assert.ok(menu.includes('<BackupPanel/>'));
 });
