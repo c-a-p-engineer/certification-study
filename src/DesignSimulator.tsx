@@ -17,8 +17,10 @@ export default function DesignSimulator({progress,onFinish}:{progress?:DesignPro
  const saved=normalizeDesignProgress(progress);
  const [active,setActive]=useState<DesignCaseId|null>(null),[step,setStep]=useState(0),[picked,setPicked]=useState<string|null>(null),[score,setScore]=useState(0),[completed,setCompleted]=useState(false);
  const c=DESIGN_CASES.find(x=>x.id===active);
- function start(id:DesignCaseId){setActive(id);setStep(0);setPicked(null);setScore(0);setCompleted(false)}
- function next(){if(!c||!picked)return;const newScore=score+(evaluateDesignChoice(c.id,c.steps[step].id,picked).correct?1:0);
+ const advanceGuard=React.useRef(false);
+ React.useEffect(()=>{advanceGuard.current=false},[step]);
+ function start(id:DesignCaseId){advanceGuard.current=false;setActive(id);setStep(0);setPicked(null);setScore(0);setCompleted(false)}
+ function next(){if(!c||!picked||advanceGuard.current)return;advanceGuard.current=true;const newScore=score+(evaluateDesignChoice(c.id,c.steps[step].id,picked).correct?1:0);
   if(step+1<c.steps.length){setScore(newScore);setStep(x=>x+1);setPicked(null);return}
   setScore(newScore);setCompleted(true);onFinish(c.id,newScore);
  }
