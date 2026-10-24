@@ -1,3 +1,4 @@
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -8,7 +9,7 @@ const tree=readFileSync('src/SkillTreeBoard.tsx','utf8');
 const vault=readFileSync('src/RelicVault.tsx','utf8');
 const css=readFileSync('src/overdrive4.css','utf8');
 test('boss challenge selects a domain and draws damage from correct answers, not answer count',()=>{
- assert.ok(main.includes('<BossBoard records={progress.bossRecords}'));
+ assert.ok(secondary.includes('<BossBoard {...boss}/>'));
  assert.ok(main.includes('x.difficulty===3&&x.domain===target'));
  assert.ok(readFileSync('src/QuizCombatStatus.tsx','utf8').includes('<BossBattleHUD domain={bossDomain} correct={session.correct}'));
  assert.ok(main.includes('recordBossVictory(p.bossRecords,bossDomain,session.correct,pool.length)'));
@@ -16,8 +17,8 @@ test('boss challenge selects a domain and draws damage from correct answers, not
 });
 test('skill tree missions filter by topic and relics are claimable only when unlocked',()=>{
  assert.ok(main.includes('questions.filter(x=>topicFor(x)===focusedTopic)'));
- assert.ok(main.includes('<SkillTreeBoard nodes={skillNodes}'));
- assert.ok(main.includes('<RelicVault relics={relics}'));
+ assert.ok(secondary.includes('<SkillTreeBoard {...skills}/>'));
+ assert.ok(secondary.includes('<RelicVault {...relic}/>'));
  assert.ok(main.includes("if(!relics.some(x=>x.id===id&&x.unlocked))return"));
  assert.ok(tree.includes('role="progressbar"'));
  assert.ok(vault.includes('disabled={!owned||isEquipped}'));
