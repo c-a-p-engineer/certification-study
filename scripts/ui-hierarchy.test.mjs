@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const source=readFileSync('src/main.tsx','utf8');
+const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
@@ -58,7 +59,7 @@ test('learning timeline sits on dashboard and records answers in the existing pr
  const stat=source.indexOf('className="stats"');
  const mastery=source.indexOf('className="mastery-section"');
  assert.ok(stat>=0&&timeline>stat&&mastery>timeline);
- assert.ok(source.includes('recordDailyAnswer(p.activity??migrateActivity(p),answerDay,ok)'));
+ assert.ok(reducer.includes('recordDailyAnswer(source.activity??migrateActivity(source),date,event.correct)'));
  assert.ok(source.includes('activity:migrateActivity(old)'));
  assert.ok(source.includes('const rank=profile.rank'));
  assert.equal(source.includes('rankFor('),false);

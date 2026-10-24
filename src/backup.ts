@@ -57,6 +57,11 @@ export function validProgress(raw:unknown):boolean{
  if(raw.activity!==undefined&&(!isObj(raw.activity)||Object.values(raw.activity).some(d=>!integerCount(d))))return false;
  if(raw.answerHistory!==undefined&&(!Array.isArray(raw.answerHistory)||raw.answerHistory.length>MAX_EVENTS||normalizeAnswerHistory(raw.answerHistory).length!==raw.answerHistory.length))return false;
  if(raw.mistakes.length>10000||Object.keys(raw.reviews).length>10000)return false;
+ if(raw.attemptReceipts!==undefined){
+  if(!Array.isArray(raw.attemptReceipts)||raw.attemptReceipts.length>1024||
+   new Set(raw.attemptReceipts).size!==raw.attemptReceipts.length||
+   raw.attemptReceipts.some((id:unknown)=>typeof id!=='string'||id.length<6||id.length>170))return false;
+ }
  if(raw.retrievalRewards!==undefined){
   const reward=raw.retrievalRewards;
   if(!isObj(reward)||typeof reward.day!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(reward.day)||

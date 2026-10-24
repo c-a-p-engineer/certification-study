@@ -3,6 +3,8 @@ import {EXPEDITIONS,type ExpeditionId} from './expeditions.ts';
 export const MISSION_SAVE_KEY='cert-overdrive-mission-save-v1';
 export type MissionSave={
  version:1;
+ /** Stable attempt run identity for exactly-once grading across page reloads. */
+ runId?:string;
  ids:string[];
  index:number;
  selected:number|null;
@@ -30,6 +32,7 @@ export type MissionSave={
 export function isMissionSave(value:unknown):value is MissionSave{
  if(!value||typeof value!=='object')return false;
  const x=value as Partial<MissionSave>;
+ if(x.runId!==undefined&&(typeof x.runId!=='string'||x.runId.length<6||x.runId.length>72))return false;
  if(x.version!==1||!Array.isArray(x.ids)||x.ids.length<1||x.ids.length>1000||x.ids.some(id=>typeof id!=='string'))return false;
  if(typeof x.index!=='number'||!Number.isInteger(x.index)||x.index<0||x.index>=x.ids.length)return false;
  if(x.selected!==null&&(!Number.isInteger(x.selected)||x.selected!< -2))return false;

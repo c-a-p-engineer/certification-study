@@ -53,10 +53,11 @@ test('optional retention flag saves without breaking old v1 missions and appears
  assert.equal(isMissionSave({...old,retention:true}),true);
  assert.equal(isMissionSave({...old,retention:'true'}),false);
  const main=readFileSync('src/main.tsx','utf8');
+ const reducer=readFileSync('src/studyAttempt.ts','utf8');
  assert.ok(main.includes('planRetentionQuest(subset'));
- assert.ok(main.includes('recordDelayedRecallReward(p.retrievalRewards'));
+ assert.ok(reducer.includes('recordDelayedRecallReward('));
  assert.ok(main.includes('setRetentionMode(!!saved.retention)'));
  assert.ok(main.includes('setSmartWhy(retentionSelection?.reasons'));
  assert.ok(main.includes('mode:examMode?\'exam\':retentionMode?\'retention\''));
- assert.ok(main.includes('retentionMode&&!examMode&&!bossMode'));
+ assert.ok(reducer.includes("event.mode==='retention'&&!event.boss"));
 });
