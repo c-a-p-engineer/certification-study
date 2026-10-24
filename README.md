@@ -18,6 +18,17 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 348 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## OVERDRIVE 6.1 — Independent reviewer provenance (first infrastructure tranche)
+
+Version 6.1 introduces **sign-off tooling**, not a claim that the 348 AWS questions are fully human-reviewed.
+
+- `reports/human-review-decisions.json` is an intentionally empty human approval ledger. The **current independent sign-off count is zero**. Historical `reviewedAt` fields (33), targeted AWS official-doc checks (19) and AI-assisted option-rationale drafting (40) remain separate evidence categories and **must never** be counted as human approval.
+- Every future human reviewer record must contain a reviewer GitHub handle, dated source links with exact checked claims, all five claim-level checks (stem, correct key, every distractor, caveats, SAA scope), a substantial written finding and a linked GitHub review PR. Human PR reviewers must corroborate the attribution: this JSON schema is not an identity-verification mechanism.
+- A SHA-256 content fingerprint includes the exact stem, answer choices, correct keys, explanation, option reasons, domain and official reference. Editing a question invalidates its previous recorded human approval and fails CI until reviewed again.
+- A prioritized **40-question review batch**, selected across all four domains (10 per domain), is generated in `reports/independent-review-queue.json` and `reports/independent-review-queue.md`. Scores flag editorial risks, not proven incorrect answers.
+- Run `npm run audit:signoff` to generate the evidence and priority queue; `npm run test:provenance` tests false approvals, dated citations, corrupt/duplicate entries, changed answers and domain balance. These gates are included in `npm run build`; GitHub Actions uploads the new reports alongside prior question-quality checks.
+- **Remaining #14 milestone:** qualified independent editors must sign off actual claims in reviewed GitHub PRs. AI cannot automatically complete that human requirement; the project should display no independently-approved badge until approvals are independently verified. E2E remains deferred.
+
 ## OVERDRIVE 5.7–6.0 — Verified implementation scope
 
 ### 5.7 — Editorial review tranche (40 issues)
