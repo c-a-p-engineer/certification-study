@@ -24,7 +24,7 @@ export default function DesignSimulator({progress,onFinish}:{progress?:DesignPro
  }
  return <section className="ds-board" aria-labelledby="ds-title">
   <div className="ds-heading"><span><BrainCircuit size={17}/> AWS ARCHITECT LAB</span><h2 id="ds-title">DESIGN DECISION SIMULATOR</h2><p>一問一答から、要件を読み、設計を選び、リスクを説明する練習へ。独自制作の4シナリオ、各3ステップ。</p></div>
-  {!c?<div className="ds-cases">{DESIGN_CASES.map(item=>{const r=saved.records[item.id];return <article className="ds-case" key={item.id}>
+  {!c?<details className="ds-launcher"><summary><BookOpen size={17}/> 4つの設計シナリオを選ぶ</summary><div className="ds-cases">{DESIGN_CASES.map(item=>{const r=saved.records[item.id];return <article className="ds-case" key={item.id}>
     <strong>{item.title}</strong><span>{item.objective}</span><small>{item.domain} · {r?'BEST '+r.best+'/3':'未挑戦'} · {saved.emblems.includes(item.id)?'◆ 判断勲章獲得':'3段階の設計判断'}</small>
     <button type="button" onClick={()=>start(item.id)}>設計する <ArrowRight size={17}/></button>
    </article>})}</div>:
