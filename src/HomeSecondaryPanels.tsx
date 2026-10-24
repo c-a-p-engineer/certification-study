@@ -44,6 +44,6 @@ export default function HomeSecondaryPanels({campaign,expedition,design,retentio
   <LearningInsights {...insights}/>
   </div></details><details className="home-hub-drawer" data-section="collection"><summary><span className="home-drawer-title">スキル・コレクション</span><span className="home-drawer-description">習熟度・レリック・問題の進捗</span><ChevronDown size={20}/></summary><div className="home-drawer-content"><SkillTreeBoard {...skills}/>
   <RelicVault {...relic}/>
-  <HomeMasteryCoverage {...mastery}/></div></details><div className="footnote"><BookOpen size={15}/> Original practice content · Unofficial learning project · Not affiliated with AWS
+  <HomeMasteryCoverage {...mastery}/></div></details><div className="footnote"><BookOpen size={15}/> Original practice content · Unofficial learning project · Not affiliated with AWS</div>
  </>;
 }
