@@ -7,7 +7,6 @@ import QuizAnswerControls from './QuizAnswerControls';
 import QuizStageHeader from './QuizStageHeader';
 import StudyAnswerFeedback from './StudyAnswerFeedback';
 import StudyResultScreen from './StudyResultScreen';
-import QuizStudyStage from './QuizStudyStage';
 import {useQuizSessionState} from './useQuizSessionState';
 import HomeMasteryCoverage from './HomeMasteryCoverage';
 import HomeProgressSummary from './HomeProgressSummary';
