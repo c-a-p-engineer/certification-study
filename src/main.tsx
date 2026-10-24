@@ -15,7 +15,7 @@ import questionBank from './generated/questions.json';
 import {rateReview,dueQuestionIds,reviewCounts,type ReviewMap} from './studyScheduler';
 import {expandTerms} from './glossary';
 import {readMissionSave,writeMissionSave,clearMissionSave,restoredMissionIsValid,type MissionSave} from './missionSave';
-import {topicFor,masteryByTopic} from './mastery';
+import {TOPICS,topicFor,masteryByTopic} from './mastery';
 import {AudioDirector,readAudioSettings,saveAudioSettings,type AudioSettings,type MusicScene,type SoundEffect} from './audioDirector';
 import {gameProfile,RANKS} from './gameProfile';
 import {selectVaried,isScenarioQuestion,readRecentQuestions,rememberQuestionSelection} from './questionSelection';
