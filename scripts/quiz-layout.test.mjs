@@ -8,6 +8,7 @@ test('responsive initial layout prefers compact on narrow devices, not fixed glo
  assert.equal(defaultQuizLayout(false),'detailed');
  assert.equal(isQuizLayout('detailed'),true);
  assert.equal(isQuizLayout('compact'),true);
+ assert.equal(isQuizLayout('focus'),true);
  assert.equal(isQuizLayout('wide'),false);
 });
 test('previous preferences remain absent and new setting persists safely',()=>{
