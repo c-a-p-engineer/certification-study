@@ -3,7 +3,7 @@ import type {BossDomain,BossGrade} from './bossCampaign.ts';
 import type {DailyFocusType} from './dailyFive.ts';
 import type {ExpeditionId,ExpeditionResult} from './expeditions.ts';
 
-/** Session-state boundary: no grading, localStorage, rewards or browser effects. */
+/** Session-state boundary: no grading, persistent writes, rewards or browser effects. */
 export function useQuizSessionState(createChoiceOrder:()=>number[]){
  const [index,setIndex]=useState(0);
  const [selected,setSelected]=useState<number|null>(null);
