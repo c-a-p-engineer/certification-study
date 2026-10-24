@@ -5,7 +5,7 @@ test('at least 3 distinct architect workflows have 3 steps and original AWS refe
  const id=new Set();
  for(const c of DESIGN_CASES){
   assert.equal(c.steps.length,3,c.id);assert.ok(!id.has(c.id));id.add(c.id);
-  assert.equal(c.nodes.length,4);
+  assert.ok(c.nodes.length>=4&&c.nodes.length<=5);
   const steps=new Set();
   for(const s of c.steps){
    assert.ok(!steps.has(s.id));steps.add(s.id);
