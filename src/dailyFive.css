@@ -1,0 +1,37 @@
+/* OVERDRIVE 7.1 — finite, learner-controlled daily five rather than endless replay */
+.app .daily-five{margin:10px 0 16px;padding:15px 14px;border:1px solid #9be4d1;border-radius:13px;background:linear-gradient(130deg,#183e46,#273d57);color:#efffff;min-width:0}
+.app .daily-five-head>span{font-size:12px;letter-spacing:.065em;color:#b0ffe2;display:flex;align-items:center;gap:7px;font-weight:900}
+.app .daily-five-head h2{font-size:clamp(23px,5vw,32px);font-weight:900;margin:7px 0 4px;color:#fff5c9}
+.app .daily-five-head p,.app .daily-five-caveat{font-size:12px;line-height:1.75;color:#e3f4fc;margin:5px 0}
+.app .daily-five-categories{display:flex;flex-wrap:wrap;gap:6px;margin:11px 0}
+.app .daily-five-categories span{font-size:12px;border-radius:7px;background:#315764;padding:7px 8px;color:#e9f9fb}
+.app .daily-five-categories strong{color:#fff0ab}
+.app .daily-five-start{display:flex;align-items:center;gap:10px;width:100%;min-height:66px;padding:12px;border:1px solid #f9eaaf;border-radius:9px;color:#1a3b32;background:linear-gradient(100deg,#bcfce0,#fff0b2);font-size:13px;text-align:left;cursor:pointer}
+.app .daily-five-start>span{display:grid;flex:1;gap:4px;min-width:0}
+.app .daily-five-start strong{font-size:16px;line-height:1.35;font-weight:900}
+.app .daily-five-start small{font-size:12px;line-height:1.5}
+.app .daily-five-start:disabled{opacity:.55;cursor:not-allowed}
+.app .daily-five-reasons{margin-top:9px;border-radius:7px;border:1px solid #618999;padding:8px}
+.app .daily-five-reasons summary{min-height:44px;cursor:pointer;font-size:12px;display:flex;align-items:center;font-weight:800}
+.app .daily-five-reasons ul{padding-left:19px;margin:5px 0;font-size:12px;line-height:1.8}
+.app .daily-five-reasons li{margin:5px 0;overflow-wrap:anywhere}
+.app .daily-five-caveat{display:flex;align-items:flex-start;gap:8px;margin-top:9px}
+.app .daily-five-caveat svg{flex-shrink:0;margin-top:3px}
+.app .daily-five-end{border:1px solid #9cf2d5;border-radius:12px;background:linear-gradient(110deg,#193b4d,#1d4740);padding:17px;margin:16px 0;color:#f1fffb}
+.app .daily-five-finished{display:flex;align-items:center;gap:9px;font-size:19px;color:#fff3bd}
+.app .daily-five-end p{font-size:14px;line-height:1.8;margin:11px 0}
+.app .daily-five-next{display:flex;gap:7px;align-items:center;color:#c6f7db}
+.app .daily-five-end-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.app .daily-five-end-actions button{min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:1px solid #f5e3a0;border-radius:8px;font-weight:900;font-size:13px;cursor:pointer}
+.app .daily-five-stop{background:#d9ffde;color:#193f35;flex:1}
+.app .daily-five-optional{background:#31516a;color:#fff;flex:1}
+.app .daily-five-end>small{font-size:12px;line-height:1.7;color:#dce9ee}
+.app .daily-five :focus-visible,.app .daily-five-end :focus-visible{outline:3px solid #fff4bc;outline-offset:3px}
+.app .delayed-recall-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.app .delayed-recall-metrics>div{border-radius:8px;background:#244a55;border:1px solid #638c9a;padding:8px;display:grid;gap:5px;min-width:0}
+.app .delayed-recall-metrics small{font-size:11px;line-height:1.4;color:#dcf4fa}
+.app .delayed-recall-metrics strong{font-size:clamp(16px,3vw,24px);color:#fff0b5}
+.app .delayed-recall-metrics span{font-size:11px;color:#d7f2e3}
+@media(max-width:520px){.app .daily-five{padding:12px 10px}.app .delayed-recall-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.app .daily-five-end{padding:13px}.app .daily-five-end-actions{flex-direction:column}.app .daily-five-end-actions button{width:100%}}
+@media(max-width:350px){.app .daily-five-categories span{width:100%}.app .daily-five-start{min-height:66px}.app .daily-five-head h2{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.app .daily-five *, .app .daily-five-end *{animation:none!important;transition:none!important}}
