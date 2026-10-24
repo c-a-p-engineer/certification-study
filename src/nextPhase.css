@@ -74,3 +74,10 @@
 @media(max-width:320px){.app .quiz-top .back{font-size:11px}.app .cq-controls button{min-width:44px;padding:5px 2px}.app .answer .answer-mark{min-width:16px}.app .question-card h2{line-height:1.6}.app .expedition-item{grid-template-columns:54px minmax(0,1fr)}.app .expedition-monster,.app .expedition-monster svg{width:52px}}
 @media(prefers-reduced-motion:reduce){.app .expedition-board *, .app .ds-board *, .app .focus-battle-line{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .app.reduced .ds-board *,.app.reduced .expedition-board *{animation:none!important;transition:none!important}
+
+/* 7.0 reward policy: readable summary without obscuring mobile quiz or answers */
+.app .xp-policy{margin:12px 0;border:1px solid #6e9f9f;border-radius:9px;background:#1d3447;color:#d9f5ff;padding:0 12px}
+.app .xp-policy summary{cursor:pointer;font-size:12px;font-weight:900;line-height:1.5;min-height:44px;display:flex;align-items:center;color:#c3ffe3}
+.app .xp-policy p{font-size:12px;line-height:1.8;padding:0 2px 12px;color:#e1edf6}
+.app .xp-policy :focus-visible{outline:3px solid #ffeda7;outline-offset:3px}
+@media(max-width:400px){.app .xp-policy{margin:9px 0;padding:0 10px}.app .xp-policy summary{font-size:12px}}
