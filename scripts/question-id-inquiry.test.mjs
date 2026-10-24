@@ -14,7 +14,8 @@ test('stable question ID is shown before answering in practice and exam, with ex
  assert.ok(intro.includes('問題ID <code>{question.id}</code>'));
  assert.ok(intro.includes('className="question-id-row"'));
  assert.ok(intro.includes('onClick={copyId}'));
- assert.ok(intro.includes('navigator.clipboard?.writeText(question.id)'));
+ assert.ok(intro.includes('if(!navigator.clipboard?.writeText)'));
+ assert.ok(intro.includes('await navigator.clipboard.writeText(question.id)'))
  assert.ok(intro.includes('aria-live="polite"'));
  assert.ok(intro.includes('questionInquiryUrl(question.id)'));
  assert.ok(intro.includes('target="_blank" rel="noopener noreferrer"'));
