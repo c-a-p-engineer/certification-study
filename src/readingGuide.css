@@ -1,0 +1,54 @@
+/* Reading ergonomics: preserve original content and compact choices; reduce excessively bold continuous text. */
+.app .question-card h2{
+ font-weight:620;
+ letter-spacing:.015em;
+ max-inline-size:36ch;
+}
+.app .answer .answer-body{
+ font-weight:560;
+ line-height:1.78;
+ letter-spacing:.01em;
+}
+.app .question-meta{align-items:center;gap:8px}
+.app .study-reading-toggle{
+ display:inline-flex;align-items:center;justify-content:center;gap:5px;
+ min-height:44px;min-width:112px;padding:7px 10px;
+ margin-left:auto;
+ border:1px solid #7191ae;border-radius:8px;
+ background:#24324c;color:#e9f5ff;
+ font-size:13px;font-weight:700;letter-spacing:0;
+ text-align:center;white-space:normal;cursor:pointer
+}
+.app .study-reading-toggle[aria-pressed="true"]{
+ border-color:#9bdac9;background:#28443f;color:#f5fffb
+}
+.app .study-reading-toggle:focus-visible{
+ outline:3px solid #fff0ad;outline-offset:3px
+}
+.app .question-card h2.question-readable{
+ font-weight:570;
+ line-height:1.94;
+ max-inline-size:29ch;
+ letter-spacing:.025em;
+}
+.app .reading-sentences{display:block}
+.app .reading-sentence{
+ display:block;
+ border-left:3px solid #617c9a;
+ padding-inline-start:.58em;
+ margin:0 0 .7em;
+}
+.app .reading-sentence:last-child{margin-bottom:0}
+.app .reading-sentence:nth-child(even){border-left-color:#8cbbb6}
+.app .question-card h2.question-readable + .question-terms{margin-top:4px}
+@media(max-width:700px){
+ .app .question-card h2{max-inline-size:100%;font-weight:600;letter-spacing:.012em}
+ .app .question-card h2.question-readable{max-inline-size:27ch;line-height:1.94;font-weight:560}
+ .app .study-reading-toggle{min-width:110px;font-size:12px;padding:7px 8px}
+ .app .answer .answer-body{line-height:1.8}
+}
+@media(max-width:370px){
+ .app .question-card h2.question-readable{max-inline-size:25ch}
+ .app .study-reading-toggle{min-width:100px}
+}
+@media(prefers-reduced-motion:reduce){.app .study-reading-toggle{transition:none}}
