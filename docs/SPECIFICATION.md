@@ -1,6 +1,6 @@
 # CERTIFICATION//OVERDRIVE — 仕様書
 
-**状態:** 現行実装を基準とする公開アプリの機能仕様。更新日: 2026-10-24。
+**状態:** 現行実装を基準とする公開アプリの機能仕様。更新日: 2026-10-25。
 **対象:** [AWS SAA-C03 向け学習アプリ](https://c-a-p-engineer.github.io/certification-study/)。
 **管理:** `AGENTS.md` が変更時の同期手順を所有し、この文書が利用者から見た動作と受入条件を所有する。README は概要と入口であり、この仕様の複製ではない。
 
@@ -37,6 +37,16 @@
 - 隠したパネルの機能を削除しない。標準学習・5分クエスト・復旧の導線は隠さない。
 - ホーム表示変更のみでXP・問題ID・進捗・保存schemaの意味を変えない。
 - 視覚効果削減設定を尊重する。開閉には予測不能な報酬やゲーム強制遷移を追加しない。
+
+### SAA-C03の公式試験案内（初期状態では折りたたむ）
+
+- `src/ExamOfficialGuide.tsx` を標準学習・Daily Fiveの後、詳細設定の手前に配置する。閉じた要約には「試験情報・公式リンク」と**65問・130分・合格720点**を見せ、初期画面で学習開始導線を押し下げない。開閉には標準 `details/summary` を使い、保存・採点・XPに触れない。
+- 展開後には、AWS公式が示す**65問（採点対象50問・採点対象外15問）**、**130分**、**720点（100～1,000点換算）**、**日本でのAssociate受験料20,000円（税等は予約時確認）**、択一/複数選択、4分野の30/26/24/20%を簡潔に提示する。採点対象外の問題は本試験で判別不能である。
+- 合格に必要な**実際の正解数は非公表**。「720点＝72%正答」「65問中47問が合格ライン」と誤認させない。**模擬試験80%（65問中52問）**はアプリの任意の自主学習目安であり、公式基準でも合格保証でもない。アプリの模擬試験をAWS公式試験と同一難易度・スコアに換算しない。
+- **公式一次資料への直接リンク**を提供する。試験の概要は `https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/`、詳細は `https://docs.aws.amazon.com/ja_jp/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html`、料金は `https://aws.amazon.com/certification/policies/before-testing/`、正解数FAQは `https://aws.amazon.com/certification/faqs/`。情報の確認日を表示し、変更されうるため予約前に公式を再確認するよう明示する。外部リンクは新規タブ・`noopener noreferrer`。
+- 320/360/400pxの表示で長文やリンクが横方向にはみ出さず、要約とリンクにはキーボードフォーカスが可視化され、リンクのタップ領域は44px以上。reduced-motion設定に従い、開閉でゲームの途中状態は変化しない。
+
+
 
 ## 3. 学習セッション
 

@@ -8,6 +8,8 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 **[▶ Play CERTIFICATION // OVERDRIVE on GitHub Pages](https://c-a-p-engineer.github.io/certification-study/)**
 
+**AWS公式情報:** [SAA-C03試験ページ（日本語）](https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/) · [公式試験ガイド（日本語）](https://docs.aws.amazon.com/ja_jp/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html)。本番は65問・130分・合格720点（換算スコア）。AWSは必要正解数を公表していません。アプリ内ではこれらの詳細を任意に展開できます。
+
 > Deployment status: GitHub Actions must complete successfully before the game is available.
 
 ## Features
