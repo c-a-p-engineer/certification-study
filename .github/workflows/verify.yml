@@ -25,5 +25,8 @@ jobs:
             reports/editorial-evidence-2026-10-24.json
             reports/overdrive-5-7-review-batch.json
             reports/overdrive-5-8-overlap-triage.json
+            reports/human-review-decisions.json
+            reports/independent-review-queue.json
+            reports/independent-review-queue.md
           if-no-files-found: warn
           retention-days: 14
