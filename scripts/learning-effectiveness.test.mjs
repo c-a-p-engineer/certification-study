@@ -37,6 +37,6 @@ test('UI reports sample sizes and forbids claiming observational causality',()=>
  const main=readFileSync('src/main.tsx','utf8');
  assert.ok(ui.includes('因果的に証明する比較ではありません'));
  assert.ok(ui.includes('5回答未満'));
- assert.ok(main.includes("mode:examMode?'exam':adaptiveMode?'smart':'normal'"));
+ assert.ok(main.includes("mode:examMode?'exam':retentionMode?'retention':adaptiveMode?'smart':'normal'"));
  assert.ok(main.includes('<LearningInsights history={progress.answerHistory}/>'));
 });
