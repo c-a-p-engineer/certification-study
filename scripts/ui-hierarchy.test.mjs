@@ -7,6 +7,7 @@ const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 const examReview=readFileSync('src/ExamReviewPanel.tsx','utf8');
 const quizIntro=readFileSync('src/StudyQuestionIntro.tsx','utf8');
+const quizHeader=readFileSync('src/QuizStageHeader.tsx','utf8');
 const homeSummary=readFileSync('src/HomeProgressSummary.tsx','utf8');
 const resultOverview=readFileSync('src/ResultOverview.tsx','utf8');
 const combatView=readFileSync('src/QuizCombatStatus.tsx','utf8');
@@ -26,7 +27,8 @@ test('one prominent launch and one menu for advanced options',()=>{
 });
 
 test('quiz shows one progress meter, and hints only for non-obvious multi-answer steps',()=>{
- assert.ok(source.includes('className="quiz-stage"'));
+ assert.ok(quizHeader.includes('className="quiz-stage"'));
+ assert.ok(source.includes('<QuizStageHeader examMode={examMode}'));
  assert.ok(source.includes('aria-label="ミッション進行度"'));
  assert.equal(source.includes('className="game-hud"'),false);
  assert.equal(source.includes('className="overdrive-banner"'),false);
@@ -52,7 +54,7 @@ test('glossary remains directly under the question, with pronunciation and detai
 
 test('unique learning information and safeguards are still visible or available on demand',()=>{
  for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','NOT AN AWS SCALED SCORE']){
-  assert.ok(source.includes(word),word);
+  assert.ok(source.includes(word)||quizHeader.includes(word),word);
  }
  assert.ok(masteryView.includes('className="metric-method"'));
  assert.ok(masteryView.includes('3回以上の連続正解'));
