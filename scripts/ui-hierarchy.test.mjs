@@ -6,6 +6,8 @@ const source=readFileSync('src/main.tsx','utf8');
 const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 const examReview=readFileSync('src/ExamReviewPanel.tsx','utf8');
+const quizIntro=readFileSync('src/StudyQuestionIntro.tsx','utf8');
+const homeSummary=readFileSync('src/HomeProgressSummary.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
  assert.equal((source.match(/START MISSION/g)||[]).length,1);
@@ -31,14 +33,15 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
 });
 
 test('glossary remains directly under the question, with pronunciation and detailed entries',()=>{
- const q=source.indexOf('<h2>{q.question}</h2>');
- const guide=source.indexOf('<TermsPanel key={q.id} question={q}/>');
- const options=source.indexOf('className="answers">',q);
- assert.ok(q>=0&&guide>q&&options>guide);
- assert.ok(source.includes('className="term-picker"'));
- assert.ok(source.includes('className="term-card-title"'));
- assert.ok(source.includes('{term.reading}'));
- assert.ok(source.includes('aria-label="正式名称"'));
+ const q=quizIntro.indexOf('<h2>{question.question}</h2>');
+ const guide=quizIntro.indexOf('<TermsPanel key={question.id} question={question}/>');
+ const options=source.indexOf('className="answers">');
+ assert.ok(q>=0&&guide>q&&options>=0);
+ assert.ok(source.includes('<StudyQuestionIntro question={q}'));
+ assert.ok(quizIntro.includes('className="term-picker"'));
+ assert.ok(quizIntro.includes('className="term-card-title"'));
+ assert.ok(quizIntro.includes('{term.reading}'));
+ assert.ok(quizIntro.includes('aria-label="正式名称"'));
  assert.equal(source.includes('タップして一覧を開く'),false);
 });
 
@@ -57,9 +60,10 @@ test('unique learning information and safeguards are still visible or available 
 
 test('learning timeline sits on dashboard and records answers in the existing progress store',()=>{
  const timeline=source.indexOf('<ActivityTimeline ');
- const stat=source.indexOf('className="stats"');
+ const stat=source.indexOf('<HomeProgressSummary ');
  const mastery=source.indexOf('className="mastery-section"');
  assert.ok(stat>=0&&timeline>stat&&mastery>timeline);
+ assert.ok(homeSummary.includes('className="stats"'));
  assert.ok(reducer.includes('recordDailyAnswer(source.activity??migrateActivity(source),date,event.correct)'));
  assert.ok(source.includes('activity:migrateActivity(old)'));
  assert.ok(source.includes('const rank=profile.rank'));
