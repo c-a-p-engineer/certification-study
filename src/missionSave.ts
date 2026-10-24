@@ -16,6 +16,7 @@ export type MissionSave={
  bossDomain?:string;
  focusTopic?:string;
  adaptive?:boolean;
+ retention?:boolean;
  smartWhy?:Record<string,string>;
  scenario?:boolean;
  due:boolean;
@@ -32,7 +33,7 @@ export function isMissionSave(value:unknown):value is MissionSave{
  if(!Array.isArray(x.multiChoices)||!Array.isArray(x.choiceOrder)||!x.multiChoices.every(Number.isInteger)||!x.choiceOrder.every(Number.isInteger))return false;
  if(!x.answers||typeof x.answers!=='object'||Array.isArray(x.answers))return false;
  if(!x.session||!Number.isInteger(x.session.correct)||!Number.isInteger(x.session.total))return false;
- if(!Number.isInteger(x.combo)||typeof x.weak!=='boolean'||typeof x.boss!=='boolean'||(x.scenario!==undefined&&typeof x.scenario!=='boolean')||(x.bossDomain!==undefined&&(typeof x.bossDomain!=='string'||x.bossDomain.length>40))||(x.focusTopic!==undefined&&(typeof x.focusTopic!=='string'||x.focusTopic.length>60))||(x.adaptive!==undefined&&typeof x.adaptive!=='boolean')||(x.smartWhy!==undefined&&(!x.smartWhy||typeof x.smartWhy!=='object'||Array.isArray(x.smartWhy)||Object.keys(x.smartWhy).length>1000||Object.entries(x.smartWhy).some(([k,v])=>k.length>160||typeof v!=='string'||v.length>80)))||typeof x.due!=='boolean'||typeof x.showChoices!=='boolean'||typeof x.reflection!=='string'||!Number.isFinite(x.savedAt))return false;
+ if(!Number.isInteger(x.combo)||typeof x.weak!=='boolean'||typeof x.boss!=='boolean'||(x.scenario!==undefined&&typeof x.scenario!=='boolean')||(x.bossDomain!==undefined&&(typeof x.bossDomain!=='string'||x.bossDomain.length>40))||(x.focusTopic!==undefined&&(typeof x.focusTopic!=='string'||x.focusTopic.length>60))||(x.adaptive!==undefined&&typeof x.adaptive!=='boolean')||(x.retention!==undefined&&typeof x.retention!=='boolean')||(x.smartWhy!==undefined&&(!x.smartWhy||typeof x.smartWhy!=='object'||Array.isArray(x.smartWhy)||Object.keys(x.smartWhy).length>1000||Object.entries(x.smartWhy).some(([k,v])=>k.length>160||typeof v!=='string'||v.length>80)))||typeof x.due!=='boolean'||typeof x.showChoices!=='boolean'||typeof x.reflection!=='string'||!Number.isFinite(x.savedAt))return false;
  return true;
 }
 export function readMissionSave():MissionSave|null{
