@@ -57,7 +57,7 @@ test('glossary remains directly under the question, with pronunciation and detai
 
 test('unique learning information and safeguards are still visible or available on demand',()=>{
  for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','NOT AN AWS SCALED SCORE']){
-  assert.ok(source.includes(word)||quizHeader.includes(word)||resultScreen.includes(word),word);
+  assert.ok(source.includes(word)||launcher.includes(word)||quizHeader.includes(word)||resultScreen.includes(word),word);
  }
  assert.ok(masteryView.includes('className="metric-method"'));
  assert.ok(masteryView.includes('3回以上の連続正解'));
@@ -98,7 +98,7 @@ test('scenario-only challenge is discoverable and survives practice resume',()=>
 
 test('gamified progress and title unlocks are discoverable without extra overlays',()=>{
  assert.ok(launcher.includes('className="hero-level-hud"'));
- assert.ok(source.includes('aria-label="次のレベルまでの進行度"'));
+ assert.ok(launcher.includes('aria-label="次のレベルまでの進行度"'));
  assert.ok(launcher.includes("onClick={()=>onTitles()}"));
  assert.ok(source.includes("onTitles={()=>showMenu('titles')}"));
  assert.ok(combatView.includes('className="fever-milestones"'));
