@@ -3,7 +3,7 @@ import {ArrowRight,BookOpen,BrainCircuit,Medal,RotateCcw} from 'lucide-react';
 import {DESIGN_CASES,evaluateDesignChoice,normalizeDesignProgress,type DesignCaseId,type DesignProgress} from './designSimulator.ts';
 import './nextPhase.css';
 function ArchitectureSketch({nodes}:{nodes:readonly string[]}){
- const xs=nodes.map((_,i)=>60+i*130);
+ const xs=nodes.map((_,i)=>50+i*(430/Math.max(1,nodes.length-1)));
  return <figure className="ds-sketch"><svg viewBox="0 0 530 105" role="img" aria-label={'構成要素：'+nodes.join('、')} preserveAspectRatio="xMidYMid meet">
   <title>アーキテクチャの構成要素を左から順に表示</title>
   {nodes.map((node,i)=><g key={node}>
