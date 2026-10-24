@@ -50,6 +50,8 @@ test('interactive HTML contains keyboard buttons, accessible SVG description and
  const main=readFileSync('src/main.tsx','utf8');
  assert.ok(ui.includes('<svg viewBox='));
  assert.ok(ui.includes('<figcaption>'));
+ assert.ok(ui.includes('接続順や障害時の経路は表示していません'));
+ assert.ok(!ui.includes("nodes.join(' → ')"));
  assert.ok(ui.includes('role="group" aria-label="設計案を選択"'));
  assert.ok(ui.includes('aria-pressed={picked===option.id}'));
  assert.ok(ui.includes('evaluateDesignChoice('));
