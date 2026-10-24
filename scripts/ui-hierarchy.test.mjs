@@ -5,6 +5,7 @@ import {readFileSync} from 'node:fs';
 const source=readFileSync('src/main.tsx','utf8');
 const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
+const examReview=readFileSync('src/ExamReviewPanel.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
  assert.equal((source.match(/START MISSION/g)||[]).length,1);
@@ -48,7 +49,7 @@ test('unique learning information and safeguards are still visible or available 
  assert.ok(source.includes('className="metric-method"'));
  assert.ok(source.includes('aria-label="出題分野"'));
  assert.ok(source.includes('aria-label="出題数"'));
- assert.ok(source.includes('className="exam-review"'));
+ assert.ok(source.includes('<ExamReviewPanel questions={pool}'));assert.ok(examReview.includes('className="exam-review"'));
  assert.ok(menu.includes('role="dialog"'));
  assert.ok(menu.includes('<details className="gm-haptic-diagnostics">'));
  assert.ok(menu.includes('aria-modal="true"'));
