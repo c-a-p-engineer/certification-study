@@ -39,9 +39,10 @@ export function planExpedition<T extends ExpeditionQuestion>(bank:readonly T[],i
  if(!expedition)return [];
  const byId=new Map<string,T>();
  for(const q of bank)if(q&&q.domain===expedition.domain&&typeof q.id==='string'&&!byId.has(q.id))byId.set(q.id,q);
- const candidates=[...byId.values()];
- const score=(q:T)=>{const match=expedition.keyword.test(q.question+' '+(q.tags??[]).join(' ')+' '+(q.reference??''));
-  return (match?1000:0)+(eligibleForDelayedRecall(reviews[q.id],now)?200:0)+(!reviews[q.id]?50:0)+(q.difficulty===3?10:0);
+ // Never silently fill a themed expedition with unrelated domain questions.
+ const candidates=[...byId.values()].filter(q=>expedition.keyword.test(q.question+' '+(q.tags??[]).join(' ')+' '+(q.reference??'')));
+ const score=(q:T)=>{
+  return (eligibleForDelayedRecall(reviews[q.id],now)?200:0)+(!reviews[q.id]?50:0)+(q.difficulty===3?10:0);
  };
  return candidates.sort((a,b)=>score(b)-score(a)||a.id.localeCompare(b.id)).slice(0,5);
 }
