@@ -1,3 +1,4 @@
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {normalizeAnswerHistory,appendAnswerEvent,growthSummary,MAX_EVENTS} from '../src/growthAnalytics.ts';
 const date='2026-10-24';
@@ -26,7 +27,7 @@ test('analytics are visible on home dashboard, not an exam pass prediction',()=>
 const reducer=readFileSync('src/studyAttempt.ts','utf8');
  const panel=readFileSync('src/GrowthDashboard.tsx','utf8');
  assert.ok(reducer.includes('appendAnswerEvent(source.answerHistory'));
- assert.ok(main.includes('<GrowthDashboard history={progress.answerHistory}'));
+ assert.ok(secondary.includes('<GrowthDashboard {...growth}/>'));
  assert.ok(panel.includes('導入前の回答を復元・推定した値ではありません'));
  assert.ok(panel.includes('合格確率ではありません'));
 });
