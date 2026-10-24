@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-import {DESIGN_CASES,evaluateDesignChoice,recordDesignCompletion,normalizeDesignProgress,updateDesignReviewQueue} from '../src/designSimulator.ts';
+import {DESIGN_CASES,evaluateDesignChoice,recordDesignCompletion,normalizeDesignProgress,updateDesignReviewQueue,recordDesignRecall} from '../src/designSimulator.ts';
 test('at least 3 distinct architect workflows have 3 steps and original AWS references',()=>{
  assert.equal(DESIGN_CASES.length,8);
  const id=new Set();
@@ -76,4 +76,25 @@ test('next-day design review is separate, bounded, source labelled and safe acro
  const again=updateDesignReviewQueue(one.state.reviewDue,id,[{stepId:DESIGN_CASES[4].steps[0].id,correct:false}],when+90000);
  assert.equal(again.length,1);
  assert.deepEqual(normalizeDesignProgress({records:{},emblems:[],reviewDue:[{caseId:id,stepId:'forged',dueAt:when,source:id+':forged'}]}).reviewDue,[]);
+});
+
+test('single-step recall clears or reschedules only that step, without altering case grade',()=>{
+ const id=DESIGN_CASES[4].id,stepId=DESIGN_CASES[4].steps[0].id,at=Date.parse('2026-10-24T08:00:00Z');
+ const initial=recordDesignCompletion(undefined,id,2,at,[{stepId,correct:false}]).state;
+ const recordBefore=initial.records[id];
+ const failed=recordDesignRecall(initial,id,stepId,false,at+86400000);
+ assert.deepEqual(failed.records[id],recordBefore);
+ assert.equal(failed.reviewDue.length,1);
+ assert.ok(failed.reviewDue[0].dueAt>at+86400000);
+ const success=recordDesignRecall(failed,id,stepId,true,at+2*86400000);
+ assert.deepEqual(success.records[id],recordBefore);
+ assert.equal(success.reviewDue.length,0);
+ assert.deepEqual(success.emblems,initial.emblems);
+ assert.deepEqual(recordDesignRecall(initial,id,'fake',true,at),normalizeDesignProgress(initial));
+ const view=readFileSync('src/DesignSimulator.tsx','utf8');
+ assert.ok(view.includes('onReview(c.id,reviewStep,passed)'));
+ assert.ok(view.includes('reviewOne(item.caseId,item.stepId)'));
+ assert.ok(view.includes('reviewStep?1:c.steps.length'));
+ const main=readFileSync('src/main.tsx','utf8');
+ assert.ok(main.includes('recordDesignRecall(p.designLab,id,stepId,correct)'));
 });
