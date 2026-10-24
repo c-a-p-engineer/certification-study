@@ -39,7 +39,7 @@ test('all secondary home modes are reachable from closed-by-default native discl
 });
 
 test('drawer markup is balanced and keeps read-only disclosure semantics',()=>{
- assert.equal((home.match(/<details\\b/g)||[]).length,(home.match(/<\\/details>/g)||[]).length);
+ assert.equal((home.match(/<details\b/g)||[]).length,(home.match(/<\/details>/g)||[]).length);
  assert.equal((home.match(/className="home-hub-drawer"/g)||[]).length,4);
  assert.ok(css.includes('summary:focus-visible'));
  assert.ok(css.includes('min-height:54px'));
@@ -49,7 +49,7 @@ test('drawer markup is balanced and keeps read-only disclosure semantics',()=>{
 });
 
 test('product specification and contributor rules name observable behavior and change gate',()=>{
- assert.match(agents,/docs\\/SPECIFICATION\\.md/);
+ assert.match(agents,/docs\/SPECIFICATION\.md/);
  assert.match(agents,/same PR/i);
  assert.match(agents,/npm run build/);
  assert.match(agents,/E2E/);
