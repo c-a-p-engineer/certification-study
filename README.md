@@ -18,6 +18,34 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 348 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## Code quality, engagement design and next-phase review
+
+The [6.6 code and engagement audit](reports/overdrive-6-6-code-engagement-audit.md) documents verified bug fixes, known source-level risks, a qualitative evaluation of immediate feedback/rewards/learning retention, the limits of static evaluation (no opt-in longitudinal engagement measurements, no hardware E2E), and ranked alternative Phase 7 directions. “Habit-forming” is a design hypothesis, not a demonstrated claim about users or actual learning outcomes. The recommended direction is **learning-effective gamification**: observable next-day recall, bounded short sessions, independent reward correctness, and optional RPG variety without pressure to play longer.
+
+## OVERDRIVE 6.4–6.6 — Expeditions, mobile focus and architecture design practice
+
+### 6.4 — Monster Mastery Expeditions
+- Optional **five themed 5-question expeditions** (IAM, VPC, S3, RDS and architecture trade-offs). Each selects distinct topic-related AWS questions from the existing locally bundled bank; the question-ID mapping and conventional review history are retained.
+- Finish with at least **4/5 correct** to clear the encounter. A **rare cosmetic emblem** requires at least **two distinct correct overdue recalls** whose prior attempt occurred on an earlier local calendar day. Rare emblems can be obtained **once per expedition**, with **no additional XP** from finishing or replaying an expedition.
+- Best scores, attempt counts and rare cosmetic IDs are recorded in optional `progress.expeditions`, and interrupted expeditions resume with optional fields in the existing mission-save v1 format. There are no timed attempts, purchases, push reminders, hidden rewards or penalty for not logging in.
+- Existing SVG monster artwork is used offline. The collection is collapsed on the dashboard until requested so mobile answer choices and core navigation remain the priority.
+
+### 6.5 — Android-first mobile reading and recovery
+- A third **集中表示 (Focus)** option in the existing quiz-density preference hides the large combat HUD and replaces it with a short HP/combo status line. The setting is available in quick quiz controls and `MENU → OPTIONS`. Previously saved `compact` and `detailed` preferences remain valid; no new storage key is introduced.
+- The question container becomes a programmatically focusable landmark. After the next question mounts, focus and scrolling move to the question, avoiding pre-render scroll timing. CSS provides 320px, 360px and 400px breakpoints, wraps long answer text, keeps at least 44px controls, and respects reduced-motion settings.
+- The backup screen adds stepwise emergency recovery instructions; OFFLINE STATUS gives Android/Brave setup guidance and spells out that remote AWS documentation is not stored offline.
+- Static regression/unit tests cover focus mode persistence, tap targets, long text and required markup. These **are not Android device tests**. Physical Brave PWA behavior and browser E2E remain deferred.
+
+### 6.6 — AWS Architect Decision Simulator
+- **Four original, 3-stage architecture scenarios**: multi-AZ web tier, private S3 access, RDS read scaling vs failover, and DynamoDB PITR recovery. Each step asks for one design decision with a concrete requirement, three alternatives, trade-off feedback, and a link to the relevant current official AWS documentation.
+- An SVG architecture sketch has a plain-text equivalent for screen readers; choice buttons support keyboard activation. The launcher is opt-in/collapsed by default. The answer and rationale are presented at each step; all explanation text is bundled for offline learning, but external source links need internet.
+- Best decision scores and first-time perfect **cosmetic emblems** are retained in optional `progress.designLab`. Retrying cannot earn additional XP or duplicate emblems; simulator progress is explicitly **not** an AWS exam score or validated certificate.
+- Original problem bank remains **348 questions and 48 longer scenarios**; the simulator is a distinct learning mode, **not** extra exam questions. Existing local progress, v1/v2 JSON imports and offline workflows remain compatible.
+
+### 6.6 integration + quality gates
+- New `test:expeditions`, `test:mobile6` and `test:simulator` are required by the full `npm run build` pipeline. A code/engagement audit is tracked separately from observed user outcomes.
+- No independent human AWS factual signoff is claimed: the original 6.1 reviewer work stays on hold. No device-level or browser E2E testing is claimed.
+
 ## OVERDRIVE 6.2–6.3 — Recall Micro Raid & Offline Data Safety
 
 ### 6.2 — RETENTION ENGINE 3.0

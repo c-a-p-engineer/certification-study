@@ -8,6 +8,7 @@ test('responsive initial layout prefers compact on narrow devices, not fixed glo
  assert.equal(defaultQuizLayout(false),'detailed');
  assert.equal(isQuizLayout('detailed'),true);
  assert.equal(isQuizLayout('compact'),true);
+ assert.equal(isQuizLayout('focus'),true);
  assert.equal(isQuizLayout('wide'),false);
 });
 test('previous preferences remain absent and new setting persists safely',()=>{
@@ -37,7 +38,7 @@ test('quiz controls are immediately accessible, saved and can switch density',()
 test('mobile compact view combines HUD instead of stacking two gameplay cards',()=>{
  assert.ok(main.includes("quizLayout==='compact'&&!examMode?<CompactQuizHUD"));
  assert.ok(main.includes("!examMode&&quizLayout==='detailed'&&<div className={'fever-meter '"));
- assert.ok(main.includes("mode==='quiz'&&quizLayout==='compact'?'quiz-compact':''"));
+ assert.ok(main.includes("mode==='quiz'&&quizLayout!=='detailed'?'quiz-compact':''"));
  assert.ok(hud.includes('<MonsterArt'));
  assert.ok(hud.includes('comboMultiplier(combo)'));
  assert.ok(hud.includes('aria-valuenow={hp}'));

@@ -59,6 +59,15 @@ export default function BackupPanel(){
   <div className="backup-recovery" aria-label="復元の安全性確認">
    <strong>RESTORE SAFETY · {journal.state==='none'?'通常':journal.state==='recoverable'?'復旧可能':journal.state==='invalid'?'要確認':'ストレージ利用不可'}</strong>
    <p>{journal.message}</p>
+   <details className="recovery-guide"><summary>復元トラブル時の手順を見る</summary>
+    <ol>
+     <li>最初に「現在の保存領域を緊急退避」を押し、ファイルを自分だけがアクセスできる場所に保管します。</li>
+     <li>ハッシュ不一致が表示された場合、ファイルを変更せず別のバックアップを選びます。v2ファイルは変更を検出して復元を拒否します。</li>
+     <li>「復旧可能」なら、退避後に元の内容への復旧を再試行します。破損・アクセス不可の状態でブラウザのサイトデータを削除しないでください。</li>
+     <li>保存容量不足やプライベートモードでは、新しいデータを書けない場合があります。ストレージ空き容量と通常ブラウザでの起動を確認します。</li>
+     <li>緊急退避ファイルは通常のバックアップとして直接インポートできません。記録を保持したまま調査するための原本です。</li>
+    </ol>
+   </details>
    <button type="button" onClick={saveEmergency}>現在の保存領域を緊急退避</button>
    {journal.state==='recoverable'&&<button type="button" onClick={retryRecovery}>元の保存内容へ復旧を試す</button>}
    <small>緊急退避には学習履歴や設定、復旧記録が含まれます。第三者に共有しないでください。内容はこの端末内で生成されます。</small>

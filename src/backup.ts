@@ -1,6 +1,8 @@
 /** Portable, schema-checked local backup. Never upload data to a server. */
 import {isMissionSave} from './missionSave.ts';
 import {normalizeEnemyCampaign} from './enemyCampaign.ts';
+import {normalizeExpeditions,EXPEDITIONS} from './expeditions.ts';
+import {normalizeDesignProgress,DESIGN_CASES} from './designSimulator.ts';
 import {normalizeReports} from './questionReports.ts';
 import {normalizeAnswerHistory,MAX_EVENTS} from './growthAnalytics.ts';
 export const BACKUP_SCHEMA=1;
@@ -60,6 +62,20 @@ export function validProgress(raw:unknown):boolean{
   if(!isObj(reward)||typeof reward.day!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(reward.day)||
    !Array.isArray(reward.questionIds)||reward.questionIds.length>5||new Set(reward.questionIds).size!==reward.questionIds.length||
    reward.questionIds.some((id:unknown)=>typeof id!=='string'||id.length===0||id.length>=170))return false;
+ }
+ if(raw.expeditions!==undefined){
+  const input=raw.expeditions as Record<string,unknown>;
+  if(!isObj(input)||!isObj(input.records)||!Array.isArray(input.rare)||input.rare.length>EXPEDITIONS.length||
+     Object.keys(input.records).some(id=>!EXPEDITIONS.some(e=>e.id===id))||
+     normalizeExpeditions(input).rare.length!==input.rare.length||
+     Object.keys(normalizeExpeditions(input).records).length!==Object.keys(input.records).length)return false;
+ }
+ if(raw.designLab!==undefined){
+  const input=raw.designLab as Record<string,unknown>;
+  if(!isObj(input)||!isObj(input.records)||!Array.isArray(input.emblems)||input.emblems.length>DESIGN_CASES.length||
+     Object.keys(input.records).some(id=>!DESIGN_CASES.some(e=>e.id===id))||
+     normalizeDesignProgress(input).emblems.length!==input.emblems.length||
+     Object.keys(normalizeDesignProgress(input).records).length!==Object.keys(input.records).length)return false;
  }
  if(raw.enemyCampaign!==undefined){
   const normalized=normalizeEnemyCampaign(raw.enemyCampaign);
