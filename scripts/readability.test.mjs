@@ -5,6 +5,7 @@ import {readFileSync} from 'node:fs';
 const css=readFileSync('src/readability.css','utf8');
 const ui=readFileSync('src/GameMenu.tsx','utf8');
 const source=readFileSync('src/main.tsx','utf8');
+const choices=readFileSync('src/QuizAnswerControls.tsx','utf8');
 test('text sizes are explicit, persistent and safe when browser storage is absent',()=>{
  assert.equal(readTextScale(),'standard');
  assert.equal(isTextScale('normal'),false);
@@ -27,7 +28,8 @@ test('quiz answer and explanation typography is readable, adjustable and wraps',
  }
  assert.ok(ui.includes('READING SIZE'));
  assert.ok(ui.includes('aria-pressed={p.textScale===value}'));
- assert.ok(source.includes('className="answer-body"'));
+ assert.ok(choices.includes('className="answer-body"'));
+ assert.ok(source.includes('<QuizAnswerControls question={q}'))
  assert.ok(source.includes('textScale={textScale}'));
  assert.ok(source.includes('textScaleClass(textScale)'));
 });
