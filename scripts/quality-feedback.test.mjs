@@ -18,8 +18,9 @@ test('local report saving is explicit; unchanged study progress',()=>{
  }finally{if(old)Object.defineProperty(globalThis,'localStorage',old);else delete globalThis.localStorage}
 });
 test('no automatic public post; exam only shows feedback after completion',()=>{
- const main=readFileSync('src/main.tsx','utf8'),exam=readFileSync('src/ExamReviewPanel.tsx','utf8'),ui=readFileSync('src/QuestionFeedback.tsx','utf8');
- assert.ok(main.includes('<QuestionFeedback id={q.id}'));
+ const main=readFileSync('src/main.tsx','utf8'),practice=readFileSync('src/StudyAnswerFeedback.tsx','utf8'),exam=readFileSync('src/ExamReviewPanel.tsx','utf8'),ui=readFileSync('src/QuestionFeedback.tsx','utf8');
+ assert.ok(main.includes('<StudyAnswerFeedback question={q}'));
+ assert.ok(practice.includes('<QuestionFeedback id={question.id}'));
  assert.ok(exam.includes('<QuestionFeedback id={question.id}'));
  assert.ok(ui.includes('GitHubで報告'));
  assert.ok(ui.includes('submitLocalReport(item)'));
