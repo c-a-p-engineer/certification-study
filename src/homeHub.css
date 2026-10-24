@@ -1,0 +1,46 @@
+/* Home hub: one clear daily action, secondary exploration on demand. */
+.app .hero{padding:clamp(24px,4vw,46px) 0 24px;max-width:none}
+.app .hero .home-tagline{font-size:clamp(30px,5vw,48px);line-height:1.06;margin:20px 0 12px;letter-spacing:.1px}
+.app .hero .quick-start{max-width:850px}
+.app .home-advanced,.app .home-hub-drawer{border:1px solid #4b5d87;border-radius:12px;background:#11182fda;min-width:0;overflow:hidden}
+.app .home-advanced{max-width:850px;margin-top:14px}
+.app .home-advanced>summary,.app .home-hub-drawer>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:58px;padding:14px 19px;font-weight:800;color:#edf4ff}
+.app .home-advanced>summary::-webkit-details-marker,.app .home-hub-drawer>summary::-webkit-details-marker{display:none}
+.app .home-advanced>summary:focus-visible,.app .home-hub-drawer>summary:focus-visible{outline:3px solid #79ebff;outline-offset:-4px}
+.app .home-advanced>summary svg,.app .home-hub-drawer>summary svg{flex-shrink:0;margin-left:auto;color:#7deaff;transition:transform .2s}
+.app .home-advanced[open]>summary svg,.app .home-hub-drawer[open]>summary svg{transform:rotate(180deg)}
+.app .home-advanced>summary:hover,.app .home-hub-drawer>summary:hover{background:#243150}
+.app .home-advanced-content,.app .home-drawer-content{padding:0 18px 20px;border-top:1px solid #ffffff22}
+.app .home-advanced .mission-setup{margin-top:12px}
+.app .home-hub-drawer{margin:12px 0}
+.app .home-hub-drawer>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;row-gap:3px}
+.app .home-drawer-title{font-size:17px;line-height:1.35}
+.app .home-drawer-description{grid-column:1;grid-row:2;font-weight:400;font-size:12px;color:#aebdd9;line-height:1.5}
+.app .home-hub-drawer>summary svg{grid-column:2;grid-row:1 / span 2}
+.app .home-drawer-content>*{min-width:0}
+.app .home-drawer-content .section-head{margin-top:28px}
+.app .home-drawer-content .skill-section,.app .home-drawer-content .mastery-section{margin-top:28px}
+.app .home-drawer-content .footnote{margin-bottom:12px}
+.app .hero .exam-cta,.app .hero .boss-cta,.app .hero .scenario-cta{max-width:100%}
+.app .stats{grid-template-columns:repeat(4,minmax(0,1fr));margin:16px 0}
+.app .stat{min-width:0;padding:20px 14px}
+.app .stat strong{font-size:clamp(29px,4vw,43px);overflow-wrap:anywhere}
+.app .stat>span{letter-spacing:.5px}
+@media(max-width:700px){
+ .app .hero{padding:18px 0 14px}
+ .app .hero .home-tagline{font-size:30px;margin:12px 0}
+ .app .hero .hero-actions{gap:8px;margin-top:12px}
+ .app .home-advanced>summary,.app .home-hub-drawer>summary{padding:13px 12px;min-height:54px}
+ .app .home-advanced-content,.app .home-drawer-content{padding:0 10px 12px}
+ .app .home-drawer-title{font-size:15px}
+ .app .home-drawer-description{font-size:11px}
+ .app .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .app .stat{padding:13px 11px}
+ .app .stat strong{font-size:32px}
+}
+@media(max-width:360px){
+ .app .home-drawer-title{font-size:14px}
+ .app .home-advanced>summary{font-size:13px}
+ .app .home-drawer-content{padding-inline:6px}
+}
+@media(prefers-reduced-motion:reduce){.app .home-advanced>summary svg,.app .home-hub-drawer>summary svg{transition:none}}
