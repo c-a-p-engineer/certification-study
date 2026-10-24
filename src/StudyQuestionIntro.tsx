@@ -4,7 +4,7 @@ import {findStudyTerms} from './termGuide';
 
 export type StudyQuestion = { id: string; domain: string; question: string; choices: string[]; answer?: number; answers?: number[]; difficulty?:number; tags?:string[]; distractorReasons?:string[]; explanation: string; reference: string;reviewedAt?:string };
 
-function TermsPanel({question}:{question:StudyQuestion}){
+export function TermsPanel({question}:{question:StudyQuestion}){
  const terms=findStudyTerms(question);
  if(terms.length===0)return null;
  return <details className="term-panel study-terms-panel" aria-label="この問題に出てきた用語とサービスの一覧">
