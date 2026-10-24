@@ -8,7 +8,7 @@ const ledger=JSON.parse(readFileSync('reports/human-review-decisions.json','utf8
 const approved=validateReviewLedger(ledger,bank);
 const status=reviewerStatus(ledger,bank);
 const spotChecked=new Set(legacy.entries.map(x=>x.id));
-const queue=prioritizeForIndependentReview(bank,spotChecked,40).filter(x=>!approved.some(d=>d.questionId===x.id));
+const queue=prioritizeForIndependentReview(bank.filter(q=>!approved.some(d=>d.questionId===q.id&&d.decision==='approved')),spotChecked,40);
 const report={generatedOn:new Date().toISOString(),status,
  notes:[
  'AI-assisted edits (40) and targeted checks (19) are NOT human sign-offs.',
