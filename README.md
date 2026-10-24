@@ -22,6 +22,16 @@ The current prototype contains 348 original AWS SAA practice questions across fo
 
 The [6.6 code and engagement audit](reports/overdrive-6-6-code-engagement-audit.md) documents verified bug fixes, known source-level risks, a qualitative evaluation of immediate feedback/rewards/learning retention, the limits of static evaluation (no opt-in longitudinal engagement measurements, no hardware E2E), and ranked alternative Phase 7 directions. “Habit-forming” is a design hypothesis, not a demonstrated claim about users or actual learning outcomes. The recommended direction is **learning-effective gamification**: observable next-day recall, bounded short sessions, independent reward correctness, and optional RPG variety without pressure to play longer.
 
+## OVERDRIVE 7.0 — Fair reward and pure answer core (first stage)
+
+- Extracted the answer transaction to `src/studyAttempt.ts`: grading, dated review events, daily contracts, enemy HP, normal XP, delayed recall XP and mock-exam grading are now calculated from immutable input **without React or browser side effects**. The UI separately triggers sound, haptics and animations.
+- **New attempts only:** a same-question correct replay on the same local calendar day earns **0 base XP and 0 enemy damage** and does not raise review streak; mock-exam answers update only explicit exam answer history, not training XP/HP, topic mastery, daily contracts or review scheduling. Prior-day/new-question XP is unchanged. **Existing XP, levels, achievements and review records are never rewritten.**
+- Every practice or exam session records an optional stable `runId` in its existing `v1` save format. Optional bounded `attemptReceipts` prevent replay of an identical `runId + question index + question ID` event, including after reload. Receipts use a bounded 1,024-item history and are verified when restoring v1/v2 backups; this is best-effort local protection, not server-side anti-cheat.
+- The +150 XP daily quest requires **five distinct, non-exam question IDs** where individual dated answer history is available. Existing legacy progress with no event history preserves already-earned eligibility.
+- Home-screen SMART QUEST, retention and expedition pool calculations are now memoized. Saved question IDs use a pre-built map instead of repeated O(bank size) scans.
+- `npm run test:attempts` covers pure grading, idempotency, prior-day recall, same-day suppression, exam isolation, unique daily counting and backup compatibility. Full `npm run build` requires that test plus all previous gates, type checking and offline PWA generation.
+- Source and engagement analysis: [7.0 Code & Engagement Review](reports/overdrive-7-0-code-engagement-review.md). **The home/quiz/results component split remains in #23**, and user retention impact has not been measured. The next preferred direction is a voluntary five-minute learning loop in #24. E2E/Android devices and expert AWS editorial approvals remain deferred.
+
 ## OVERDRIVE 6.4–6.6 — Expeditions, mobile focus and architecture design practice
 
 ### 6.4 — Monster Mastery Expeditions
