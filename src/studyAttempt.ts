@@ -10,7 +10,7 @@ import {appendAnswerEvent,normalizeAnswerHistory,type AnswerHistory} from './gro
 
 export const MAX_ATTEMPT_RECEIPTS=1024;
 export const MAX_ATTEMPT_ID_LENGTH=170;
-export type AttemptMode='normal'|'smart'|'retention'|'exam';
+export type AttemptMode='normal'|'smart'|'retention'|'daily'|'exam';
 export type AttemptReceiptState=string[];
 export type AttemptProgress={
  xp:number;best:number;answered:number;correct:number;mistakes:string[];
