@@ -23,8 +23,9 @@ test('malformed entries discarded; history capped without changing aggregate XP'
 });
 test('analytics are visible on home dashboard, not an exam pass prediction',()=>{
  const main=readFileSync('src/main.tsx','utf8');
+const reducer=readFileSync('src/studyAttempt.ts','utf8');
  const panel=readFileSync('src/GrowthDashboard.tsx','utf8');
- assert.ok(main.includes('appendAnswerEvent(p.answerHistory'));
+ assert.ok(reducer.includes('appendAnswerEvent(source.answerHistory'));
  assert.ok(main.includes('<GrowthDashboard history={progress.answerHistory}'));
  assert.ok(panel.includes('導入前の回答を復元・推定した値ではありません'));
  assert.ok(panel.includes('合格確率ではありません'));
