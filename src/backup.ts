@@ -57,6 +57,12 @@ export function validProgress(raw:unknown):boolean{
  if(raw.activity!==undefined&&(!isObj(raw.activity)||Object.values(raw.activity).some(d=>!integerCount(d))))return false;
  if(raw.answerHistory!==undefined&&(!Array.isArray(raw.answerHistory)||raw.answerHistory.length>MAX_EVENTS||normalizeAnswerHistory(raw.answerHistory).length!==raw.answerHistory.length))return false;
  if(raw.mistakes.length>10000||Object.keys(raw.reviews).length>10000)return false;
+ if(raw._sync!==undefined){
+  const meta=raw._sync;
+  if(!isObj(meta)||!Number.isSafeInteger(meta.revision)||Number(meta.revision)<1||
+   typeof meta.writerId!=='string'||meta.writerId.length<6||meta.writerId.length>120||
+   !Number.isSafeInteger(meta.updatedAt)||Number(meta.updatedAt)<0)return false;
+ }
  if(raw.attemptReceipts!==undefined){
   if(!Array.isArray(raw.attemptReceipts)||raw.attemptReceipts.length>1024||
    new Set(raw.attemptReceipts).size!==raw.attemptReceipts.length||

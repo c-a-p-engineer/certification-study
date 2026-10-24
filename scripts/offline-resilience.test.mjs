@@ -48,7 +48,7 @@ test('invalid journal never overwrites progress during startup and visible warni
  assert.equal(JSON.parse(dest.getItem(BACKUP_KEYS[0])).xp,10);
  const main=readFileSync('src/main.tsx','utf8');
  assert.ok(main.includes('recoverInterruptedRestore(localStorage)'));
- assert.ok(main.includes("localStorage.getItem(RESTORE_JOURNAL_KEY)===null"));
+ assert.ok(readFileSync('src/progressSync.ts','utf8').includes('store.getItem(RESTORE_PENDING_KEY)!==null'));
  assert.ok(main.includes('保存データの復旧が未完了です'));
 });
 test('offline status reports valid build cache and gracefully handles no caching support',async()=>{
