@@ -32,7 +32,7 @@ import ExpeditionJourneyHUD from './ExpeditionJourneyHUD';
 import DesignSimulator from './DesignSimulator';
 import {EXPEDITIONS,planExpedition,normalizeExpeditions,finishExpedition,type ExpeditionId,type ExpeditionProgress,type ExpeditionResult} from './expeditions.ts';
 import {eligibleForDelayedRecall} from './retentionQuest.ts';
-import {recordDesignCompletion,type DesignProgress} from './designSimulator.ts';
+import {recordDesignCompletion,recordDesignRecall,type DesignProgress} from './designSimulator.ts';
 import './nextPhase.css';
 import './homeHub.css';
 import {planRetentionQuest,recordDelayedRecallReward,normalizeRecallRewards,type RecallRewardState} from './retentionQuest.ts';
@@ -303,7 +303,7 @@ function App(){
   <OfflineStatus activeMission={!!missionSave||!!examSave}/>
   <details className="home-hub-drawer" data-section="adventure"><summary><span className="home-drawer-title">冒険・設計チャレンジ</span><span className="home-drawer-description">モンスター討伐・遠征・AWS設計演習</span><ChevronDown size={20}/></summary><div className="home-drawer-content"><EnemyCampaignPanel campaign={enemyCampaign} onStart={()=>start(false)} onReplay={()=>setProgress(p=>({...p,enemyCampaign:restartCampaign(p.enemyCampaign)}))}/>
   <ExpeditionBoard progress={progress.expeditions} available={expeditionCounts} onLaunch={id=>start(false,false,false,false,false,undefined,undefined,false,undefined,id)}/>
-  <DesignSimulator progress={progress.designLab} onFinish={(id,correct,outcomes)=>setProgress(p=>({...p,designLab:recordDesignCompletion(p.designLab,id,correct,Date.now(),outcomes).state}))}/>
+  <DesignSimulator progress={progress.designLab} onFinish={(id,correct,outcomes)=>setProgress(p=>({...p,designLab:recordDesignCompletion(p.designLab,id,correct,Date.now(),outcomes).state}))} onReview={(id,stepId,correct)=>setProgress(p=>({...p,designLab:recordDesignRecall(p.designLab,id,stepId,correct)}))}/>
   </div></details><details className="home-hub-drawer" data-section="review"><summary><span className="home-drawer-title">もっと学習する</span><span className="home-drawer-description">期限が来た復習・おすすめ問題・ボス戦</span><ChevronDown size={20}/></summary><div className="home-drawer-content"><RetentionQuestBoard plan5={retention5} plan10={retention10} rewards={progress.retrievalRewards} onStart={count=>start(false,false,true,false,false,undefined,undefined,false,count)}/>
    <SmartQuestBoard profile={smartProfile} onProfile={changeSmartProfile} plan={smartPlan} stats={smartReasons} onStart={()=>start(false,false,false,false,false,undefined,undefined,true)}/>
   <BossBoard records={progress.bossRecords} onChallenge={target=>start(false,false,false,true,false,target)}/>

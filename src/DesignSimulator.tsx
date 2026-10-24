@@ -13,24 +13,27 @@ function ArchitectureSketch({nodes}:{nodes:readonly string[]}){
   </g>)}
  </svg><figcaption>構成要素：{nodes.join(' ／ ')}。接続順や障害時の経路は表示していません。</figcaption></figure>;
 }
-export default function DesignSimulator({progress,onFinish}:{progress?:DesignProgress;onFinish:(id:DesignCaseId,correct:number,outcomes:DesignOutcome[])=>void}){
+export default function DesignSimulator({progress,onFinish,onReview}:{progress?:DesignProgress;onFinish:(id:DesignCaseId,correct:number,outcomes:DesignOutcome[])=>void;onReview:(id:DesignCaseId,stepId:string,correct:boolean)=>void}){
  const saved=normalizeDesignProgress(progress);
  const [active,setActive]=useState<DesignCaseId|null>(null),[step,setStep]=useState(0),[picked,setPicked]=useState<string|null>(null),[score,setScore]=useState(0),[completed,setCompleted]=useState(false);
  const c=DESIGN_CASES.find(x=>x.id===active);
+ const [reviewStep,setReviewStep]=useState<string|null>(null);
  const advanceGuard=React.useRef(false);
  const decisions=React.useRef<DesignOutcome[]>([]);
  const dueReview=(saved.reviewDue??[]).filter(x=>x.dueAt<=Date.now());
  React.useEffect(()=>{advanceGuard.current=false},[step]);
- function start(id:DesignCaseId){decisions.current=[];advanceGuard.current=false;setActive(id);setStep(0);setPicked(null);setScore(0);setCompleted(false)}
+ function start(id:DesignCaseId){setReviewStep(null);decisions.current=[];advanceGuard.current=false;setActive(id);setStep(0);setPicked(null);setScore(0);setCompleted(false)}
+ function reviewOne(id:DesignCaseId,stepId:string){const def=DESIGN_CASES.find(x=>x.id===id),index=def?.steps.findIndex(x=>x.id===stepId)??-1;if(index<0)return;start(id);setStep(index);setReviewStep(stepId)}
  function next(){if(!c||!picked||advanceGuard.current)return;advanceGuard.current=true;const passed=evaluateDesignChoice(c.id,c.steps[step].id,picked).correct;
   const recorded=[...decisions.current,{stepId:c.steps[step].id,correct:passed}];decisions.current=recorded;
   const newScore=score+(passed?1:0);
+  if(reviewStep){setScore(passed?1:0);setCompleted(true);onReview(c.id,reviewStep,passed);return}
   if(step+1<c.steps.length){setScore(newScore);setStep(x=>x+1);setPicked(null);return}
   setScore(newScore);setCompleted(true);onFinish(c.id,newScore,recorded);
  }
  return <section className="ds-board" aria-labelledby="ds-title">
   <div className="ds-heading"><span><BrainCircuit size={17}/> AWS ARCHITECT LAB</span><h2 id="ds-title">DESIGN DECISION SIMULATOR</h2><p>一問一答から、要件を読み、設計を選び、リスクを説明する練習へ。独自制作の8シナリオ、各3ステップ。</p></div>
-  {!c&&dueReview.length>0&&<div className="ds-review-due" role="group" aria-label="翌日以降に確認する設計判断"><strong>設計判断の再確認 · {dueReview.length}項目</strong><p>前回誤った判断を再確認します。問題集の復習予定やXPには影響しません。</p>{dueReview.slice(0,5).map(item=>{const found=DESIGN_CASES.find(x=>x.id===item.caseId);const one=found?.steps.find(x=>x.id===item.stepId);return <button key={item.source} type="button" onClick={()=>start(item.caseId)}>{found?.title} · {one?.heading}（再演習）</button>})}</div>}
+  {!c&&dueReview.length>0&&<div className="ds-review-due" role="group" aria-label="翌日以降に確認する設計判断"><strong>設計判断の再確認 · {dueReview.length}項目</strong><p>前回誤った判断を再確認します。問題集の復習予定やXPには影響しません。</p>{dueReview.slice(0,5).map(item=>{const found=DESIGN_CASES.find(x=>x.id===item.caseId);const one=found?.steps.find(x=>x.id===item.stepId);return <button key={item.source} type="button" onClick={()=>reviewOne(item.caseId,item.stepId)}>{found?.title} · {one?.heading}（この判断だけ復習）</button>})}</div>}
   {!c?<details className="ds-launcher"><summary><BookOpen size={17}/> {DESIGN_CASES.length}つの設計シナリオを選ぶ</summary><div className="ds-cases">{DESIGN_CASES.map(item=>{const r=saved.records[item.id];return <article className="ds-case" key={item.id}>
     <strong>{item.title}</strong><span>{item.objective}</span><small>{item.domain} · {r?'BEST '+r.best+'/'+item.steps.length:'未挑戦'} · {saved.emblems.includes(item.id)?'◆ 判断勲章獲得':item.steps.length+'段階の設計判断'}</small>
     <button type="button" onClick={()=>start(item.id)}>設計する <ArrowRight size={17}/></button>
@@ -39,7 +42,7 @@ export default function DesignSimulator({progress,onFinish}:{progress?:DesignPro
     <div className="ds-session"><strong>{c.title}</strong><button type="button" onClick={()=>setActive(null)} aria-label="設計シミュレーターの一覧に戻る">一覧へ戻る</button></div>
     <ArchitectureSketch nodes={c.nodes}/>
     {!completed?<div className="ds-step">
-     <small>DECISION {step+1} / {c.steps.length} · {c.domain}</small>
+     <small>{reviewStep?'SINGLE DECISION REVIEW':'DECISION'} {reviewStep?1:step+1} / {reviewStep?1:c.steps.length} · {c.domain}</small>
      <h3>{c.steps[step].heading}</h3><p>{c.steps[step].context}</p>
      <div className="ds-options" role="group" aria-label="設計案を選択">{c.steps[step].options.map((option,i)=><button key={option.id} type="button" disabled={picked!==null} onClick={()=>setPicked(option.id)}
       className={picked===option.id?'ds-selected':''} aria-pressed={picked===option.id}>
@@ -51,10 +54,10 @@ export default function DesignSimulator({progress,onFinish}:{progress?:DesignPro
       <a href={c.steps[step].reference} target="_blank" rel="noopener noreferrer"><BookOpen size={15}/> AWS公式資料を確認</a>
       <button className="ds-next" type="button" onClick={next}>{step+1===c.steps.length?'結果を表示':'次の設計判断'} <ArrowRight size={17}/></button>
      </div>}
-    </div>:<div className="ds-result" role="status"><Medal size={27}/><h3>DESIGN REVIEW COMPLETE</h3><strong>{score} / {c.steps.length}</strong>
-      <p>{score===c.steps.length?'設計判断をすべて満たしました。初回達成で勲章を獲得できます。':'誤った判断のリスクも把握して再設計しましょう。'}</p>
+    </div>:<div className="ds-result" role="status"><Medal size={27}/><h3>DESIGN REVIEW COMPLETE</h3><strong>{score} / {reviewStep?1:c.steps.length}</strong>
+      <p>{reviewStep?'以前誤った判断を一問だけ再確認しました。正解時はこの復習予定を解消します。':score===c.steps.length?'設計判断をすべて満たしました。初回達成で勲章を獲得できます。':'誤った判断のリスクも把握して再設計しましょう。'}</p>
       <small>模擬試験の得点とは無関係。追加XPなし・勲章は一度のみ。</small>
-      <div><button type="button" onClick={()=>start(c.id)}><RotateCcw size={17}/> もう一度</button><button type="button" onClick={()=>setActive(null)}>シナリオ一覧</button></div>
+      <div><button type="button" onClick={()=>reviewStep?reviewOne(c.id,reviewStep):start(c.id)}><RotateCcw size={17}/> もう一度</button><button type="button" onClick={()=>setActive(null)}>シナリオ一覧</button></div>
      </div>}
    </div>}
   <p className="ds-caveat">学習用の独自シナリオです。公式試験問題や合格判定ではありません。正解・不正解の説明はAWS公式ドキュメントへ接続します。オフライン時は外部リンクを閲覧できません。</p>

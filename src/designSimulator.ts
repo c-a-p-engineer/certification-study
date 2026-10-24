@@ -123,3 +123,10 @@ export function recordDesignCompletion(raw:unknown,id:DesignCaseId,correct:numbe
  const old=p.records[id],firstClear=!old,emblemUnlocked=correct===def.steps.length&&!p.emblems.includes(id);
  return {state:{records:{...p.records,[id]:{best:Math.max(correct,old?.best??0),attempts:Math.min(100000,(old?.attempts??0)+1),completedAt:old?.completedAt??now}},emblems:emblemUnlocked?[...p.emblems,id]:[...p.emblems],reviewDue:updateDesignReviewQueue(p.reviewDue??[],id,outcomes,now)},firstClear,emblemUnlocked,bonusXp:0 as const};
 }
+
+/** A single previously missed architectural decision; never grants full-case rewards or question XP. */
+export function recordDesignRecall(raw:unknown,id:DesignCaseId,stepId:string,correct:boolean,now=Date.now()):DesignProgress{
+ const p=normalizeDesignProgress(raw);
+ if(typeof correct!=='boolean'||!DESIGN_CASES.find(c=>c.id===id)?.steps.some(step=>step.id===stepId))return p;
+ return {...p,reviewDue:updateDesignReviewQueue(p.reviewDue??[],id,[{stepId,correct}],now)};
+}
