@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Zap, Trophy, RotateCcw, Volume2, VolumeX, BookOpen, ArrowRight, Flame, Menu, ChevronDown } from 'lucide-react';
-import StudyQuestionIntro,{type StudyQuestion} from './StudyQuestionIntro';
+import StudyQuestionIntro,{TermsPanel,type StudyQuestion} from './StudyQuestionIntro';
 import HomeProgressSummary from './HomeProgressSummary';
 import './style.css';
 import './readability.css';
