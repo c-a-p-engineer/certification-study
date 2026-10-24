@@ -45,7 +45,7 @@
     "test:resilience": "node --experimental-strip-types --test scripts/offline-resilience.test.mjs",
     "test:provenance": "node --test scripts/review-provenance.test.mjs",
     "audit:signoff": "node scripts/audit-review-signoff.mjs",
-    "test:retention": "node --experimental-strip-types --test scripts/retention-quest.test.mjs",
+    "test:retention": "node --experimental-strip-types --test scripts/retention-quest.test.mjs scripts/retention-dst.test.mjs",
     "test:integrity": "node --experimental-strip-types --test scripts/backup-integrity.test.mjs"
   },
   "dependencies": {
