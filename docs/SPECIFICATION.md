@@ -111,6 +111,7 @@
 - `src/HomeProgressSummary.tsx` は既存のXP・累積正答率・復習期限・コンボ数を受け取り表示するだけで、学習状態を更新しない。
 - 模試の解答レビューは引き続き `src/ExamReviewPanel.tsx` で読み取り専用とする。
 - `src/ResultOverview.tsx` は採点済み結果の点数・練習用ランク評価を表示するだけとし、模試XP・保存・試験合否の再計算を行わない。評価詳細や報酬の実際の更新は既存の状態管理が責任を持つ。
+- `src/StudyResultScreen.tsx` は結果画面全体の表示構成を担当する。学習評価、模試レビュー、BOSS・遠征報告、Daily Five終了導線を条件付きで表示し、再挑戦・帰還・称号画面遷移は `src/main.tsx` から受け取ったcallbackのみ実行する。XP確定、レビュー更新、セッション再初期化やローカル保存は行わない。
 - `src/QuizAnswerControls.tsx` は選択肢の表示、単一選択・複数選択UI、選択肢公開操作を描画し、コントローラーから渡されたcallbackへ回答を渡す。採点・XP・save・問題復習予定を直接更新しない。
 - `src/QuizStageHeader.tsx` はクイズの種類・問題位置、模試残り時間と文字サイズ・画面密度の切替操作を表示する。モード遷移と設定保存は `src/main.tsx` のcallbackで扱い、表示側では永続化しない。
 - `src/StudyAnswerFeedback.tsx` は練習問題の解説、確定済みXP・称号・レリック、理解度の自己評価と外部資料の導線を表示する。称号の装備、復習予定の変更、コピー、次の問題への移動は `src/main.tsx` がcallbackを受けて実行し、表示コンポーネント側はデータを保存しない。
