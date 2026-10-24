@@ -88,8 +88,8 @@
 | 受入条件 | 主な実装・検証 |
 | --- | --- |
 | 日々の主要学習導線がすぐ見つかる | `src/main.tsx` / `src/HomeProgressSummary.tsx` / `src/DailyFiveBoard.tsx` / `scripts/home-hub.test.mjs` |
-| 初期画面は二次情報を折りたたみ、展開すれば全て利用可能 | `src/homeHub.css` / `scripts/home-hub.test.mjs` |
-| 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `src/StudyQuestionIntro.tsx` / `scripts/study-attempt.test.mjs` |
+| 初期画面は二次情報を折りたたみ、展開すれば全て利用可能 | `src/homeHub.css` / `src/HomeMasteryCoverage.tsx` / `scripts/home-hub.test.mjs` |
+| 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `src/StudyQuestionIntro.tsx` / `src/QuizAnswerControls.tsx` / `scripts/study-attempt.test.mjs` |
 | 途中保存、バックアップ、複数タブの衝突で進捗を黙って消さない | `src/missionSave.ts`, `src/backup.ts`, `src/progressSync.ts`, 各対応テスト |
 | 問題の参照元と監査状態を正直に示す | `certifications/aws-saa/` / `scripts/audit-question-bank.mjs` / `scripts/audit-review-signoff.mjs` |
 | 型チェック・単体回帰・静的PWA生成・Pages公開 | `npm run build` / `.github/workflows/verify.yml` / `.github/workflows/deploy.yml` |
@@ -103,6 +103,8 @@
 - `src/HomeProgressSummary.tsx` は既存のXP・累積正答率・復習期限・コンボ数を受け取り表示するだけで、学習状態を更新しない。
 - 模試の解答レビューは引き続き `src/ExamReviewPanel.tsx` で読み取り専用とする。
 - `src/ResultOverview.tsx` は採点済み結果の点数・練習用ランク評価を表示するだけとし、模試XP・保存・試験合否の再計算を行わない。評価詳細や報酬の実際の更新は既存の状態管理が責任を持つ。
+- `src/QuizAnswerControls.tsx` は選択肢の表示、単一選択・複数選択UI、選択肢公開操作を描画し、コントローラーから渡されたcallbackへ回答を渡す。採点・XP・save・問題復習予定を直接更新しない。
+- `src/HomeMasteryCoverage.tsx` は学習分野別の定着候補、期限、回答済み問題数を表示する。統計は推定合格率ではなく既存ローカル履歴に基づく。
 - `src/QuizCombatStatus.tsx` は集中・省スペース・詳細表示の戦闘HUDとコンボゲージを表示するだけとする。解答判定、HP減算、XP、保存、称号の発生や更新は行わず、コントローラーから渡された入力だけを使用する。
 
 ## 8. 将来の変更
