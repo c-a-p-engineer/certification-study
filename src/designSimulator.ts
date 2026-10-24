@@ -8,14 +8,14 @@ export const DESIGN_CASES=[
    {id:'b',label:'EC2を一つのAZに集約して大型化',feedback:'AZそのものが停止すれば全台同時に利用不能になる。'},
    {id:'c',label:'DNSだけを設定しEC2の正常性チェックを省略',feedback:'DNSだけでは各インスタンスの異常を適切に除外できない。'}
   ],correct:'a',why:'AZ境界を跨いだ冗長化とターゲット正常性確認の組み合わせ。',reference:'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html'},
-  {id:'session',heading:'セッションの保護',context:'ユーザーがEC2障害で別のAZへ振り分けられてもログイン状態を維持したい。',options:[
+  {id:'session',heading:'セッションの保護',context:'ユーザーがEC2障害で別のAZへ振り分けられても、ログイン状態を維持したい。アプリ自体は複数AZへ配備済みだ。',options:[
    {id:'a',label:'セッションをそれぞれのEC2のローカルメモリだけに保存',feedback:'切り替え先に状態がなく再ログインが必要になり得る。'},
    {id:'b',label:'セッションを適切な共有ストアへ外部化',feedback:'個々のEC2を置換してもセッションを取得できる設計。'},
-   {id:'c',label:'ALBヘルスチェックを完全に停止',feedback:'障害ターゲットへ接続が残るリスクがある。'}
+   {id:'c',label:'ALBヘルスチェックを完全に停止',feedback:'異常なターゲットが振り分け対象に残り、利用者が障害ノードに接続するリスクがある。'}
   ],correct:'b',why:'ステートレスなアプリインスタンスと共有セッションストアを組み合わせる。',reference:'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/sticky-sessions.html'},
-  {id:'replacement',heading:'異常なEC2の置き換え',context:'障害AZの復旧後、運用者が手作業でEC2を作り直す負担を減らしたい。',options:[
+  {id:'replacement',heading:'異常なEC2の置き換え',context:'障害AZの復旧後、運用者が手作業でEC2を作り直す負担を減らしたい。利用数が変動しても必要な台数を維持する。',options:[
    {id:'a',label:'EBS容量だけを増やす',feedback:'ストレージ容量は計算ホストの自動復旧に関与しない。'},
-   {id:'b',label:'ALBログをオフにする',feedback:'ログ停止で復旧能力は増えず監査性が低下する。'},
+   {id:'b',label:'ALBログをオフにする',feedback:'ALBログを停止してもEC2の自動復旧能力は増えず、障害分析に必要な監査データを失う。'},
    {id:'c',label:'複数AZ対応のAuto Scaling Groupで望ましい容量を維持',feedback:'グループがヘルスに応じインスタンスを起動・置換する。'}
   ],correct:'c',why:'Auto Scalingは希望容量とAZ分散を維持できる。',reference:'https://docs.aws.amazon.com/autoscaling/ec2/userguide/auto-scaling-benefits.html'}
  ]},
@@ -25,13 +25,13 @@ export const DESIGN_CASES=[
    {id:'b',label:'S3ゲートウェイVPCエンドポイントとサブネット経路を設定',feedback:'ゲートウェイエンドポイントでS3へ私設経路を構成できる。'},
    {id:'c',label:'Internet Gatewayだけを追加してルートテーブルを放置',feedback:'プライベートインスタンスのS3向け経路と権限が不足する。'}
   ],correct:'b',why:'S3 Gateway Endpointに関連付けたルートテーブルを介して通信する。',reference:'https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html'},
-  {id:'policy',heading:'バケットポリシー',context:'指定したVPCEから来たリクエストだけを許したい。IAM権限は別途付与済み。',options:[
+  {id:'policy',heading:'バケットポリシー',context:'指定したVPCEから来たリクエストだけを許したい。IAM権限は別途付与済みだが、運用担当者のコンソール接続にも注意が必要。',options:[
    {id:'a',label:'aws:SourceVpce条件による明示的Denyを設ける',feedback:'指定外の経路を拒否できるがコンソール利用も影響を受ける。'},
    {id:'b',label:'Refererヘッダーの文字列だけで接続元を判断',feedback:'容易に偽装でき、VPCエンドポイントの接続元確認ではない。'},
-   {id:'c',label:'S3を一般公開してHTTPS利用者をすべて許可',feedback:'社内専用のアクセス要件を満たさない。'}
+   {id:'c',label:'S3を一般公開してHTTPS利用者をすべて許可',feedback:'バケットを一般公開すると社内ワークロードのみに利用を制限する要件を満たせず、漏えいリスクが増す。'}
   ],correct:'a',why:'aws:SourceVpce制約はコンソールを閉め出す可能性があるため復旧手段も設計する。',reference:'https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies-vpc-endpoint.html'},
   {id:'kms',heading:'クロスアカウント暗号鍵',context:'別アカウントの監査ロールがSSE-KMSで保護されたオブジェクトを復号する必要がある。',options:[
-   {id:'a',label:'S3を公開してKMSのチェックを省略',feedback:'KMS復号権限はS3公開の有無とは別で必要。'},
+   {id:'a',label:'S3を公開してKMSのチェックを省略',feedback:'SSE-KMSの復号はS3へのアクセス許可だけでは成立せず、KMS側のDecryptなどの認可が必要。'},
    {id:'b',label:'aws/s3管理キーを共有許可へ書き換える',feedback:'AWS管理キーの独自クロスアカウントポリシーは変更できない。'},
    {id:'c',label:'顧客管理KMSキーとS3・KMS双方の最小権限を設定',feedback:'暗号化データには対象オブジェクトと暗号鍵の両方の認可が必要。'}
   ],correct:'c',why:'S3のGetObjectだけでなくKMSの復号認可が別途必要。',reference:'https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html'}
@@ -44,7 +44,7 @@ export const DESIGN_CASES=[
   ],correct:'a',why:'単一スタンバイのMulti-AZ DBインスタンスはHA用途。',reference:'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html'},
   {id:'read',heading:'参照クエリの増加',context:'同期スタンバイは読めない構成のまま、参照SQLを別の接続先に分離して性能を改善したい。',options:[
    {id:'a',label:'同期スタンバイへ直接SELECTをルーティング',feedback:'従来型単一スタンバイ型では読み取り先にできない。'},
-   {id:'b',label:'リードレプリカを追加し参照接続を分離',feedback:'非同期複製の遅延を受容できる読み取り向け。'},
+   {id:'b',label:'リードレプリカを追加し参照接続を分離',feedback:'別のリードレプリカへ参照を分散できるが、非同期複製のため最新データとの差を許容できる用途に使う。'},
    {id:'c',label:'自動バックアップを無効にすると読み取り性能が倍増する',feedback:'バックアップ設定だけでは読み取り先の増強にならない。'}
   ],correct:'b',why:'リードレプリカは読み取り負荷分散、Multi-AZのスタンバイはHAという役割分担。',reference:'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html'},
   {id:'cluster',heading:'別構成の見極め',context:'RDS Multi-AZ DBクラスターへ移行する場合、従来型と異なる読み取り機能として正しいものは？',options:[
@@ -56,17 +56,17 @@ export const DESIGN_CASES=[
  {id:'pitr-recovery',title:'DynamoDB Recovery',domain:'耐障害性',objective:'データ事故後の安全な比較復旧を設計',nodes:['Live Table','PITR Backup','New Table','Compare & Cutover'],steps:[
   {id:'backup',heading:'事故前の備え',context:'DynamoDBでオペレーターによる大量の誤削除に備え、過去時点のデータ復元が必要。',options:[
    {id:'a',label:'DynamoDB Streamsだけを有効化し永久保存を期待',feedback:'Streamsには保持期間の制約がありPITRの代替ではない。'},
-   {id:'b',label:'DynamoDBのPITRを有効化する',feedback:'指定した保持期間内の過去時点へ復元できる。'},
-   {id:'c',label:'毎日テーブルの名称を変更',feedback:'名前変更は復旧履歴の保存ではない。'}
+   {id:'b',label:'DynamoDBのPITRを有効化する',feedback:'事前にPITRを有効化すれば、設定された復元可能期間内の指定時点へ新規テーブルとして復元できる。'},
+   {id:'c',label:'毎日テーブルの名称を変更',feedback:'テーブル名を変更しても過去時点のデータは生成されず、事故前の内容への復元はできない。'}
   ],correct:'b',why:'PITRは操作ミス前の時点を選んで復元できる。',reference:'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Point-in-time-recovery.html'},
-  {id:'restore',heading:'リストア先',context:'稼働中テーブルを止めず、事故直前の状態と現在の状態を比較したい。',options:[
+  {id:'restore',heading:'リストア先',context:'稼働中のDynamoDBテーブルへの新規注文書き込みを止めず、事故直前の状態を別テーブルに復元して現在の状態と比較したい。',options:[
    {id:'a',label:'指定した時点のデータを新しいテーブルへリストア',feedback:'稼働中のテーブルを上書きせずに差分を調査できる。'},
    {id:'b',label:'PITR復元で現行テーブルを必ず上書きする',feedback:'DynamoDB PITRの復元先は新しいテーブルとなる。'},
-   {id:'c',label:'Global Secondary Indexを追加すれば削除データが復旧する',feedback:'GSIは検索用で時点復元機能ではない。'}
+   {id:'c',label:'Global Secondary Indexを追加すれば削除データが復旧する',feedback:'GSIは追加のキーで検索するための仕組みで、削除済みアイテムを過去時点へ戻すことはできない。'}
   ],correct:'a',why:'PITRは新しい独立したDynamoDBテーブルへ復元される。',reference:'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/pointintimerecovery_restores.html'},
-  {id:'rollout',heading:'復旧後の切り替え',context:'新しいテーブルに復元した後、アプリの接続先切り替えに向けて確認すべきことは？',options:[
-   {id:'a',label:'復元テーブルはIAM・Streams・TTL・PITRなどすべて自動で継承されるとみなす',feedback:'一部の設定は復元後に再設定が必要。'},
-   {id:'b',label:'接続先とリソース設定を確認せずに即座に削除',feedback:'差分検証と設定確認の手順が抜けている。'},
+  {id:'rollout',heading:'復旧後の切り替え',context:'新しいテーブルに復元した後、データ内容と周辺設定を確かめてからアプリの接続先を切り替えたい。必須の追加作業は何か？',options:[
+   {id:'a',label:'復元テーブルはIAM・Streams・TTL・PITRなどすべて自動で継承されるとみなす',feedback:'IAM許可、ストリーム、TTLやPITRの設定などは復元テーブルで再構成が必要な場合がある。'},
+   {id:'b',label:'接続先とリソース設定を確認せずに即座に削除',feedback:'直ちに削除すると復元内容の照合やアプリ接続先の検証ができず、二次的なデータ事故を招き得る。'},
    {id:'c',label:'データ差分を確認しIAM、Streams、TTLなど復元後の設定を点検',feedback:'復元後の構成を個別確認し、段階的な切り替えを計画する。'}
   ],correct:'c',why:'復元した新しいテーブルではすべての設定が自動継承されるわけではない。',reference:'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/pointintimerecovery_restores.html'}
  ]}
