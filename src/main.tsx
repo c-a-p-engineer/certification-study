@@ -67,7 +67,7 @@ import {todayContracts,claimContract,type ContractId,type DailyContracts} from '
 import {localDateKey,migrateActivity,type ActivityHistory} from './studyHistory';
 import GameMenu from './GameMenu';
 import {readHapticMode,writeHapticMode,triggerHaptic,testHapticDevice,type HapticEvent,type HapticMode} from './haptics';
-import {readTextScale,saveTextScale,textScaleClass,shiftTextScale,TEXT_SCALES,type TextScale} from './readability';
+import {readTextScale,saveTextScale,textScaleClass,type TextScale} from './readability';
 import {readQuizLayout,saveQuizLayout,type QuizLayout} from './quizLayout';
 import {missionGrade,comboMilestone} from './missionGrade';
 import {readVisualPower,saveVisualPower,type VisualPower} from './visualPower';
