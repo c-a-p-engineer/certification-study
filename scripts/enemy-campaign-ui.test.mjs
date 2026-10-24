@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=readFileSync('src/main.tsx','utf8');
+const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const art=readFileSync('src/MonsterArt.tsx','utf8');
 const panel=readFileSync('src/EnemyCampaignPanel.tsx','utf8');
 const css=readFileSync('src/enemyVisual.css','utf8');
@@ -10,10 +11,11 @@ const battle=readFileSync('src/BossBattleHUD.tsx','utf8');
 test('normal practice drives a persistent campaign and one atomic progress write',()=>{
  assert.ok(source.includes('enemyCampaign?:EnemyCampaign'));
  assert.ok(source.includes('enemyCampaign:normalizeEnemyCampaign(old.enemyCampaign)'));
- assert.ok(source.includes('enemyCampaign:strike.state'));
- assert.ok(source.includes('xp:p.xp+(ok?100+Math.min(nextCombo,10)*20:15)+strike.bonusXp'));
- assert.ok(source.includes('const strike=applyCampaignAnswer(p.enemyCampaign,campaignEvent)'));
- assert.ok(source.includes('setCampaignHit(examMode||bossMode||!ok?null:attack)'));
+ assert.ok(reducer.includes('enemyCampaign:campaign?.state??source.enemyCampaign'));
+ assert.ok(reducer.includes('xp:source.xp+totalXp'));
+ assert.ok(reducer.includes('applyCampaignAnswer(source.enemyCampaign,campaignEvent)'));
+ assert.ok(source.includes('setProgress(p=>applyStudyAttempt(p,event).progress)'));
+ assert.ok(source.includes('setCampaignHit(preview.reward.campaign?.credited&&!examMode&&!bossMode&&ok?preview.reward.campaign:null)'));
  assert.ok(source.includes('setCampaignHit(null)'));
 });
 test('campaign is visible on dashboard, quiz and results; exam excludes combat',()=>{
