@@ -28,7 +28,7 @@ test('game menu has an explicit safe effect selector and question-sized rewards'
  assert.ok(main.includes("visualPower==='overdrive'?'visual-overdrive':''"));
  assert.ok(main.includes('className="title-drop"'));
  assert.ok(main.includes('role="status" aria-live="polite"'));
- assert.ok(main.includes('MISSION RATING'));
+ assert.ok(readFileSync('src/ResultOverview.tsx','utf8').includes('MISSION RATING'));
  assert.ok(main.includes('comboMilestone(nextCombo)'));
  assert.ok(effects.includes('.app.visual-overdrive .fever-meter.charged'));
  assert.ok(effects.includes('.app.reduced .impact-layer{display:none!important}'));
