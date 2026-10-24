@@ -48,9 +48,11 @@ test('legacy mission stays valid and optional daily five cannot forge six or inv
  assert.equal(isMissionSave({...old,...fields,dailyTypes:{...fields.dailyTypes,e:'false'}}),false);
 });
 test('daily UI is first study action and has explicit non-coercive session stop and saved selection reasons',()=>{
- const main=readFileSync('src/main.tsx','utf8'),header=readFileSync('src/QuizStageHeader.tsx','utf8'),result=readFileSync('src/StudyResultScreen.tsx','utf8'),ui=readFileSync('src/DailyFiveBoard.tsx','utf8');
- assert.ok(main.includes('<DailyFiveBoard plan={dailyFivePlan}'));
- assert.ok(main.indexOf('<DailyFiveBoard')<main.indexOf('START MISSION'));
+ const main=readFileSync('src/main.tsx','utf8'),launcher=readFileSync('src/HomeMissionLauncher.tsx','utf8'),header=readFileSync('src/QuizStageHeader.tsx','utf8'),result=readFileSync('src/StudyResultScreen.tsx','utf8'),ui=readFileSync('src/DailyFiveBoard.tsx','utf8');
+ assert.ok(launcher.includes('<DailyFiveBoard plan={dailyFivePlan}'));
+ assert.ok(main.includes('dailyFivePlan={dailyFivePlan}'))
+ assert.ok(launcher.indexOf('<DailyFiveBoard')<launcher.indexOf('START MISSION'));
+ assert.ok(main.indexOf('<HomeMissionLauncher ')<main.indexOf('className="daily-quest"'));
  assert.ok(header.includes('dailyFocus?"DAILY FIVE"'));
  assert.ok(main.includes('<QuizStageHeader examMode={examMode}'));
  assert.ok(main.includes('dailyTypes:dailyFocus?dailyTypes:undefined'));

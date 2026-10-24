@@ -108,10 +108,12 @@ test('old v1 and SHA256 v2 backups retain receipts and reject invalid receipt du
 });
 test('published UI declares fair XP semantics and the answer path calls the pure reducer once',()=>{
  const main=readFileSync('src/main.tsx','utf8');
+ const launcher=readFileSync('src/HomeMissionLauncher.tsx','utf8');
  assert.ok(main.includes('applyStudyAttempt(p,event).progress'));
  assert.ok(main.includes('setAttemptRunId(saved.runId'));
  assert.ok(main.includes('attemptId:attemptRunId'));
- assert.ok(main.includes('同日再解答・模擬試験ではXPを加算しません'));
+ assert.ok(launcher.includes('同日再解答・模擬試験ではXPを加算しません'));
+ assert.ok(main.includes('<HomeMissionLauncher displayTitle={displayTitle}'));
  assert.ok(main.includes('dailyQuestUniqueCount(p.answerHistory'));
  assert.ok(main.includes('const smartPlan=useMemo('));
  assert.ok(main.includes('questionById.get(id)'));

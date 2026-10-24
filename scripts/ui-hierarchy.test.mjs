@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const source=readFileSync('src/main.tsx','utf8');
+const launcher=readFileSync('src/HomeMissionLauncher.tsx','utf8');
 const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 const examReview=readFileSync('src/ExamReviewPanel.tsx','utf8');
@@ -17,8 +18,9 @@ const feedbackView=readFileSync('src/StudyAnswerFeedback.tsx','utf8');
 const masteryView=readFileSync('src/HomeMasteryCoverage.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
- assert.equal((source.match(/START MISSION/g)||[]).length,1);
- assert.ok(source.includes('className="quick-start"'));
+ assert.equal((launcher.match(/START MISSION/g)||[]).length,1);
+ assert.ok(source.includes('<HomeMissionLauncher displayTitle={displayTitle}'));
+ assert.ok(launcher.includes('className="quick-start"'));
  assert.ok(source.includes('className="game-menu-trigger"'));
  assert.ok(source.includes('onClick={toggleAudio}'));
  assert.ok(source.includes('<GameMenu titles={titleCollection}'));
@@ -55,7 +57,7 @@ test('glossary remains directly under the question, with pronunciation and detai
 
 test('unique learning information and safeguards are still visible or available on demand',()=>{
  for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','NOT AN AWS SCALED SCORE']){
-  assert.ok(source.includes(word)||quizHeader.includes(word)||resultScreen.includes(word),word);
+  assert.ok(source.includes(word)||launcher.includes(word)||quizHeader.includes(word)||resultScreen.includes(word),word);
  }
  assert.ok(masteryView.includes('className="metric-method"'));
  assert.ok(masteryView.includes('3回以上の連続正解'));
@@ -64,8 +66,8 @@ test('unique learning information and safeguards are still visible or available 
  assert.ok(source.includes('<StudyAnswerFeedback question={q}'));
  assert.ok(source.includes('<HomeMasteryCoverage questions={questions}'));
  assert.ok(optionsView.includes('className="answer-instructions"'));
- assert.ok(source.includes('aria-label="出題分野"'));
- assert.ok(source.includes('aria-label="出題数"'));
+ assert.ok(launcher.includes('aria-label="出題分野"'));
+ assert.ok(launcher.includes('aria-label="出題数"'));
  assert.ok(resultScreen.includes('<ExamReviewPanel questions={questions}'));
  assert.ok(source.includes('<StudyResultScreen correct={session.correct}'));assert.ok(examReview.includes('className="exam-review"'));
  assert.ok(menu.includes('role="dialog"'));
@@ -86,7 +88,8 @@ test('learning timeline sits on dashboard and records answers in the existing pr
 });
 
 test('scenario-only challenge is discoverable and survives practice resume',()=>{
- assert.ok(source.includes('CASE FILES · {questions.filter(isScenarioQuestion).length} SCENARIOS'));
+ assert.ok(launcher.includes('CASE FILES · {scenarioCount} SCENARIOS'));
+ assert.ok(source.includes('scenarioCount={questions.filter(isScenarioQuestion).length}'));
  assert.ok(source.includes('start(false,false,false,false,true)'));
  assert.ok(source.includes('setCaseMode(!!saved.scenario)'));
  assert.ok(source.includes('scenario:caseMode'));
@@ -94,9 +97,10 @@ test('scenario-only challenge is discoverable and survives practice resume',()=>
 });
 
 test('gamified progress and title unlocks are discoverable without extra overlays',()=>{
- assert.ok(source.includes('className="hero-level-hud"'));
- assert.ok(source.includes('aria-label="次のレベルまでの進行度"'));
- assert.ok(source.includes("onClick={()=>showMenu('titles')}"));
+ assert.ok(launcher.includes('className="hero-level-hud"'));
+ assert.ok(launcher.includes('aria-label="次のレベルまでの進行度"'));
+ assert.ok(launcher.includes("onClick={()=>onTitles()}"));
+ assert.ok(source.includes("onTitles={()=>showMenu('titles')}"));
  assert.ok(combatView.includes('className="fever-milestones"'));
  assert.ok(resultOverview.includes('className="clear-judgement"'));
  assert.ok(resultScreen.includes('<ResultOverview correct={correct}'));
