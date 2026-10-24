@@ -1,6 +1,7 @@
 import React from 'react';
 import {BookOpen,ChevronDown,Zap} from 'lucide-react';
 import {findStudyTerms} from './termGuide';
+import {splitReadingSentences} from './readingGuide';
 
 export type StudyQuestion = { id: string; domain: string; question: string; choices: string[]; answer?: number; answers?: number[]; difficulty?:number; tags?:string[]; distractorReasons?:string[]; explanation: string; reference: string;reviewedAt?:string };
 
@@ -21,11 +22,11 @@ export function TermsPanel({question}:{question:StudyQuestion}){
  </details>;
 }
 
-export default function StudyQuestionIntro({question,topic,reason,showTerms}:{question:StudyQuestion;topic:string;reason?:string;showTerms:boolean}){
+export default function StudyQuestionIntro({question,topic,reason,showTerms,readingGuide,onReadingGuide}:{question:StudyQuestion;topic:string;reason?:string;showTerms:boolean;readingGuide?:boolean;onReadingGuide?:()=>void}){
  return <>
-  <div className="question-meta"><span>{question.domain.toUpperCase()} · {topic}</span></div>
+  <div className="question-meta"><span>{question.domain.toUpperCase()} · {topic}</span>{onReadingGuide&&<button type="button" className="study-reading-toggle" aria-pressed={!!readingGuide} aria-label={readingGuide?"文ごとの区切り表示を解除":"文ごとに区切り、行間を広げて読む"} onClick={onReadingGuide}><BookOpen size={15} aria-hidden="true"/>{readingGuide?"通常表示へ":"文ごとに読む"}</button>}</div>
   {reason&&<span className="smart-reason"><Zap size={14}/> 選出理由：{reason}</span>}
-  <h2>{question.question}</h2>
+  <h2 className={readingGuide?"question-readable":undefined}>{readingGuide?<span className="reading-sentences">{splitReadingSentences(question.question).map((part,i)=><span key={i} className="reading-sentence">{part}</span>)}</span>:question.question}</h2>
   {showTerms&&<div className="question-terms" aria-label="この問題の用語とサービスの説明"><TermsPanel key={question.id} question={question}/></div>}
  </>;
 }

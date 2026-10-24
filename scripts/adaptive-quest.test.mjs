@@ -34,9 +34,10 @@ test('real AWS question bank supports 10 diverse selections and zero-count edge 
  assert.ok(result.some(q=>q.question.length>85));
 });
 test('SMART QUEST is isolated from 65-question exam and persisted on normal mission saves',()=>{
- const src=readFileSync('src/main.tsx','utf8');const mission=readFileSync('src/missionSave.ts','utf8');
+ const src=readFileSync('src/main.tsx','utf8');const header=readFileSync('src/QuizStageHeader.tsx','utf8');const mission=readFileSync('src/missionSave.ts','utf8');
  assert.ok(src.includes('adaptive?planSmartQuest('));
- assert.ok(src.includes('adaptiveMode'));assert.ok(src.includes('SMART QUEST'));
+ assert.ok(src.includes('adaptiveMode'));assert.ok(header.includes('SMART QUEST'));
+ assert.ok(src.includes('<QuizStageHeader examMode={examMode}'));
  assert.ok(src.includes('exam?examPool('));
  assert.ok(src.includes('adaptive:adaptiveMode'));
  assert.ok(mission.includes('adaptive?:boolean'));

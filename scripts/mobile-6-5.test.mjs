@@ -2,6 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';import {rea
 import {isQuizLayout,readQuizLayout,saveQuizLayout,QUIZ_LAYOUT_KEY} from '../src/quizLayout.ts';
 const main=readFileSync('src/main.tsx','utf8');
 const combat=readFileSync('src/QuizCombatStatus.tsx','utf8');
+const header=readFileSync('src/QuizStageHeader.tsx','utf8');
 const css=readFileSync('src/nextPhase.css','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 test('focus preference persists using the existing key with no new migration',()=>{
@@ -15,8 +16,8 @@ test('focus preference persists using the existing key with no new migration',()
 });
 test('focus mode hides monster portrait but leaves readable compact combat progress and restores a status control',()=>{
  assert.ok(combat.includes('quizLayout===\'focus\'&&!examMode?<div className="focus-battle-line"'));
- assert.ok(main.includes('className="cq-focus-toggle"'));
- assert.ok(main.includes("quizLayout==='focus'?'compact':'focus'"));
+ assert.ok(header.includes('className="cq-focus-toggle"'));
+ assert.ok(header.includes("quizLayout==='focus'?'compact':'focus'"));
  assert.ok(main.includes("mode==='quiz'&&quizLayout==='focus'?'quiz-focus':''"));
  assert.ok(menu.includes("['focus','集中表示']"));
  assert.ok(css.includes('.app.quiz-focus .question-card'));

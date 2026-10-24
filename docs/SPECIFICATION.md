@@ -82,6 +82,12 @@
 - Android/Braveなどのモバイル閲覧を想定し、320px幅までの狭い画面で横溢れを抑え、学習問題・回答の可読性を優先する。
 - 開閉操作・解答・次へ・メニューにキーボードで到達できる。操作可能要素のタップ領域は原則44px以上とし、focus-visibleとreduced motionを維持する。
 - ホームの開閉によってクイズの読込や採点、セッション復帰に影響を与えない。
+- クイズ問題文の長文視認性を優先し、通常表示でも過度な太字を避け、選択肢本文を軽めのウェイトで描画する。文字の大きさは従来の5段階設定を維持する。
+- 問題分野の横に **「文ごとに読む」** を配置し、押すと問題の句点・疑問符・感嘆符で視覚的なまとまりに区切り、行間と段落間隔、左側の細いガイド、読みやすい行幅を適用する。もう一度押すと「通常表示へ」戻せる。操作は44px以上、状態は `aria-pressed` で伝える。
+- 長い選択肢も同じ読み方設定を使用し、複数の文がある場合に限り文間の視覚的余白を加える。答えのボタンや選択位置は変更しない。
+- 文章の分割は**表示専用**であり、元の問題文字列は改変しない。問題文・正答・選択肢・ChatGPTへコピーする素材・問題ID・採点・XP・模試の保存に影響を与えない。問題文の結合順序、句読点、空白を保持する。
+- 設定は別キー `cert-overdrive-reading-guide-v1` に端末ローカルで任意保存し、初期値はオフ。保存不可・不正値でも正常表示を維持し、既存バックアップのスキーマは変更しない。
+
 
 ## 7. 受入条件と検証対応
 
@@ -92,6 +98,7 @@
 | 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `src/StudyQuestionIntro.tsx` / `src/QuizAnswerControls.tsx` / `scripts/study-attempt.test.mjs` |
 | 途中保存、バックアップ、複数タブの衝突で進捗を黙って消さない | `src/missionSave.ts`, `src/backup.ts`, `src/progressSync.ts`, 各対応テスト |
 | 問題の参照元と監査状態を正直に示す | `certifications/aws-saa/` / `scripts/audit-question-bank.mjs` / `scripts/audit-review-signoff.mjs` |
+| 文ごとの読書補助が元の問題文を保持し、設定が安全に永続化される | `src/readingGuide.ts` / `src/StudyQuestionIntro.tsx` / `src/readingGuide.css` / `scripts/reading-guide.test.mjs` |
 | 型チェック・単体回帰・静的PWA生成・Pages公開 | `npm run build` / `.github/workflows/verify.yml` / `.github/workflows/deploy.yml` |
 
 **検証の境界:** CI成功は静的テスト・ビルドの成功であり、物理Android端末や実ブラウザE2Eでの操作を証明しない。これらは現在保留中。
@@ -105,6 +112,7 @@
 - 模試の解答レビューは引き続き `src/ExamReviewPanel.tsx` で読み取り専用とする。
 - `src/ResultOverview.tsx` は採点済み結果の点数・練習用ランク評価を表示するだけとし、模試XP・保存・試験合否の再計算を行わない。評価詳細や報酬の実際の更新は既存の状態管理が責任を持つ。
 - `src/QuizAnswerControls.tsx` は選択肢の表示、単一選択・複数選択UI、選択肢公開操作を描画し、コントローラーから渡されたcallbackへ回答を渡す。採点・XP・save・問題復習予定を直接更新しない。
+- `src/QuizStageHeader.tsx` はクイズの種類・問題位置、模試残り時間と文字サイズ・画面密度の切替操作を表示する。モード遷移と設定保存は `src/main.tsx` のcallbackで扱い、表示側では永続化しない。
 - `src/StudyAnswerFeedback.tsx` は練習問題の解説、確定済みXP・称号・レリック、理解度の自己評価と外部資料の導線を表示する。称号の装備、復習予定の変更、コピー、次の問題への移動は `src/main.tsx` がcallbackを受けて実行し、表示コンポーネント側はデータを保存しない。
 - `src/HomeMasteryCoverage.tsx` は学習分野別の定着候補、期限、回答済み問題数を表示する。統計は推定合格率ではなく既存ローカル履歴に基づく。
 - `src/QuizCombatStatus.tsx` は集中・省スペース・詳細表示の戦闘HUDとコンボゲージを表示するだけとする。解答判定、HP減算、XP、保存、称号の発生や更新は行わず、コントローラーから渡された入力だけを使用する。

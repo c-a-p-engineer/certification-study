@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const main=readFileSync('src/main.tsx','utf8');
 const board=readFileSync('src/BossBoard.tsx','utf8');
+const header=readFileSync('src/QuizStageHeader.tsx','utf8');
 const tree=readFileSync('src/SkillTreeBoard.tsx','utf8');
 const vault=readFileSync('src/RelicVault.tsx','utf8');
 const css=readFileSync('src/overdrive4.css','utf8');
@@ -26,7 +27,8 @@ test('legacy progress and snapshot keys remain; effects respect reduced motion',
  assert.ok(main.includes('activity:migrateActivity(old)'));
  assert.ok(main.includes('bossRecords?:BossRecords'));
  assert.ok(main.includes('finishing.current=true'));
- assert.ok(main.includes('examMode&&<span className='));
+ assert.ok(header.includes('examMode&&<span className='));
+ assert.ok(main.includes('<QuizStageHeader examMode={examMode}'))
  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
  assert.ok(css.includes('.app.reduced .od4-node-track'));
 });

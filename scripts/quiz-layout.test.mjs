@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {defaultQuizLayout,isQuizLayout,QUIZ_LAYOUT_KEY,readQuizLayout,saveQuizLayout} from '../src/quizLayout.ts';
 const combat=readFileSync('src/QuizCombatStatus.tsx','utf8');
+const header=readFileSync('src/QuizStageHeader.tsx','utf8');
 const main=readFileSync('src/main.tsx','utf8'),menu=readFileSync('src/GameMenu.tsx','utf8'),css=readFileSync('src/quizDensity.css','utf8'),hud=readFileSync('src/CompactQuizHUD.tsx','utf8');
 test('responsive initial layout prefers compact on narrow devices, not fixed globally',()=>{
  assert.equal(defaultQuizLayout(true),'compact');
@@ -31,8 +32,11 @@ test('previous preferences remain absent and new setting persists safely',()=>{
  }
 });
 test('quiz controls are immediately accessible, saved and can switch density',()=>{
- for(const token of ["aria-label=\"文字を一段階小さくする\"","aria-label=\"文字を一段階大きくする\"","changeTextScale(shiftTextScale(textScale,-1))","changeTextScale(shiftTextScale(textScale,1))","changeQuizLayout(quizLayout==='compact'?'detailed':'compact')","saveQuizLayout(value)","quizLayout={quizLayout} onQuizLayout={changeQuizLayout}"])
+ for(const token of ["aria-label=\"文字を一段階小さくする\"","aria-label=\"文字を一段階大きくする\"","onTextScale(shiftTextScale(textScale,-1))","onTextScale(shiftTextScale(textScale,1))","onQuizLayout(quizLayout==='compact'?'detailed':'compact')"])
+  assert.ok(header.includes(token),token);
+ for(const token of ["saveQuizLayout(value)","quizLayout={quizLayout} onQuizLayout={changeQuizLayout}","onTextScale={changeTextScale}"]){
   assert.ok(main.includes(token),token);
+ }
  assert.ok(menu.includes('QUIZ LAYOUT'));
  assert.ok(menu.includes('READING SIZE'));
 });
@@ -51,7 +55,7 @@ test('mobile compact view combines HUD instead of stacking two gameplay cards',(
 });
 test('exam excludes enemy and combo hints and layouts never overlay answers',()=>{
  assert.ok(combat.includes("quizLayout==='compact'&&!examMode?"));
- assert.ok(main.includes("quizLayout==='detailed'&&!examMode&&<div className=\"combo\""));
+ assert.ok(header.includes("quizLayout==='detailed'&&!examMode&&<div className=\"combo\""));
  assert.ok(hud.includes('role="progressbar"'));
  assert.equal(css.includes('position:fixed'),false);
  assert.equal(css.includes('position:sticky'),false);
