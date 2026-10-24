@@ -1,7 +1,7 @@
 /** Independent browser-local mobile reading layout preference. */
-export type QuizLayout='compact'|'detailed';
+export type QuizLayout='compact'|'detailed'|'focus';
 export const QUIZ_LAYOUT_KEY='cert-overdrive-quiz-layout-v1';
-export function isQuizLayout(value:unknown):value is QuizLayout{return value==='compact'||value==='detailed'}
+export function isQuizLayout(value:unknown):value is QuizLayout{return value==='compact'||value==='detailed'||value==='focus'}
 export function defaultQuizLayout(isNarrow:boolean):QuizLayout{return isNarrow?'compact':'detailed'}
 export function readQuizLayout():QuizLayout{
  try{
