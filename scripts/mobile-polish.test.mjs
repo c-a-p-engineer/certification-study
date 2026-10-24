@@ -42,7 +42,8 @@ test('reading controls and question scroll remain responsive and accessible',()=
  const density=readFileSync('src/quizDensity.css','utf8');
  const visual=readFileSync('src/qualityGrowth.css','utf8');
  assert.ok(main.includes('questionRef.current?.scrollIntoView'));
- assert.ok(main.includes('shiftTextScale(textScale,-1)'));
+ assert.ok(readFileSync('src/QuizStageHeader.tsx','utf8').includes('shiftTextScale(textScale,-1)'));
+ assert.ok(main.includes('<QuizStageHeader examMode={examMode}'));
  assert.ok(density.includes('@media(max-width:700px)'));
  assert.ok(visual.includes('@media(max-width:750px)'));
  assert.ok(visual.includes(':focus-visible'));
