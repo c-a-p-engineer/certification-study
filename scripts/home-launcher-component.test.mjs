@@ -21,7 +21,8 @@ test('home mission settings preserve every launch destination and player options
   assert.ok(launcher.includes(text),text);
  }
  assert.ok(launcher.includes('disabled={!weakCount>0}')===false);
- assert.ok(launcher.includes('weakCount>0'));
+ assert.ok(launcher.includes('disabled={weakCount===0}'));
+ assert.ok(launcher.includes('WEAKNESS RAID ({weakCount})'));
  assert.ok(launcher.includes('disabled={dueCount===0}'));
  assert.ok(launcher.includes('aria-label="出題分野"'));
  assert.ok(launcher.includes('aria-label="出題数"'));
