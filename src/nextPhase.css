@@ -81,3 +81,10 @@
 .app .xp-policy p{font-size:12px;line-height:1.8;padding:0 2px 12px;color:#e1edf6}
 .app .xp-policy :focus-visible{outline:3px solid #ffeda7;outline-offset:3px}
 @media(max-width:400px){.app .xp-policy{margin:9px 0;padding:0 10px}.app .xp-policy summary{font-size:12px}}
+
+/* Architecture concept follow-up is explicit, bounded, and independent from MCQ review state. */
+.app .ds-review-due{margin:12px 0;padding:13px;background:#192a3d;border:1px solid #5a98a6;border-radius:10px}
+.app .ds-review-due strong{color:#b4ffdb;font-size:14px}
+.app .ds-review-due p{font-size:12px;line-height:1.6}
+.app .ds-review-due button{display:block;width:100%;min-height:44px;text-align:left;margin:7px 0;padding:11px;border:1px solid #6285a8;border-radius:7px;background:#172039;color:#eaf5ff;white-space:normal;overflow-wrap:anywhere}
+.app .ds-review-due button:focus-visible{outline:3px solid #7ceaff;outline-offset:2px}
