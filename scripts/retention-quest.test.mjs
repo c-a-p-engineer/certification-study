@@ -59,5 +59,5 @@ test('optional retention flag saves without breaking old v1 missions and appears
  assert.ok(main.includes('setRetentionMode(!!saved.retention)'));
  assert.ok(main.includes('setSmartWhy(retentionSelection?.reasons'));
  assert.ok(main.includes('mode:examMode?\'exam\':retentionMode?\'retention\''));
- assert.ok(main.includes('retentionMode&&!examMode&&!bossMode'));
+ assert.ok(reducer.includes("event.mode==='retention'&&!event.boss"));
 });
