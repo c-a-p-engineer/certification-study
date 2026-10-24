@@ -1,6 +1,6 @@
 # Phase 8 — MASTER QUEST 実装計画
 
-**状態:** 仕様合意済み・開発着手前（2026-10-25）。ここは実装順序・受入テスト・PR境界の計画であり、ユーザー体験の契約は [docs/SPECIFICATION.md §9](SPECIFICATION.md#9-phase-8--master-quest合意済み将来仕様未実装) が唯一の正本。
+**状態:** 仕様合意済み・開発着手前（2026-10-25）。ここは実装順序・受入テスト・PR境界の計画であり、ユーザー体験の契約は [docs/SPECIFICATION.md §9](SPECIFICATION.md) が唯一の正本。
 **前提:** 7.0b Issue #23は完了。現行348問、10問×4分野ボス、10問のB/A/S基準、既存XP、Daily Five、復習エンジン、SVG、ローカルセーブを生かす。
 
 ## 1. 開発上の重要な決定
