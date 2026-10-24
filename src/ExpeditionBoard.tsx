@@ -1,14 +1,16 @@
 import React from 'react';
 import {ChevronDown,Compass,Medal,ShieldCheck,Swords} from 'lucide-react';
-import {EXPEDITIONS,normalizeExpeditions,type ExpeditionId,type ExpeditionProgress} from './expeditions.ts';
+import {EXPEDITIONS,normalizeExpeditions,expeditionCollectionMilestones,type ExpeditionId,type ExpeditionProgress} from './expeditions.ts';
 import MonsterArt from './MonsterArt';
 import './nextPhase.css';
 export default function ExpeditionBoard({progress,onLaunch,available}:{progress?:ExpeditionProgress;onLaunch:(id:ExpeditionId)=>void;available:Partial<Record<ExpeditionId,number>>}){
  const state=normalizeExpeditions(progress),cleared=Object.values(state.records).filter(x=>x?.clearedAt!==undefined).length;
+ const milestones=expeditionCollectionMilestones(progress);
  return <section className="expedition-board" aria-labelledby="expedition-title">
   <div className="expedition-head"><span><Compass size={17}/> MONSTER MASTERY EXPEDITIONS</span><h2 id="expedition-title">KNOWLEDGE EXPEDITIONS</h2>
-   <p>実際のAWS設計問題で5体の守護者に挑む。4問以上の正解で討伐、前日以前の期限到来復習を2問成功すると限定エンブレム。</p>
+   <p>テーマごとに5問の遭遇を乗り越えて守護者に挑む。4問以上の正解で討伐、前日以前の期限到来復習を2問成功すると限定エンブレム。</p>
    <div className="expedition-totals"><strong>{cleared}/5 CLEAR</strong><strong><Medal size={16}/> {state.rare.length}/5 RARE EMBLEMS</strong></div>
+   <div className="expedition-collector" role="group" aria-label="探索コレクション">{milestones.map(item=><div key={item.id} className={'expedition-collector-item '+(item.unlocked?'unlocked':'locked')}><strong>{item.unlocked?'◆ ': '◇ '}{item.title}</strong><span>{item.unlocked?'獲得済み':item.requirement} · {item.current}/{item.target}</span></div>)}</div>
   </div>
   <details className="expedition-collection">
    <summary><Swords size={17}/> 探索先を選ぶ <ChevronDown size={17}/></summary>

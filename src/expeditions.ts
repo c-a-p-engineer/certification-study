@@ -57,3 +57,15 @@ export function finishExpedition(raw:unknown,id:ExpeditionId,correct:number,tota
  const records={...state.records,[id]:{best:Math.max(correct,old?.best??0),attempts:Math.min(100000,(old?.attempts??0)+1),lastAt:now,...(old?.clearedAt!==undefined?{clearedAt:old.clearedAt}:success?{clearedAt:now}:{})}};
  return {state:{records,rare:rareUnlocked?[...state.rare,id]:[...state.rare]},success,firstClear,rareUnlocked,alreadyRare:state.rare.includes(id),bonusXp:0};
 }
+
+/** Derived cosmetics: unlocking depends on distinct cleared themes and prior-day rare proof, never replay count. */
+export function expeditionCollectionMilestones(raw:unknown){
+ const state=normalizeExpeditions(raw);
+ const cleared=EXPEDITIONS.filter(item=>state.records[item.id]?.clearedAt!==undefined).length;
+ const rare=state.rare.length;
+ return [
+  {id:'scout',title:'探索者',requirement:'異なる探索先を1つ討伐',unlocked:cleared>=1,current:Math.min(cleared,1),target:1},
+  {id:'pathfinder',title:'踏破者',requirement:'異なる探索先を3つ討伐',unlocked:cleared>=3,current:Math.min(cleared,3),target:3},
+  {id:'guardian',title:'知識の守護者',requirement:'全5探索先の討伐＋翌日以降の復習エンブレム2種',unlocked:cleared>=5&&rare>=2,current:Math.min(cleared,5),target:5}
+ ] as const;
+}
