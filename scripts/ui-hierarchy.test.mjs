@@ -29,7 +29,7 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
  assert.equal(source.includes('className="overdrive-banner"'),false);
  assert.equal(source.includes('className="instruction-icon"'),false);
  assert.ok(source.includes('{q.answers&&<div className="answer-instructions"'));
- assert.ok(source.includes("className={'fever-meter '"));
+ assert.ok(combatView.includes("className={'fever-meter '"));
  assert.ok(source.includes('className="xp-award"'));
  assert.ok(!source.includes('PERFECT! +XP'));
 });
