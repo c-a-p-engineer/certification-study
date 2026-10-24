@@ -18,6 +18,10 @@ A flashy, arcade-inspired open-source certification learning game. Starting with
 
 The current prototype contains 348 original AWS SAA practice questions across four domains, a learning timeline, combo/XP progression, and local mistake review. The skill-tree nodes now track per-domain practice accuracy (not a calibrated exam readiness score). Sessions offer 10 questions, 20 questions, marathon mode, and a 65-question exam trial approximately weighted to the SAA-C03 domain outline (20 security / 17 resilient / 15 performance / 13 cost). Answer positions are shuffled separately for every item. Multi-select questions support multiple marked answers and exact-set grading. The exam trial includes a 130-minute countdown, deferred feedback and at least two five-choice multi-select questions per domain. Combo milestones trigger OVERDRIVE banners. Learning progress is stored in browser localStorage; cloud sync is not available.
 
+## Code quality, engagement design and next-phase review
+
+The [6.6 code and engagement audit](reports/overdrive-6-6-code-engagement-audit.md) documents verified bug fixes, known source-level risks, a qualitative evaluation of immediate feedback/rewards/learning retention, the limits of static evaluation (no opt-in longitudinal engagement measurements, no hardware E2E), and ranked alternative Phase 7 directions. “Habit-forming” is a design hypothesis, not a demonstrated claim about users or actual learning outcomes. The recommended direction is **learning-effective gamification**: observable next-day recall, bounded short sessions, independent reward correctness, and optional RPG variety without pressure to play longer.
+
 ## OVERDRIVE 6.4–6.6 — Expeditions, mobile focus and architecture design practice
 
 ### 6.4 — Monster Mastery Expeditions
