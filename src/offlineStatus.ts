@@ -14,3 +14,16 @@ export async function inspectOffline():Promise<OfflineSnapshot>{
   return {status:hasShell&&hasBundle?'ready':'partial',cacheRevision:last.slice('cert-overdrive-'.length),assetCount:requests.length,online,swControlled};
  }catch{return fallback}
 }
+
+export type StorageEstimate={usageBytes:number;quotaBytes:number;percent:number|null;persistent:boolean|null};
+/** Browser quota values are estimates, not guaranteed available bytes. */
+export async function inspectStorageQuota():Promise<StorageEstimate|null>{
+ if(typeof navigator==='undefined'||!navigator.storage?.estimate)return null;
+ try{
+  const value=await navigator.storage.estimate();
+  const usageBytes=Number.isFinite(value.usage)&&value.usage!>=0?value.usage!:0;
+  const quotaBytes=Number.isFinite(value.quota)&&value.quota!>0?value.quota!:0;
+  const persistent=typeof navigator.storage.persisted==='function'?await navigator.storage.persisted().catch(()=>null):null;
+  return {usageBytes,quotaBytes,percent:quotaBytes>0?Math.min(100,Math.round(100*usageBytes/quotaBytes)):null,persistent};
+ }catch{return null}
+}
