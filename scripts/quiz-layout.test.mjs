@@ -37,7 +37,7 @@ test('quiz controls are immediately accessible, saved and can switch density',()
 test('mobile compact view combines HUD instead of stacking two gameplay cards',()=>{
  assert.ok(main.includes("quizLayout==='compact'&&!examMode?<CompactQuizHUD"));
  assert.ok(main.includes("!examMode&&quizLayout==='detailed'&&<div className={'fever-meter '"));
- assert.ok(main.includes("mode==='quiz'&&quizLayout==='compact'?'quiz-compact':''"));
+ assert.ok(main.includes("mode==='quiz'&&quizLayout!=='detailed'?'quiz-compact':''"));
  assert.ok(hud.includes('<MonsterArt'));
  assert.ok(hud.includes('comboMultiplier(combo)'));
  assert.ok(hud.includes('aria-valuenow={hp}'));
