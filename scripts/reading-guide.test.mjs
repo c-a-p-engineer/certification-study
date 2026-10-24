@@ -5,6 +5,7 @@ import {READING_GUIDE_KEY,readReadingGuide,saveReadingGuide,splitReadingSentence
 
 const source=readFileSync('src/main.tsx','utf8');
 const intro=readFileSync('src/StudyQuestionIntro.tsx','utf8');
+const answers=readFileSync('src/QuizAnswerControls.tsx','utf8');
 const css=readFileSync('src/readingGuide.css','utf8');
 const spec=readFileSync('docs/SPECIFICATION.md','utf8');
 
@@ -43,11 +44,16 @@ test('preference is explicitly opt-in, local-only and robust to corrupt/unavaila
 
 test('question toggles paragraph view without changing grading, quiz focus or answer text',()=>{
  assert.ok(source.includes('onReadingGuide={toggleReadingGuide}'));
+ assert.ok(source.includes('readingGuide={readingGuide} onReveal='));
  assert.ok(source.includes('readReadingGuide'));
  assert.ok(source.includes('saveReadingGuide(next)'));
  assert.ok(intro.includes('className="study-reading-toggle"'));
  assert.ok(intro.includes('aria-pressed={!!readingGuide}'));
  assert.ok(intro.includes('splitReadingSentences(question.question)'));
+ assert.ok(answers.includes('splitReadingSentences(question.choices[originalIndex])'));
+ assert.ok(answers.includes(':question.choices[originalIndex]'));
+ assert.ok(css.includes('.answer-reading-sentence'));
+ assert.ok(answers.includes('readingGuide?:boolean'))
  assert.ok(intro.includes(':question.question'));
  assert.ok(css.includes('.question-card h2.question-readable'));
  assert.ok(css.includes('line-height:1.94'));
