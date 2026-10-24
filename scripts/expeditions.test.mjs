@@ -14,6 +14,7 @@ test('five domain expeditions use only unique questions and earnable 5-question 
   assert.equal(plan.length,5,e.id);
   assert.equal(new Set(plan.map(x=>x.id)).size,5,e.id);
   assert.ok(plan.every(x=>x.domain===e.domain));
+  assert.ok(plan.every(q=>e.keyword.test(q.question+' '+(q.tags??[]).join(' ')+' '+(q.reference??''))),e.id+' includes unrelated topic');
  }
 });
 test('optional rares require clear >=4 and two distinct qualified delayed correct answers, never extra XP',()=>{
