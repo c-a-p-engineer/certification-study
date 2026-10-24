@@ -55,6 +55,12 @@ export function validProgress(raw:unknown):boolean{
  if(raw.activity!==undefined&&(!isObj(raw.activity)||Object.values(raw.activity).some(d=>!integerCount(d))))return false;
  if(raw.answerHistory!==undefined&&(!Array.isArray(raw.answerHistory)||raw.answerHistory.length>MAX_EVENTS||normalizeAnswerHistory(raw.answerHistory).length!==raw.answerHistory.length))return false;
  if(raw.mistakes.length>10000||Object.keys(raw.reviews).length>10000)return false;
+ if(raw.retrievalRewards!==undefined){
+  const reward=raw.retrievalRewards;
+  if(!isObj(reward)||typeof reward.day!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(reward.day)||
+   !Array.isArray(reward.questionIds)||reward.questionIds.length>5||new Set(reward.questionIds).size!==reward.questionIds.length||
+   reward.questionIds.some((id:unknown)=>typeof id!=='string'||id.length===0||id.length>=170))return false;
+ }
  if(raw.enemyCampaign!==undefined){
   const normalized=normalizeEnemyCampaign(raw.enemyCampaign);
   if(!isObj(raw.enemyCampaign)||normalized.stageIndex!==raw.enemyCampaign.stageIndex||normalized.hp!==raw.enemyCampaign.hp)return false;
@@ -90,6 +96,18 @@ export function parseBackup(input:string):BackupData{
   }
  }
  return x as BackupData;
+}
+export type RestoreJournalStatus={state:'none'|'recoverable'|'invalid'|'unavailable';message:string};
+export function inspectRestoreJournal(store:StoragePort):RestoreJournalStatus{
+ let raw:string|null;
+ try{raw=store.getItem(RESTORE_JOURNAL_KEY)}catch{return {state:'unavailable',message:'ローカルストレージへアクセスできません。ブラウザの設定をご確認ください。'}}
+ if(raw===null)return {state:'none',message:'未完了の復元は検出されていません。'};
+ let data:unknown;try{data=JSON.parse(raw)}catch{return {state:'invalid',message:'復旧ジャーナルが破損しています。学習データの自動削除・上書きを行わないでください。'}}
+ if(!isObj(data)||data.version!==1||!isObj(data.previous)||!validateJsonShape(data))return {state:'invalid',message:'復旧ジャーナル形式が不正です。自動上書きは禁止されています。'};
+ const previous=data.previous;
+ if(Object.keys(previous).length!==BACKUP_KEYS.length||BACKUP_KEYS.some(key=>!Object.prototype.hasOwnProperty.call(previous,key))||
+  Object.values(previous).some(v=>v!==null&&typeof v!=='string'))return {state:'invalid',message:'復旧ジャーナルの項目が不正です。自動上書きは禁止されています。'};
+ return {state:'recoverable',message:'中断された復元の復旧用記録があります。データを消さずに復旧を試みられます。'};
 }
 /** Recovery journal survives page reload if a previous import stopped mid-write.
  * It is intentionally not included in exported backups.
