@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const source=readFileSync('src/main.tsx','utf8');
+const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
