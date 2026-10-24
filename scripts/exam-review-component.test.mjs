@@ -4,9 +4,11 @@ import {readFileSync} from 'node:fs';
 import {gradeAnswer} from '../src/studyAttempt.ts';
 const component=readFileSync('src/ExamReviewPanel.tsx','utf8');
 const main=readFileSync('src/main.tsx','utf8');
+const result=readFileSync('src/StudyResultScreen.tsx','utf8');
 test('mock exam review is a separate pure display component; graded answer transaction remains the sole writer',()=>{
- assert.ok(main.includes('import ExamReviewPanel from'));
- assert.ok(main.includes('<ExamReviewPanel questions={pool} answers={sessionAnswers}'));
+ assert.ok(result.includes('import ExamReviewPanel from'));
+ assert.ok(main.includes('<StudyResultScreen correct={session.correct}'))
+ assert.ok(result.includes('<ExamReviewPanel questions={questions} answers={answers}'))
  assert.ok(!main.includes('<div className="exam-review">'));
  assert.ok(component.includes('className="exam-review"'));
  assert.ok(component.includes('gradeAnswer(given,expected)'));
