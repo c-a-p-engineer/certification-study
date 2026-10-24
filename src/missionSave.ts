@@ -1,5 +1,6 @@
 /** Local-only persisted study run, kept separate from timed exam snapshots. */
 import {EXPEDITIONS,type ExpeditionId} from './expeditions.ts';
+import type {DailyFocusType} from './dailyFive.ts';
 export const MISSION_SAVE_KEY='cert-overdrive-mission-save-v1';
 export type MissionSave={
  version:1;
