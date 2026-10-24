@@ -26,3 +26,13 @@ test('audit exports domain quality and prioritized human editorial queue',()=>{
  assert.ok(script.includes('editorialPriority'));
  assert.ok(script.includes('human editorial review'));
 });
+
+test('quality documentation reflects the live bank and does not manufacture independent approval',()=>{
+ const quality=readFileSync('docs/QUALITY_GATE.md','utf8');
+ const ledger=JSON.parse(readFileSync('reports/human-review-decisions.json','utf8'));
+ const count=bank.length;
+ assert.ok(quality.includes('| Authored questions | '+count+' |'));
+ assert.ok(quality.includes('| Qualified independent approvals | **'+ledger.decisions.length+'** |'));
+ assert.ok(quality.includes('automated structural audit'));
+ assert.ok(quality.includes('315'));
+});
