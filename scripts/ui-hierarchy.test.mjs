@@ -10,6 +10,8 @@ const quizIntro=readFileSync('src/StudyQuestionIntro.tsx','utf8');
 const homeSummary=readFileSync('src/HomeProgressSummary.tsx','utf8');
 const resultOverview=readFileSync('src/ResultOverview.tsx','utf8');
 const combatView=readFileSync('src/QuizCombatStatus.tsx','utf8');
+const optionsView=readFileSync('src/QuizAnswerControls.tsx','utf8');
+const masteryView=readFileSync('src/HomeMasteryCoverage.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
  assert.equal((source.match(/START MISSION/g)||[]).length,1);
@@ -28,7 +30,7 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
  assert.equal(source.includes('className="game-hud"'),false);
  assert.equal(source.includes('className="overdrive-banner"'),false);
  assert.equal(source.includes('className="instruction-icon"'),false);
- assert.ok(source.includes('{q.answers&&<div className="answer-instructions"'));
+ assert.ok(optionsView.includes('{question.answers&&<div className="answer-instructions"'));
  assert.ok(combatView.includes("className={'fever-meter '"));
  assert.ok(source.includes('className="xp-award"'));
  assert.ok(!source.includes('PERFECT! +XP'));
@@ -37,7 +39,7 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
 test('glossary remains directly under the question, with pronunciation and detailed entries',()=>{
  const q=quizIntro.indexOf('<h2>{question.question}</h2>');
  const guide=quizIntro.indexOf('<TermsPanel key={question.id} question={question}/>');
- const options=source.indexOf('className="answers">');
+ const options=optionsView.indexOf('className="answers">');
  assert.ok(q>=0&&guide>q&&options>=0);
  assert.ok(source.includes('<StudyQuestionIntro question={q}'));
  assert.ok(quizIntro.includes('className="term-picker"'));
@@ -48,10 +50,15 @@ test('glossary remains directly under the question, with pronunciation and detai
 });
 
 test('unique learning information and safeguards are still visible or available on demand',()=>{
- for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','3回以上の連続正解','合格確率ではありません','NOT AN AWS SCALED SCORE']){
+ for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','NOT AN AWS SCALED SCORE']){
   assert.ok(source.includes(word),word);
  }
- assert.ok(source.includes('className="metric-method"'));
+ assert.ok(masteryView.includes('className="metric-method"'));
+ assert.ok(masteryView.includes('3回以上の連続正解'));
+ assert.ok(masteryView.includes('合格確率ではありません'));
+ assert.ok(source.includes('<QuizAnswerControls question={q}'));
+ assert.ok(source.includes('<HomeMasteryCoverage questions={questions}'));
+ assert.ok(optionsView.includes('className="answer-instructions"'));
  assert.ok(source.includes('aria-label="出題分野"'));
  assert.ok(source.includes('aria-label="出題数"'));
  assert.ok(source.includes('<ExamReviewPanel questions={pool}'));assert.ok(examReview.includes('className="exam-review"'));
@@ -63,7 +70,7 @@ test('unique learning information and safeguards are still visible or available 
 test('learning timeline sits on dashboard and records answers in the existing progress store',()=>{
  const timeline=source.indexOf('<ActivityTimeline ');
  const stat=source.indexOf('<HomeProgressSummary ');
- const mastery=source.indexOf('className="mastery-section"');
+ const mastery=source.indexOf('<HomeMasteryCoverage ');
  assert.ok(stat>=0&&timeline>stat&&mastery>timeline);
  assert.ok(homeSummary.includes('className="stats"'));
  assert.ok(reducer.includes('recordDailyAnswer(source.activity??migrateActivity(source),date,event.correct)'));
