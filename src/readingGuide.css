@@ -52,3 +52,8 @@
  .app .study-reading-toggle{min-width:100px}
 }
 @media(prefers-reduced-motion:reduce){.app .study-reading-toggle{transition:none}}
+
+/* Optional visual sentences in choices; selection labels and scoring remain unchanged. */
+.app .answer .answer-reading-flow{display:block}
+.app .answer .answer-reading-sentence{display:block;margin-bottom:.46em;max-inline-size:33em}
+.app .answer .answer-reading-sentence:last-child{margin-bottom:0}
