@@ -24,6 +24,12 @@ The current prototype contains 348 original AWS SAA practice questions across fo
 
 The [6.6 code and engagement audit](reports/overdrive-6-6-code-engagement-audit.md) documents verified bug fixes, known source-level risks, a qualitative evaluation of immediate feedback/rewards/learning retention, the limits of static evaluation (no opt-in longitudinal engagement measurements, no hardware E2E), and ranked alternative Phase 7 directions. “Habit-forming” is a design hypothesis, not a demonstrated claim about users or actual learning outcomes. The recommended direction is **learning-effective gamification**: observable next-day recall, bounded short sessions, independent reward correctness, and optional RPG variety without pressure to play longer.
 
+## OVERDRIVE 7.2 — Optional encounter chain and earned collector emblems
+
+- All five existing themed expeditions now show a **five-stage read-only encounter telegraph** based on the saved mission index; no progress keys or XP policies were changed. Each step has a small existing offline SVG monster icon; focus reading mode intentionally hides it.
+- Explorer/Pathfinder/Guardian collector milestones derive from unique expedition clears and the already-existing two prior-day spaced-recall rare-emblem evidence. Replays cannot grant additional XP or repeatedly mint the same rare emblem. No push reminders, chance loot or compulsory continuation.
+- `test:expedition-endgame` now guards deterministic stages, no farming and 320px/reduced-motion focus display.
+
 ## OVERDRIVE 7.3 — Eight architecture cases and next-day mistake review
 
 - Architect Lab now offers **8 original 3-step AWS decision cases**: the existing multi-AZ web, private S3, RDS and DynamoDB recovery, plus cross-Region DR RTO/RPO, S3 storage class cost/size, Organizations SCP/IAM guardrails and SQS/Lambda failure handling. Each decision includes three options, choice-specific feedback and an AWS documentation reference. References are not independent reviewer sign-off.
