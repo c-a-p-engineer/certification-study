@@ -57,3 +57,12 @@
 .app .answer .answer-reading-flow{display:block}
 .app .answer .answer-reading-sentence{display:block;margin-bottom:.46em;max-inline-size:33em}
 .app .answer .answer-reading-sentence:last-child{margin-bottom:0}
+
+/* Stable question identifier and opt-in support: visible even before marking an exam answer. */
+.app .question-id-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;margin:8px 0 2px;font-size:12px;letter-spacing:0}
+.app .question-id-value{color:#d0deec;white-space:nowrap}
+.app .question-id-value code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#bde9f2;font-weight:700;user-select:text}
+.app .question-id-row button,.app .question-id-row a{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:44px;min-width:88px;padding:8px 10px;border:1px solid #678ca9;border-radius:8px;color:#e4f4ff;background:#1f334b;font-size:12px;font-weight:750;letter-spacing:0;text-decoration:none;cursor:pointer}
+.app .question-id-row button:focus-visible,.app .question-id-row a:focus-visible{outline:3px solid #ffe7a3;outline-offset:2px}
+.app .question-id-copy-status{font-size:12px;color:#b6f2dc}
+@media(max-width:370px){.app .question-id-row{gap:4px 7px}.app .question-id-row button,.app .question-id-row a{min-width:85px;padding-inline:8px}}
