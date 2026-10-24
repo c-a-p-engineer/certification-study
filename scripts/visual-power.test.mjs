@@ -5,6 +5,7 @@ import {readFileSync} from 'node:fs';
 const main=readFileSync('src/main.tsx','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 const effects=readFileSync('src/feedbackEffects.css','utf8');
+const feedback=readFileSync('src/StudyAnswerFeedback.tsx','utf8');
 
 test('visual intensity is opt-in, persisted and fails safely on unsupported storage',()=>{
  assert.equal(readVisualPower(),'balanced');
@@ -26,7 +27,8 @@ test('game menu has an explicit safe effect selector and question-sized rewards'
  assert.ok(menu.includes('disabled={p.reduced}'));
  assert.ok(menu.includes('aria-pressed={p.visualPower===value}'));
  assert.ok(main.includes("visualPower==='overdrive'?'visual-overdrive':''"));
- assert.ok(main.includes('className="title-drop"'));
+ assert.ok(feedback.includes('className="title-drop"'));
+ assert.ok(main.includes('<StudyAnswerFeedback question={q}'));
  assert.ok(main.includes('role="status" aria-live="polite"'));
  assert.ok(readFileSync('src/ResultOverview.tsx','utf8').includes('MISSION RATING'));
  assert.ok(main.includes('comboMilestone(nextCombo)'));
