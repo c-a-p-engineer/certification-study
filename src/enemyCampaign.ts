@@ -76,7 +76,7 @@ export function applyCampaignAnswer(value:unknown,event:CampaignAnswer):Campaign
  const hitHistory=[...(state.hitHistory??[]),hit].slice(-24);
  const defeatHistory=defeated?[...(state.defeatHistory??[]),{enemyId:enemy.id,at}].slice(-24):state.defeatHistory;
  const next:EnemyCampaign=defeated
-  ?{stageIndex:nextIndex,hp:last?0:ENEMIES[nextIndex].hp,
+  ?{stageIndex:nextIndex,hp:last?0:campaignMaxHp(ENEMIES[nextIndex],state.cycle??0),
     cleared:[...new Set([...state.cleared,enemy.id])],hitIds:[],completed:last,hitHistory,defeatHistory,runCleared:[...(state.runCleared??[]),enemy.id],cycle:state.cycle}
   :{...state,hp:remaining,hitIds:[...state.hitIds,event.questionId],hitHistory,defeatHistory};
  return {state:next,damage:Math.min(state.hp,damage),multiplier,
