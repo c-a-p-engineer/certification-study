@@ -9,6 +9,7 @@ const css=readFileSync('src/enemyVisual.css','utf8');
 const boss=readFileSync('src/BossBoard.tsx','utf8');
 const battle=readFileSync('src/BossBattleHUD.tsx','utf8');
 const combat=readFileSync('src/QuizCombatStatus.tsx','utf8');
+const result=readFileSync('src/StudyResultScreen.tsx','utf8');
 test('normal practice drives a persistent campaign and one atomic progress write',()=>{
  assert.ok(source.includes('enemyCampaign?:EnemyCampaign'));
  assert.ok(source.includes('enemyCampaign:normalizeEnemyCampaign(old.enemyCampaign)'));
@@ -23,7 +24,8 @@ test('campaign is visible on dashboard, quiz and results; exam excludes combat',
  assert.ok(source.includes('<EnemyCampaignPanel campaign={enemyCampaign} onStart={()=>start(false)} onReplay='));
  assert.ok(source.includes('restartCampaign(p.enemyCampaign)'));
  assert.ok(combat.includes('!examMode?<EnemyCampaignPanel campaign={enemyCampaign} compact attack={campaignHit}/>:null'));
- assert.ok(source.includes('!examMode&&!bossMode&&<EnemyCampaignPanel campaign={enemyCampaign} compact attack={campaignHit}/>'));
+ assert.ok(result.includes('!examMode&&!bossMode&&<EnemyCampaignPanel campaign={campaign} compact attack={attack}/>'));
+ assert.ok(source.includes('campaign={enemyCampaign} attack={campaignHit}'));
  assert.equal(source.includes('className="boss-health"'),false);
  assert.ok(panel.includes('role="progressbar"'));
  assert.ok(panel.includes('MONSTER ARCHIVE'));
@@ -34,7 +36,7 @@ test('nine distinct SVG monster designs and four original domain bosses now have
  assert.ok(art.includes('viewBox="0 0 240 220"'));
  assert.ok(boss.includes('<MonsterArt id='));
  assert.ok(battle.includes('<MonsterArt id='));
- assert.ok(source.includes('<MonsterArt id='));
+ assert.ok(result.includes('<MonsterArt id='));
 });
 test('reduced motion, readable sizes and no blocking answer overlay',()=>{
  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));

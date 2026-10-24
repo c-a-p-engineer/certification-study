@@ -10,6 +10,7 @@ const quizIntro=readFileSync('src/StudyQuestionIntro.tsx','utf8');
 const quizHeader=readFileSync('src/QuizStageHeader.tsx','utf8');
 const homeSummary=readFileSync('src/HomeProgressSummary.tsx','utf8');
 const resultOverview=readFileSync('src/ResultOverview.tsx','utf8');
+const resultScreen=readFileSync('src/StudyResultScreen.tsx','utf8');
 const combatView=readFileSync('src/QuizCombatStatus.tsx','utf8');
 const optionsView=readFileSync('src/QuizAnswerControls.tsx','utf8');
 const feedbackView=readFileSync('src/StudyAnswerFeedback.tsx','utf8');
@@ -54,7 +55,7 @@ test('glossary remains directly under the question, with pronunciation and detai
 
 test('unique learning information and safeguards are still visible or available on demand',()=>{
  for(const word of ['EXAM TRIAL','RECALL RAID','BOSS RUSH','NOT AN AWS SCALED SCORE']){
-  assert.ok(source.includes(word)||quizHeader.includes(word),word);
+  assert.ok(source.includes(word)||quizHeader.includes(word)||resultScreen.includes(word),word);
  }
  assert.ok(masteryView.includes('className="metric-method"'));
  assert.ok(masteryView.includes('3回以上の連続正解'));
@@ -65,7 +66,8 @@ test('unique learning information and safeguards are still visible or available 
  assert.ok(optionsView.includes('className="answer-instructions"'));
  assert.ok(source.includes('aria-label="出題分野"'));
  assert.ok(source.includes('aria-label="出題数"'));
- assert.ok(source.includes('<ExamReviewPanel questions={pool}'));assert.ok(examReview.includes('className="exam-review"'));
+ assert.ok(resultScreen.includes('<ExamReviewPanel questions={questions}'));
+ assert.ok(source.includes('<StudyResultScreen correct={session.correct}'));assert.ok(examReview.includes('className="exam-review"'));
  assert.ok(menu.includes('role="dialog"'));
  assert.ok(menu.includes('<details className="gm-haptic-diagnostics">'));
  assert.ok(menu.includes('aria-modal="true"'));
@@ -97,7 +99,8 @@ test('gamified progress and title unlocks are discoverable without extra overlay
  assert.ok(source.includes("onClick={()=>showMenu('titles')}"));
  assert.ok(combatView.includes('className="fever-milestones"'));
  assert.ok(resultOverview.includes('className="clear-judgement"'));
- assert.ok(source.includes('<ResultOverview correct={session.correct}'));
+ assert.ok(resultScreen.includes('<ResultOverview correct={correct}'));
+ assert.ok(source.includes('<StudyResultScreen correct={session.correct}'));
  assert.ok(resultOverview.includes('grade.letter'));
  assert.ok(feedbackView.includes('className="title-drop"'));
 });
@@ -105,6 +108,6 @@ test('timed exam holds new badges and rank promotions until the result screen',(
  assert.ok(source.includes("if(examMode&&mode==='quiz'){setDeferredRankNotice(current)}"));
  assert.ok(source.includes("if(examMode&&mode==='result'&&deferredRankNotice)"));
  assert.ok(source.includes("if(!examMode){setNewTitleIds([]);setNewRelicIds([])}"));
- assert.ok(source.includes("examMode&&(newTitleIds.length>0||newRelicIds.length>0)&&"));
+ assert.ok(resultScreen.includes("examMode&&(titleIds.length>0||relicIds.length>0)&&"));
  assert.ok(!source.includes('selected!==null&&examMode&&<div className="explanation"'));
 });

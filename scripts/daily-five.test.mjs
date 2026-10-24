@@ -48,7 +48,7 @@ test('legacy mission stays valid and optional daily five cannot forge six or inv
  assert.equal(isMissionSave({...old,...fields,dailyTypes:{...fields.dailyTypes,e:'false'}}),false);
 });
 test('daily UI is first study action and has explicit non-coercive session stop and saved selection reasons',()=>{
- const main=readFileSync('src/main.tsx','utf8'),header=readFileSync('src/QuizStageHeader.tsx','utf8'),ui=readFileSync('src/DailyFiveBoard.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8'),header=readFileSync('src/QuizStageHeader.tsx','utf8'),result=readFileSync('src/StudyResultScreen.tsx','utf8'),ui=readFileSync('src/DailyFiveBoard.tsx','utf8');
  assert.ok(main.includes('<DailyFiveBoard plan={dailyFivePlan}'));
  assert.ok(main.indexOf('<DailyFiveBoard')<main.indexOf('START MISSION'));
  assert.ok(header.includes('dailyFocus?"DAILY FIVE"'));
@@ -56,7 +56,8 @@ test('daily UI is first study action and has explicit non-coercive session stop 
  assert.ok(main.includes('dailyTypes:dailyFocus?dailyTypes:undefined'));
  assert.ok(main.includes('setDailyFocus(!!saved.dailyFocus)'));
  assert.ok(main.includes('mode:examMode?\'exam\':dailyFocus?\'daily\''));
- assert.ok(main.includes('!dailyFocus&&<div className="hero-actions"'));
+ assert.ok(result.includes('!dailyFocus&&<div className="hero-actions"'));
+ assert.ok(main.includes('<StudyResultScreen correct={session.correct}'))
  assert.ok(ui.includes('今日はここで終了'));
  assert.ok(ui.includes('追加で学習'));
  assert.ok(ui.includes('期限到来が0問'));
