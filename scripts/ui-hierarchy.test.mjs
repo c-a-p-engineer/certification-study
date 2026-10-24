@@ -11,6 +11,7 @@ const homeSummary=readFileSync('src/HomeProgressSummary.tsx','utf8');
 const resultOverview=readFileSync('src/ResultOverview.tsx','utf8');
 const combatView=readFileSync('src/QuizCombatStatus.tsx','utf8');
 const optionsView=readFileSync('src/QuizAnswerControls.tsx','utf8');
+const feedbackView=readFileSync('src/StudyAnswerFeedback.tsx','utf8');
 const masteryView=readFileSync('src/HomeMasteryCoverage.tsx','utf8');
 
 test('one prominent launch and one menu for advanced options',()=>{
@@ -32,7 +33,7 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
  assert.equal(source.includes('className="instruction-icon"'),false);
  assert.ok(optionsView.includes('{question.answers&&<div className="answer-instructions"'));
  assert.ok(combatView.includes("className={'fever-meter '"));
- assert.ok(source.includes('className="xp-award"'));
+ assert.ok(feedbackView.includes('className="xp-award"'));
  assert.ok(!source.includes('PERFECT! +XP'));
 });
 
@@ -57,6 +58,7 @@ test('unique learning information and safeguards are still visible or available 
  assert.ok(masteryView.includes('3回以上の連続正解'));
  assert.ok(masteryView.includes('合格確率ではありません'));
  assert.ok(source.includes('<QuizAnswerControls question={q}'));
+ assert.ok(source.includes('<StudyAnswerFeedback question={q}'));
  assert.ok(source.includes('<HomeMasteryCoverage questions={questions}'));
  assert.ok(optionsView.includes('className="answer-instructions"'));
  assert.ok(source.includes('aria-label="出題分野"'));
@@ -95,7 +97,7 @@ test('gamified progress and title unlocks are discoverable without extra overlay
  assert.ok(resultOverview.includes('className="clear-judgement"'));
  assert.ok(source.includes('<ResultOverview correct={session.correct}'));
  assert.ok(resultOverview.includes('grade.letter'));
- assert.ok(source.includes('className="title-drop"'));
+ assert.ok(feedbackView.includes('className="title-drop"'));
 });
 test('timed exam holds new badges and rank promotions until the result screen',()=>{
  assert.ok(source.includes("if(examMode&&mode==='quiz'){setDeferredRankNotice(current)}"));
