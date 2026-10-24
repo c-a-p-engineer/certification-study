@@ -1,0 +1,20 @@
+/* Fixed-size, optional encounter telegraph: never obscure answers or force animation. */
+.app .expedition-journey{display:flex;align-items:center;gap:12px;border:1px solid #6d7b9c;background:#181e38;padding:10px 12px;margin:0 0 16px;border-radius:12px;min-width:0}
+.app .expedition-journey-portrait{width:58px;min-width:58px;height:57px;overflow:hidden}
+.app .expedition-journey-portrait svg{width:58px;height:53px}
+.app .expedition-journey-body{flex:1;min-width:0}
+.app .expedition-journey-heading{display:flex;justify-content:space-between;gap:8px;font-weight:900;font-size:12px}
+.app .expedition-telegraph{margin:3px 0 8px;font-size:11px;line-height:1.5;color:#b9d9ee}
+.app .expedition-journey ol{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin:0;padding:0}
+.app .expedition-journey li{text-align:center;font-size:10px;color:#b2bbd3;padding:5px 1px;border:1px solid #414e78;border-radius:5px;overflow-wrap:anywhere}
+.app .expedition-journey li span{display:inline-block;margin-right:2px;font-variant-numeric:tabular-nums}
+.app .expedition-journey li.done{color:#a6e8d4;border-color:#397b6a}
+.app .expedition-journey li.current{color:#0b2330;background:#90f3ed;border-color:#90f3ed;font-weight:900}
+.app.quiz-focus .expedition-journey{display:none}
+.app .expedition-collector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.app .expedition-collector-item{padding:9px 8px;border:1px solid #44546c;border-radius:8px;background:#151e30;min-width:0}
+.app .expedition-collector-item strong{display:block;font-size:12px}
+.app .expedition-collector-item span{font-size:10px;color:#b5c9dd}
+.app .expedition-collector-item.unlocked{border-color:#7de6c1;background:#1b383c}
+@media(max-width:420px){.app .expedition-collector{grid-template-columns:1fr}.app .expedition-journey-portrait{display:none}.app .expedition-journey{padding:9px}.app .expedition-journey li{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.app .expedition-journey *{transition:none!important;animation:none!important}}
