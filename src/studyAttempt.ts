@@ -6,7 +6,7 @@ import {recordDelayedRecallReward,type RecallRewardState} from './retentionQuest
 import {scheduleReview,type ReviewMap} from './studyScheduler.ts';
 import {recordContractAnswer,type DailyContracts} from './dailyContracts.ts';
 import {recordDailyAnswer,migrateActivity,localDateKey,type ActivityHistory} from './studyHistory.ts';
-import {appendAnswerEvent,type AnswerHistory} from './growthAnalytics.ts';
+import {appendAnswerEvent,normalizeAnswerHistory,type AnswerHistory} from './growthAnalytics.ts';
 
 export const MAX_ATTEMPT_RECEIPTS=1024;
 export const MAX_ATTEMPT_ID_LENGTH=170;
@@ -36,6 +36,13 @@ export function normalizeAttemptReceipts(value:unknown):AttemptReceiptState{
 export function makeAttemptRunId():string{
  const secure=globalThis.crypto?.randomUUID?.();
  return secure??(Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,14));
+}
+/** The daily 150-XP reward requires 5 distinct non-exam questions. Legacy saves
+ * without an event history retain their already-earned daily eligibility.
+ */
+export function dailyQuestUniqueCount(history:unknown,date:string,legacy?:{date:string;answered:number}):number{
+ if(!Array.isArray(history)||history.length===0)return legacy?.date===date&&Number.isSafeInteger(legacy.answered)?Math.max(0,legacy.answered):0;
+ return new Set(normalizeAnswerHistory(history).filter(e=>!e.exam&&e.day===date).map(e=>e.id)).size;
 }
 export function gradeAnswer(selected:readonly number[],answers:readonly number[]):boolean{
  if(!Array.isArray(selected)||!Array.isArray(answers)||answers.length===0)return false;
