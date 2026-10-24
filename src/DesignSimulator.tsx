@@ -5,13 +5,13 @@ import './nextPhase.css';
 function ArchitectureSketch({nodes}:{nodes:readonly string[]}){
  const xs=nodes.map((_,i)=>50+i*(430/Math.max(1,nodes.length-1)));
  return <figure className="ds-sketch"><svg viewBox="0 0 530 105" role="img" aria-label={'構成要素：'+nodes.join('、')} preserveAspectRatio="xMidYMid meet">
-  <title>アーキテクチャの構成要素を左から順に表示</title>
+  <title>構成要素の概念図。接続経路や転送順序は示さない</title>
   {nodes.map((node,i)=><g key={node}>
-   {i>0&&<path d={'M'+(xs[i-1]+43)+' 49 H'+(xs[i]-43)} stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="6 4"/>}
+   {/* Component inventory only; avoid drawing incorrect serial arrows for parallel AZs or replicas. */}
    <rect x={xs[i]-48} y="22" width="96" height="55" rx="9" fill="#274d62" stroke="#9de7dd" strokeWidth="1.5"/>
    <text x={xs[i]} y="48" textAnchor="middle" fill="#f5fcff" fontSize="12" fontWeight="700">{node.length>14?node.slice(0,13)+'…':node}</text>
   </g>)}
- </svg><figcaption>{nodes.join(' → ')}</figcaption></figure>;
+ </svg><figcaption>構成要素：{nodes.join(' ／ ')}。接続順や障害時の経路は表示していません。</figcaption></figure>;
 }
 export default function DesignSimulator({progress,onFinish}:{progress?:DesignProgress;onFinish:(id:DesignCaseId,correct:number)=>void}){
  const saved=normalizeDesignProgress(progress);
