@@ -1,3 +1,4 @@
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {planDailyFive,summarizeDailyFive} from '../src/dailyFive.ts';
 import {isMissionSave} from '../src/missionSave.ts';
@@ -52,7 +53,7 @@ test('daily UI is first study action and has explicit non-coercive session stop 
  assert.ok(launcher.includes('<DailyFiveBoard plan={dailyFivePlan}'));
  assert.ok(main.includes('dailyFivePlan={dailyFivePlan}'))
  assert.ok(launcher.indexOf('<DailyFiveBoard')<launcher.indexOf('START MISSION'));
- assert.ok(main.indexOf('<HomeMissionLauncher ')<main.indexOf('className="daily-quest"'));
+ assert.ok(main.indexOf('<HomeMissionLauncher ')<main.indexOf('<HomeDailyOverview '));
  assert.ok(header.includes('dailyFocus?"DAILY FIVE"'));
  assert.ok(main.includes('<QuizStageHeader examMode={examMode}'));
  assert.ok(main.includes('dailyTypes:dailyFocus?dailyTypes:undefined'));
