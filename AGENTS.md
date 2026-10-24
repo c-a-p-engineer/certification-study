@@ -18,6 +18,13 @@ This public repository is an independent, original certification learning game, 
 - **Before merging:** review spec ↔ implementation ↔ tests, and describe affected clauses and verification in the PR. Do not call an unverified assumption a tested fact.
 - README is a concise introduction and links to the specification. Domain-specific editorial reports and Issues are evidence/backlog, not competing product contracts.
 
+## Task-specific project skills (on-demand, not a new policy owner)
+
+- AWS SAA question writing, editorial review, answer-key changes, distractor QA, official references, conceptual duplicates or Phase 8 concept mapping: read `/.agents/skills/aws-saa-content-quality/SKILL.md` before modifying the question source.
+- XP, game rewards, boss/expedition progression, Daily Five, due recall, knowledge-evidence calculations or BOSS INTEL: read `/.agents/skills/learning-rpg-integrity/SKILL.md`. When one task changes both answer content and learning rewards, apply **both**.
+- These files are scoped execution procedures. This `AGENTS.md` owns project change policy, `docs/SPECIFICATION.md` owns behavior, and `docs/QUALITY_GATE.md` owns editorial audit distinctions. The skills may point to them but must not silently supersede them.
+- Ordinary CI triage, isolated UI/CSS work, read-only project status, and deployment do not trigger both skills automatically. Select only what the current task needs.
+
 ## Non-negotiable behavior and compatibility
 
 - Only original, independently authored questions. Never commit exam dumps, copyrighted third-party practice banks, passwords, tokens or learner's private diagnostic snapshots. Check AWS claims against official exam guides and vendor docs; keep meaningful per-question references. Editorial date/AI analysis is **not** independent human sign-off.
