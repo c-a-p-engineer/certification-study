@@ -1,6 +1,6 @@
 /** Analytics from explicit events only: never invent per-question history from aggregate XP. */
 import {localDateKey,parseLocalDate,shiftLocalDate,type ActivityHistory} from './studyHistory.ts';
-export type AnswerEvent={id:string;domain:string;day:string;correct:boolean;firstAttempt:boolean;due:boolean;recovery:boolean;exam:boolean;mode?:'smart'|'normal'|'retention'|'exam';at?:number};
+export type AnswerEvent={id:string;domain:string;day:string;correct:boolean;firstAttempt:boolean;due:boolean;recovery:boolean;exam:boolean;mode?:'smart'|'normal'|'retention'|'daily'|'exam';at?:number};
 export type AnswerHistory=AnswerEvent[];
 export type AnalyticsWindow=7|30|90;
 export const MAX_EVENTS=3000;
