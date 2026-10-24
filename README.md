@@ -2,6 +2,8 @@
 
 A flashy, arcade-inspired open-source certification learning game. Starting with AWS Solutions Architect Associate.
 
+**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The home screen now foregrounds the daily five-question mission and progress; advanced modes, RPG content, charts, and collections expand on demand instead of occupying the initial scroll.
+
 ## Play online
 
 **[▶ Play CERTIFICATION // OVERDRIVE on GitHub Pages](https://c-a-p-engineer.github.io/certification-study/)**
