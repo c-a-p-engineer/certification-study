@@ -38,7 +38,7 @@ test('quiz shows one progress meter, and hints only for non-obvious multi-answer
 });
 
 test('glossary remains directly under the question, with pronunciation and detailed entries',()=>{
- const q=quizIntro.indexOf('<h2>{question.question}</h2>');
+ const q=quizIntro.indexOf('<h2 className={readingGuide?"question-readable":undefined}>');
  const guide=quizIntro.indexOf('<TermsPanel key={question.id} question={question}/>');
  const options=optionsView.indexOf('className="answers">');
  assert.ok(q>=0&&guide>q&&options>=0);
