@@ -22,7 +22,9 @@ test('corrupt first-run award flags cannot retroactively mark a cleared monster'
 test('HUD and archive display cycle number and an opt-in replay button',()=>{
  const board=readFileSync('src/EnemyCampaignPanel.tsx','utf8');
  const main=readFileSync('src/main.tsx','utf8');
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
  assert.ok(board.includes('NEW GAME+'));assert.ok(board.includes('ROUND'));
  assert.ok(main.includes('restartCampaign(p.enemyCampaign)'));
- assert.ok(main.includes('onReplay='));
+ assert.ok(secondary.includes('<EnemyCampaignPanel {...campaign}/>'));
+ assert.ok(main.includes('onReplay:()=>setProgress('));
 });
