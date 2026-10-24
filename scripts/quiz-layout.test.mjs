@@ -50,7 +50,7 @@ test('mobile compact view combines HUD instead of stacking two gameplay cards',(
  assert.ok(css.includes('.app.quiz-compact .answers'));
 });
 test('exam excludes enemy and combo hints and layouts never overlay answers',()=>{
- assert.ok(main.includes("quizLayout==='compact'&&!examMode?"));
+ assert.ok(combat.includes("quizLayout==='compact'&&!examMode?"));
  assert.ok(main.includes("quizLayout==='detailed'&&!examMode&&<div className=\"combo\""));
  assert.ok(hud.includes('role="progressbar"'));
  assert.equal(css.includes('position:fixed'),false);
