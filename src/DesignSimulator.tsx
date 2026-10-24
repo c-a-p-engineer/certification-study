@@ -27,7 +27,7 @@ export default function DesignSimulator({progress,onFinish}:{progress?:DesignPro
   {!c?<details className="ds-launcher"><summary><BookOpen size={17}/> 4つの設計シナリオを選ぶ</summary><div className="ds-cases">{DESIGN_CASES.map(item=>{const r=saved.records[item.id];return <article className="ds-case" key={item.id}>
     <strong>{item.title}</strong><span>{item.objective}</span><small>{item.domain} · {r?'BEST '+r.best+'/3':'未挑戦'} · {saved.emblems.includes(item.id)?'◆ 判断勲章獲得':'3段階の設計判断'}</small>
     <button type="button" onClick={()=>start(item.id)}>設計する <ArrowRight size={17}/></button>
-   </article>})}</div>:
+   </article>})}</div></details>:
    <div className="ds-play">
     <div className="ds-session"><strong>{c.title}</strong><button type="button" onClick={()=>setActive(null)} aria-label="設計シミュレーターの一覧に戻る">一覧へ戻る</button></div>
     <ArchitectureSketch nodes={c.nodes}/>
