@@ -35,8 +35,10 @@ test('SMART selection is robust to corrupt due dates, repeated IDs and very smal
 test('UI reports sample sizes and forbids claiming observational causality',()=>{
  const ui=readFileSync('src/LearningInsights.tsx','utf8');
  const main=readFileSync('src/main.tsx','utf8');
+ const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
  assert.ok(ui.includes('因果的に証明する比較ではありません'));
  assert.ok(ui.includes('5回答未満'));
  assert.ok(main.includes("mode:examMode?'exam':dailyFocus?'daily':retentionMode?'retention':adaptiveMode?'smart':'normal'"));
- assert.ok(main.includes('<LearningInsights history={progress.answerHistory}/>'));
+ assert.ok(secondary.includes('<LearningInsights {...insights}/>'));
+ assert.ok(main.includes('insights={{history:progress.answerHistory}}'));
 });
