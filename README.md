@@ -24,6 +24,12 @@ The current prototype contains 348 original AWS SAA practice questions across fo
 
 The [6.6 code and engagement audit](reports/overdrive-6-6-code-engagement-audit.md) documents verified bug fixes, known source-level risks, a qualitative evaluation of immediate feedback/rewards/learning retention, the limits of static evaluation (no opt-in longitudinal engagement measurements, no hardware E2E), and ranked alternative Phase 7 directions. “Habit-forming” is a design hypothesis, not a demonstrated claim about users or actual learning outcomes. The recommended direction is **learning-effective gamification**: observable next-day recall, bounded short sessions, independent reward correctness, and optional RPG variety without pressure to play longer.
 
+## OVERDRIVE 7.3 — Eight architecture cases and next-day mistake review
+
+- Architect Lab now offers **8 original 3-step AWS decision cases**: the existing multi-AZ web, private S3, RDS and DynamoDB recovery, plus cross-Region DR RTO/RPO, S3 storage class cost/size, Organizations SCP/IAM guardrails and SQS/Lambda failure handling. Each decision includes three options, choice-specific feedback and an AWS documentation reference. References are not independent reviewer sign-off.
+- Wrong design concepts add optional, bounded `designLab.reviewDue` entries keyed by `caseId:stepId`. From the next local calendar day onward, Architect Lab lists due decisions for deliberate case-level re-practice. A correct attempt on that specific step clears the due entry; no multiple-choice progress, mock-exam result or XP is altered. Old saves without design history are not backfilled.
+- `npm run test:simulator` and portable v1/v2 backup validation cover the new case IDs and recall provenance. Browser E2E and actual Android testing remain deferred by request.
+
 ## OVERDRIVE 7.4 (first tranche) — Stale-tab progress protection
 
 - A **new independent, browser-local progress persistence guard** checks whether the latest saved record is exactly the version that this tab last read or committed. Progress JSON stores an optional `_sync` metadata object with monotonically increasing `revision`, ephemeral `writerId` and `updatedAt`. Legacy records without metadata remain importable; no historical XP is rewritten.

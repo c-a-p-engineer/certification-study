@@ -86,7 +86,9 @@ export function validProgress(raw:unknown):boolean{
   if(!isObj(input)||!isObj(input.records)||!Array.isArray(input.emblems)||input.emblems.length>DESIGN_CASES.length||
      Object.keys(input.records).some(id=>!DESIGN_CASES.some(e=>e.id===id))||
      normalizeDesignProgress(input).emblems.length!==input.emblems.length||
-     Object.keys(normalizeDesignProgress(input).records).length!==Object.keys(input.records).length)return false;
+     Object.keys(normalizeDesignProgress(input).records).length!==Object.keys(input.records).length||
+     (input.reviewDue!==undefined&&(!Array.isArray(input.reviewDue)||input.reviewDue.length>40||
+       normalizeDesignProgress(input).reviewDue?.length!==input.reviewDue.length)))return false;
  }
  if(raw.enemyCampaign!==undefined){
   const normalized=normalizeEnemyCampaign(raw.enemyCampaign);

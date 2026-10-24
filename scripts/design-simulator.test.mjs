@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-import {DESIGN_CASES,evaluateDesignChoice,recordDesignCompletion,normalizeDesignProgress} from '../src/designSimulator.ts';
+import {DESIGN_CASES,evaluateDesignChoice,recordDesignCompletion,normalizeDesignProgress,updateDesignReviewQueue} from '../src/designSimulator.ts';
 test('at least 3 distinct architect workflows have 3 steps and original AWS references',()=>{
- assert.ok(DESIGN_CASES.length>=3);assert.ok(DESIGN_CASES.length<=5);
+ assert.equal(DESIGN_CASES.length,8);
  const id=new Set();
  for(const c of DESIGN_CASES){
   assert.equal(c.steps.length,3,c.id);assert.ok(!id.has(c.id));id.add(c.id);
@@ -56,6 +56,24 @@ test('interactive HTML contains keyboard buttons, accessible SVG description and
  assert.ok(ui.includes('aria-pressed={picked===option.id}'));
  assert.ok(ui.includes('evaluateDesignChoice('));
  assert.ok(ui.includes('追加XPなし'));
+ assert.ok(ui.includes('ds-review-due'));
+ assert.ok(ui.includes('decisions.current=recorded'));
+ assert.ok(ui.includes('onFinish(c.id,newScore,recorded)'));
  assert.ok(main.includes('recordDesignCompletion(p.designLab'));
  assert.ok(ui.includes('AWS公式資料を確認'));
+});
+
+test('next-day design review is separate, bounded, source labelled and safe across repeats',()=>{
+ const id=DESIGN_CASES[4].id,when=new Date(2026,9,24,12,30).getTime();
+ const one=recordDesignCompletion(undefined,id,2,when,[{stepId:DESIGN_CASES[4].steps[0].id,correct:false}]);
+ assert.equal(one.bonusXp,0);
+ assert.equal(one.state.reviewDue.length,1);
+ assert.equal(one.state.reviewDue[0].source,id+':'+DESIGN_CASES[4].steps[0].id);
+ assert.ok(one.state.reviewDue[0].dueAt>when);
+ assert.equal(new Date(one.state.reviewDue[0].dueAt).getHours(),0);
+ const two=recordDesignCompletion(one.state,id,3,when+86400000,[{stepId:DESIGN_CASES[4].steps[0].id,correct:true}]);
+ assert.equal(two.state.reviewDue.length,0);assert.equal(two.bonusXp,0);
+ const again=updateDesignReviewQueue(one.state.reviewDue,id,[{stepId:DESIGN_CASES[4].steps[0].id,correct:false}],when+90000);
+ assert.equal(again.length,1);
+ assert.deepEqual(normalizeDesignProgress({records:{},emblems:[],reviewDue:[{caseId:id,stepId:'forged',dueAt:when,source:id+':forged'}]}).reviewDue,[]);
 });
