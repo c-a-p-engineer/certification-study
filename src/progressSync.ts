@@ -46,7 +46,7 @@ function writeIfUnchanged(store:StorageReaderWriter,expectedRaw:string|null,next
 }
 export async function guardedProgressSave(store:StorageReaderWriter,expectedRaw:string|null,next:unknown,writerId:string,
  now=Date.now(),locks?:{request:<T>(name:string,options:{mode:'exclusive'},callback:()=>T|Promise<T>)=>Promise<T>}):Promise<SaveResult>{
- const lock=locks??(typeof navigator!=='undefined'&&navigator.locks?.request?navigator.locks:undefined);
+ const lock=locks??(typeof navigator!=='undefined'&&'locks' in navigator?navigator.locks:undefined);
  try{
   if(lock?.request)return await lock.request(PROGRESS_LOCK_NAME,{mode:'exclusive'},()=>writeIfUnchanged(store,expectedRaw,next,writerId,now,true));
  }catch{
