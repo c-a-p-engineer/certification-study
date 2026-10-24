@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=readFileSync('src/main.tsx','utf8');
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
 const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const art=readFileSync('src/MonsterArt.tsx','utf8');
 const panel=readFileSync('src/EnemyCampaignPanel.tsx','utf8');
@@ -21,7 +22,8 @@ test('normal practice drives a persistent campaign and one atomic progress write
  assert.ok(source.includes('setCampaignHit(null)'));
 });
 test('campaign is visible on dashboard, quiz and results; exam excludes combat',()=>{
- assert.ok(source.includes('<EnemyCampaignPanel campaign={enemyCampaign} onStart={()=>start(false)} onReplay='));
+ assert.ok(secondary.includes('<EnemyCampaignPanel {...campaign}/>'));
+ assert.ok(source.includes('campaign={{campaign:enemyCampaign,onStart:()=>start(false),onReplay:()=>setProgress('));
  assert.ok(source.includes('restartCampaign(p.enemyCampaign)'));
  assert.ok(combat.includes('!examMode?<EnemyCampaignPanel campaign={enemyCampaign} compact attack={campaignHit}/>:null'));
  assert.ok(result.includes('!examMode&&!bossMode&&<EnemyCampaignPanel campaign={campaign} compact attack={attack}/>'));

@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 const main=readFileSync('src/main.tsx','utf8');
 const options=readFileSync('src/QuizAnswerControls.tsx','utf8');
 const coverage=readFileSync('src/HomeMasteryCoverage.tsx','utf8');
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
 const spec=readFileSync('docs/SPECIFICATION.md','utf8');
 
 test('quiz selection controls send answers through one controller callback',()=>{
@@ -19,7 +20,8 @@ test('quiz selection controls send answers through one controller callback',()=>
  for(const term of ['localStorage','setProgress','applyStudyAttempt','scheduleReview'])assert.ok(!options.includes(term));
 });
 test('home mastery and domain coverage stay visible on demand with unchanged meaning',()=>{
- assert.match(main,/<HomeMasteryCoverage questions=\{questions\} masteryMap=\{masteryMap\} reviews=\{progress\.reviews\|\|\{\}\}/);
+ assert.ok(main.includes('mastery={{questions,masteryMap,reviews:progress.reviews||{}}}'));
+ assert.ok(secondary.includes('<HomeMasteryCoverage {...mastery}/>'));
  assert.match(coverage,/3回以上の連続正解/);
  assert.match(coverage,/合格確率ではありません/);
  assert.match(coverage,/className="mastery-section"/);

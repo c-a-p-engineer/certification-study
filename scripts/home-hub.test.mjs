@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const main=readFileSync('src/main.tsx','utf8');
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
+const daily=readFileSync('src/HomeDailyOverview.tsx','utf8');
 const launcher=readFileSync('src/HomeMissionLauncher.tsx','utf8');
 const css=readFileSync('src/homeHub.css','utf8');
 const agents=readFileSync('AGENTS.md','utf8');
@@ -17,10 +19,10 @@ test('home offers daily five, regular mission and useful progress before optiona
  assert.ok(index('<HomeMissionLauncher ')>=0);
  assert.ok(launcher.indexOf('<DailyFiveBoard ')>=0);
  assert.ok(launcher.indexOf('START MISSION')>launcher.indexOf('<DailyFiveBoard '));
- assert.ok(index('className="daily-quest"')>index('<HomeMissionLauncher '));
- assert.ok(index('<HomeProgressSummary ')>index('className="daily-quest"'));
- assert.ok(index('data-section="adventure"')>index('<HomeProgressSummary '));
- assert.ok(index('<OfflineStatus ')>index('<HomeProgressSummary '));
+ assert.ok(index('<HomeDailyOverview ')>index('<HomeMissionLauncher '));
+ assert.ok(index('<HomeSecondaryPanels')>index('<HomeDailyOverview '));
+ assert.ok(daily.indexOf('className="daily-quest"')<daily.indexOf('<HomeProgressSummary '));
+ assert.ok(daily.indexOf('<OfflineStatus ')>daily.indexOf('<HomeProgressSummary '));
 });
 
 test('all secondary home modes are reachable from closed-by-default native disclosures',()=>{
@@ -28,23 +30,23 @@ test('all secondary home modes are reachable from closed-by-default native discl
  assert.ok(advanced>0);
  for(const section of ['adventure','review','insights','collection']){
   const fragment='<details className="home-hub-drawer" data-section="'+section+'">';
-  assert.equal(home.split(fragment).length-1,1,section);
+  assert.equal(secondary.split(fragment).length-1,1,section);
  }
  for(const component of ['EnemyCampaignPanel','ExpeditionBoard','DesignSimulator','RetentionQuestBoard','SmartQuestBoard','BossBoard','ActivityTimeline','GrowthDashboard','LearningInsights','SkillTreeBoard','RelicVault']){
-  assert.ok(home.includes('<'+component+' '),component);
+  assert.ok(secondary.includes('<'+component+' '),component);
  }
  assert.ok(launcher.indexOf('EXAM TRIAL')>advanced);
  assert.ok(launcher.indexOf('aria-label="出題分野"')>advanced);
  assert.ok(launcher.indexOf('aria-label="出題数"')>advanced);
  assert.ok(!launcher.includes('defaultOpen'));
  assert.ok(!home.includes('defaultOpen'));
- assert.ok(!home.includes('<details className="home-hub-drawer" open'));
+ assert.ok(!secondary.includes('<details className="home-hub-drawer" open'));
 });
 
 test('drawer markup is balanced and keeps read-only disclosure semantics',()=>{
- assert.equal((home.match(/<details\b/g)||[]).length,(home.match(/<\/details>/g)||[]).length);
+ assert.equal((secondary.match(/<details\b/g)||[]).length,(secondary.match(/<\/details>/g)||[]).length);
  assert.equal((launcher.match(/<details\b/g)||[]).length,(launcher.match(/<\/details>/g)||[]).length);
- assert.equal((home.match(/className="home-hub-drawer"/g)||[]).length,4);
+ assert.equal((secondary.match(/className="home-hub-drawer"/g)||[]).length,4);
  assert.ok(css.includes('summary:focus-visible'));
  assert.ok(css.includes('min-height:54px'));
  assert.ok(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))'));

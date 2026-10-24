@@ -93,8 +93,8 @@
 
 | 受入条件 | 主な実装・検証 |
 | --- | --- |
-| 日々の主要学習導線がすぐ見つかる | `src/main.tsx` / `src/HomeMissionLauncher.tsx` / `src/HomeProgressSummary.tsx` / `src/DailyFiveBoard.tsx` / `scripts/home-hub.test.mjs` |
-| 初期画面は二次情報を折りたたみ、展開すれば全て利用可能 | `src/homeHub.css` / `src/HomeMasteryCoverage.tsx` / `scripts/home-hub.test.mjs` |
+| 日々の主要学習導線がすぐ見つかる | `src/main.tsx` / `src/HomeMissionLauncher.tsx` / `src/HomeDailyOverview.tsx` / `src/HomeProgressSummary.tsx` / `src/DailyFiveBoard.tsx` / `scripts/home-hub.test.mjs` |
+| 初期画面は二次情報を折りたたみ、展開すれば全て利用可能 | `src/homeHub.css` / `src/HomeSecondaryPanels.tsx` / `src/HomeMasteryCoverage.tsx` / `scripts/home-hub.test.mjs` |
 | 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `src/StudyQuestionIntro.tsx` / `src/QuizAnswerControls.tsx` / `scripts/study-attempt.test.mjs` |
 | 途中保存、バックアップ、複数タブの衝突で進捗を黙って消さない | `src/missionSave.ts`, `src/backup.ts`, `src/progressSync.ts`, 各対応テスト |
 | 問題の参照元と監査状態を正直に示す | `certifications/aws-saa/` / `scripts/audit-question-bank.mjs` / `scripts/audit-review-signoff.mjs` |
@@ -109,6 +109,8 @@
 - `src/useQuizSessionState.ts` はクイズ・模試・遠征の画面内セッション状態（現在の設問、選択候補、演習モード、報酬表示の一時状態等）と更新setterを保持するReactフック。**採点、経験値・勲章の付与、復習スケジュール、保存やバックアップの読み書きを行わない**。既存の`applyStudyAttempt`とセーブ処理は引き続きApp側から呼び出す。既存進捗・v1/v2バックアップは変更しない。
 - `src/StudyQuestionIntro.tsx` は問題本文、選出理由、読み付き用語ガイドの表示のみを担当し、採点や保存を実行しない。
 - `src/HomeMissionLauncher.tsx` はホーム初動の称号・ランク、保存済み学習と模試の再開、Daily Five、通常学習、弱点復習、任意展開の分野・問数・模擬試験・設計問題・能動想起・復習・ボス選択をまとめて表示する。ホームの初期画面における表示優先順位や展開既定値は変えず、全ての状態更新・削除確認・開始・スクロール等の副作用を `src/main.tsx` から受け取るコールバックへ委譲する。問題本文・採点・XP・保存形式は変えない。
+- `src/HomeDailyOverview.tsx` は本日の5問クリア状況・DAILY CONTRACTS・XP/正答率/復習期限の概要・Offline Statusを表示する。報酬受取・通常学習開始はAppのコールバックへ委譲し、未確定の報酬を独自に加算しない。
+- `src/HomeSecondaryPanels.tsx` は冒険・設計、追加学習、成長分析、スキル・コレクションの4つのネイティブな`details/summary`を初期状態では閉じたまま構成する。各子画面へ渡すデータと操作はAppが定義し、ここでは状態の永続化・採点・セーブ破棄をしない。展開後の機能・同名のセクションID・キーボード操作を維持する。
 - `src/HomeProgressSummary.tsx` は既存のXP・累積正答率・復習期限・コンボ数を受け取り表示するだけで、学習状態を更新しない。
 - 模試の解答レビューは引き続き `src/ExamReviewPanel.tsx` で読み取り専用とする。
 - `src/ResultOverview.tsx` は採点済み結果の点数・練習用ランク評価を表示するだけとし、模試XP・保存・試験合否の再計算を行わない。評価詳細や報酬の実際の更新は既存の状態管理が責任を持つ。
