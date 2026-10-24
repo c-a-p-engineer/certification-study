@@ -21,6 +21,8 @@ export type MissionSave={
  focusTopic?:string;
  adaptive?:boolean;
  retention?:boolean;
+ dailyFocus?:boolean;
+ dailyTypes?:Record<string,DailyFocusType>;
  expeditionId?:ExpeditionId;
  expeditionProof?:string[];
  smartWhy?:Record<string,string>;
