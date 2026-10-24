@@ -59,7 +59,7 @@ test('learning timeline sits on dashboard and records answers in the existing pr
  const stat=source.indexOf('className="stats"');
  const mastery=source.indexOf('className="mastery-section"');
  assert.ok(stat>=0&&timeline>stat&&mastery>timeline);
- assert.ok(source.includes('recordDailyAnswer(p.activity??migrateActivity(p),answerDay,ok)'));
+ assert.ok(reducer.includes('recordDailyAnswer(source.activity??migrateActivity(source),date,event.correct)'));
  assert.ok(source.includes('activity:migrateActivity(old)'));
  assert.ok(source.includes('const rank=profile.rank'));
  assert.equal(source.includes('rankFor('),false);
