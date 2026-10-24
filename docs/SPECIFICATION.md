@@ -82,6 +82,11 @@
 - Android/Braveなどのモバイル閲覧を想定し、320px幅までの狭い画面で横溢れを抑え、学習問題・回答の可読性を優先する。
 - 開閉操作・解答・次へ・メニューにキーボードで到達できる。操作可能要素のタップ領域は原則44px以上とし、focus-visibleとreduced motionを維持する。
 - ホームの開閉によってクイズの読込や採点、セッション復帰に影響を与えない。
+- クイズ問題文の長文視認性を優先し、通常表示でも過度な太字を避け、選択肢本文を軽めのウェイトで描画する。文字の大きさは従来の5段階設定を維持する。
+- 問題分野の横に **「文ごとに読む」** を配置し、押すと問題の句点・疑問符・感嘆符で視覚的なまとまりに区切り、行間と段落間隔、左側の細いガイド、読みやすい行幅を適用する。もう一度押すと「通常表示へ」戻せる。操作は44px以上、状態は `aria-pressed` で伝える。
+- 文章の分割は**表示専用**であり、元の問題文字列は改変しない。問題文・正答・選択肢・ChatGPTへコピーする素材・問題ID・採点・XP・模試の保存に影響を与えない。問題文の結合順序、句読点、空白を保持する。
+- 設定は別キー `cert-overdrive-reading-guide-v1` に端末ローカルで任意保存し、初期値はオフ。保存不可・不正値でも正常表示を維持し、既存バックアップのスキーマは変更しない。
+
 
 ## 7. 受入条件と検証対応
 
@@ -92,6 +97,7 @@
 | 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `src/StudyQuestionIntro.tsx` / `src/QuizAnswerControls.tsx` / `scripts/study-attempt.test.mjs` |
 | 途中保存、バックアップ、複数タブの衝突で進捗を黙って消さない | `src/missionSave.ts`, `src/backup.ts`, `src/progressSync.ts`, 各対応テスト |
 | 問題の参照元と監査状態を正直に示す | `certifications/aws-saa/` / `scripts/audit-question-bank.mjs` / `scripts/audit-review-signoff.mjs` |
+| 文ごとの読書補助が元の問題文を保持し、設定が安全に永続化される | `src/readingGuide.ts` / `src/StudyQuestionIntro.tsx` / `src/readingGuide.css` / `scripts/reading-guide.test.mjs` |
 | 型チェック・単体回帰・静的PWA生成・Pages公開 | `npm run build` / `.github/workflows/verify.yml` / `.github/workflows/deploy.yml` |
 
 **検証の境界:** CI成功は静的テスト・ビルドの成功であり、物理Android端末や実ブラウザE2Eでの操作を証明しない。これらは現在保留中。
