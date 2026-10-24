@@ -94,6 +94,6 @@ export function evaluateDesignChoice(caseId:DesignCaseId,stepId:string,optionId:
 export function recordDesignCompletion(raw:unknown,id:DesignCaseId,correct:number,now=Date.now()){
  const p=normalizeDesignProgress(raw),def=DESIGN_CASES.find(x=>x.id===id);
  if(!def||!Number.isSafeInteger(correct)||correct<0||correct>def.steps.length)return {state:p,firstClear:false,emblemUnlocked:false,bonusXp:0 as const};
- const old=p.records[id],firstClear=!old,emblemUnlocked:correct===def.steps.length&&!p.emblems.includes(id);
+ const old=p.records[id],firstClear=!old,emblemUnlocked=correct===def.steps.length&&!p.emblems.includes(id);
  return {state:{records:{...p.records,[id]:{best:Math.max(correct,old?.best??0),attempts:Math.min(100000,(old?.attempts??0)+1),completedAt:old?.completedAt??now}},emblems:emblemUnlocked?[...p.emblems,id]:[...p.emblems]},firstClear,emblemUnlocked,bonusXp:0 as const};
 }
