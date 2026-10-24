@@ -1,4 +1,5 @@
 /** 6.6 — original offline architectural decisions; not a reproduction of AWS exam questions. */
+import {EXTRA_DESIGN_CASES} from './designCasesExtra.ts';
 export type DesignChoice={id:string;label:string;feedback:string};
 export type DesignStep={id:string;heading:string;context:string;options:readonly DesignChoice[];correct:string;why:string;reference:string};
 export const DESIGN_CASES=[
@@ -69,10 +70,13 @@ export const DESIGN_CASES=[
    {id:'b',label:'接続先とリソース設定を確認せずに即座に削除',feedback:'直ちに削除すると復元内容の照合やアプリ接続先の検証ができず、二次的なデータ事故を招き得る。'},
    {id:'c',label:'データ差分を確認しIAM、Streams、TTLなど復元後の設定を点検',feedback:'復元後の構成を個別確認し、段階的な切り替えを計画する。'}
   ],correct:'c',why:'復元した新しいテーブルではすべての設定が自動継承されるわけではない。',reference:'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/pointintimerecovery_restores.html'}
- ]}
+ ]},
+ ...EXTRA_DESIGN_CASES
 ] as const;
 export type DesignCaseId=typeof DESIGN_CASES[number]['id'];
-export type DesignProgress={records:Partial<Record<DesignCaseId,{best:number;attempts:number;completedAt:number}>>;emblems:DesignCaseId[]};
+export type DesignRecall={caseId:DesignCaseId;stepId:string;dueAt:number;source:string};
+export type DesignOutcome={stepId:string;correct:boolean};
+export type DesignProgress={records:Partial<Record<DesignCaseId,{best:number;attempts:number;completedAt:number}>>;emblems:DesignCaseId[];reviewDue?:DesignRecall[]};
 export const initialDesignProgress=():DesignProgress=>({records:{},emblems:[]});
 const validId=(id:unknown):id is DesignCaseId=>DESIGN_CASES.some(x=>x.id===id);
 export function normalizeDesignProgress(value:unknown):DesignProgress{
@@ -82,7 +86,15 @@ export function normalizeDesignProgress(value:unknown):DesignProgress{
   const r=p.records[c.id];
   if(r&&Number.isSafeInteger(r.best)&&r.best>=0&&r.best<=c.steps.length&&Number.isSafeInteger(r.attempts)&&r.attempts>=0&&r.attempts<=100000&&Number.isFinite(r.completedAt)&&r.completedAt>=0)records[c.id]={...r};
  }
- return {records,emblems:Array.isArray(p.emblems)?[...new Set(p.emblems.filter(validId))].filter(x=>records[x]?.best===DESIGN_CASES.find(c=>c.id===x)?.steps.length):[]};
+ const seen=new Set<string>(),reviewDue:DesignRecall[]=[];
+ if(Array.isArray(p.reviewDue))for(const r of p.reviewDue.slice(0,120)){
+  if(!r||!validId(r.caseId)||typeof r.stepId!=='string'||!DESIGN_CASES.find(c=>c.id===r.caseId)?.steps.some(step=>step.id===r.stepId)||
+   !Number.isSafeInteger(r.dueAt)||r.dueAt<0||typeof r.source!=='string'||r.source!==r.caseId+':'+r.stepId)continue;
+  if(seen.has(r.source))continue;
+  seen.add(r.source);reviewDue.push({caseId:r.caseId,stepId:r.stepId,dueAt:r.dueAt,source:r.source});
+  if(reviewDue.length===40)break;
+ }
+ return {records,emblems:Array.isArray(p.emblems)?[...new Set(p.emblems.filter(validId))].filter(x=>records[x]?.best===DESIGN_CASES.find(c=>c.id===x)?.steps.length):[],...(Array.isArray(p.reviewDue)?{reviewDue}: {})};
 }
 export function evaluateDesignChoice(caseId:DesignCaseId,stepId:string,optionId:string){
  const c=DESIGN_CASES.find(x=>x.id===caseId),step=c?.steps.find(x=>x.id===stepId);
@@ -91,9 +103,23 @@ export function evaluateDesignChoice(caseId:DesignCaseId,stepId:string,optionId:
  if(!choice)throw Error('Unknown answer option');
  return {correct:step.correct===optionId,feedback:choice.feedback,why:step.why,reference:step.reference};
 }
-export function recordDesignCompletion(raw:unknown,id:DesignCaseId,correct:number,now=Date.now()){
+/** Record separately provenance-labelled architecture recall. Never modifies question review schedule or XP. */
+export function updateDesignReviewQueue(previous:readonly DesignRecall[],caseId:DesignCaseId,outcomes:readonly DesignOutcome[],now:number):DesignRecall[]{
+ const def=DESIGN_CASES.find(c=>c.id===caseId);
+ if(!def||!Number.isSafeInteger(now)||now<0)return [...previous];
+ const due=new Date(now);due.setDate(due.getDate()+1);due.setHours(0,0,0,0);
+ const state=new Map(previous.map(r=>[r.source,r]));
+ for(const event of outcomes){
+  if(!def.steps.some(step=>step.id===event.stepId)||typeof event.correct!=='boolean')continue;
+  const source=caseId+':'+event.stepId;
+  if(event.correct)state.delete(source);
+  else state.set(source,{caseId,stepId:event.stepId,dueAt:due.getTime(),source});
+ }
+ return [...state.values()].sort((a,b)=>a.dueAt-b.dueAt||a.source.localeCompare(b.source)).slice(0,40);
+}
+export function recordDesignCompletion(raw:unknown,id:DesignCaseId,correct:number,now=Date.now(),outcomes:readonly DesignOutcome[]=[]){
  const p=normalizeDesignProgress(raw),def=DESIGN_CASES.find(x=>x.id===id);
  if(!def||!Number.isSafeInteger(correct)||correct<0||correct>def.steps.length)return {state:p,firstClear:false,emblemUnlocked:false,bonusXp:0 as const};
  const old=p.records[id],firstClear=!old,emblemUnlocked=correct===def.steps.length&&!p.emblems.includes(id);
- return {state:{records:{...p.records,[id]:{best:Math.max(correct,old?.best??0),attempts:Math.min(100000,(old?.attempts??0)+1),completedAt:old?.completedAt??now}},emblems:emblemUnlocked?[...p.emblems,id]:[...p.emblems]},firstClear,emblemUnlocked,bonusXp:0 as const};
+ return {state:{records:{...p.records,[id]:{best:Math.max(correct,old?.best??0),attempts:Math.min(100000,(old?.attempts??0)+1),completedAt:old?.completedAt??now}},emblems:emblemUnlocked?[...p.emblems,id]:[...p.emblems],reviewDue:updateDesignReviewQueue(p.reviewDue??[],id,outcomes,now)},firstClear,emblemUnlocked,bonusXp:0 as const};
 }
