@@ -10,6 +10,7 @@ export default function LearningInsights({history}:{history?:AnswerHistory}){
   <div className="learning-insights-heading"><strong id="learning-insights-title"><BrainCircuit size={17}/> RETENTION LAB</strong><span>直近7日・この端末のみ</span></div>
   <div className="learning-insights-grid">
    <div><small>SMART期限到来復習</small><strong>{stat(weekly.smartDue.rate)}</strong><span>{weekly.smartDue.n} 回</span></div>
+   <div><small>短時間復習 RAID</small><strong>{stat(weekly.retentionDue.rate)}</strong><span>{weekly.retentionDue.n} 回</span></div>
    <div><small>その他の期限到来復習</small><strong>{stat(weekly.otherDue.rate)}</strong><span>{weekly.otherDue.n} 回</span></div>
    <div><small>日をまたいだ再挑戦</small><strong>{stat(weekly.delayedReturn.rate)}</strong><span>{weekly.delayedReturn.n} 回</span></div>
   </div>
