@@ -57,7 +57,7 @@ export function validProgress(raw:unknown):boolean{
  if(raw.mistakes.length>10000||Object.keys(raw.reviews).length>10000)return false;
  if(raw.retrievalRewards!==undefined){
   const reward=raw.retrievalRewards;
-  if(!isObj(reward)||typeof reward.day!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(reward.day)||
+  if(!isObj(reward)||typeof reward.day!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(reward.day)||
    !Array.isArray(reward.questionIds)||reward.questionIds.length>5||new Set(reward.questionIds).size!==reward.questionIds.length||
    reward.questionIds.some((id:unknown)=>typeof id!=='string'||id.length===0||id.length>=170))return false;
  }
