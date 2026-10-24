@@ -10,7 +10,7 @@ export function normalizeAnswerHistory(value:unknown):AnswerHistory{
   &&typeof x.domain==='string'&&x.domain.length<60&&typeof x.day==='string'&&!!parseLocalDate(x.day)
   &&typeof x.correct==='boolean'&&typeof x.firstAttempt==='boolean'&&typeof x.due==='boolean'
   &&typeof x.recovery==='boolean'&&typeof x.exam==='boolean'
-  &&(x.mode===undefined||x.mode==='smart'||x.mode==='normal'||x.mode==='retention'||x.mode==='exam')
+  &&(x.mode===undefined||x.mode==='smart'||x.mode==='normal'||x.mode==='retention'||x.mode==='daily'||x.mode==='exam')
   &&(x.at===undefined||(typeof x.at==='number'&&Number.isFinite(x.at)&&x.at>=0))).slice(-MAX_EVENTS);
 }
 export function appendAnswerEvent(value:unknown,event:AnswerEvent):AnswerHistory{
