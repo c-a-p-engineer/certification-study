@@ -1,3 +1,4 @@
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {EXPEDITIONS,planExpedition,finishExpedition,normalizeExpeditions} from '../src/expeditions.ts';
 import {ENEMIES,initialEnemyCampaign,applyCampaignAnswer,restartCampaign,campaignMaxHp} from '../src/enemyCampaign.ts';
@@ -65,5 +66,5 @@ test('expedition question evidence is computed from prior-day spaced reviews, no
  assert.ok(main.includes('setExpeditionProof(ids=>ids.includes(q.id)?ids:[...ids,q.id])'));
  assert.ok(main.includes('expeditionProof:expeditionMode?expeditionProof'));
  assert.ok(main.includes('finishExpedition(p.expeditions'));
- assert.ok(main.includes('<ExpeditionBoard'));
+ assert.ok(secondary.includes('<ExpeditionBoard {...expedition}/>'));
 });
