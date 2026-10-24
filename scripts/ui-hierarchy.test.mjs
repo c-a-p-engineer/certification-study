@@ -4,6 +4,8 @@ import {readFileSync} from 'node:fs';
 
 const source=readFileSync('src/main.tsx','utf8');
 const launcher=readFileSync('src/HomeMissionLauncher.tsx','utf8');
+const secondary=readFileSync('src/HomeSecondaryPanels.tsx','utf8');
+const daily=readFileSync('src/HomeDailyOverview.tsx','utf8');
 const reducer=readFileSync('src/studyAttempt.ts','utf8');
 const menu=readFileSync('src/GameMenu.tsx','utf8');
 const examReview=readFileSync('src/ExamReviewPanel.tsx','utf8');
@@ -64,7 +66,8 @@ test('unique learning information and safeguards are still visible or available 
  assert.ok(masteryView.includes('合格確率ではありません'));
  assert.ok(source.includes('<QuizAnswerControls question={q}'));
  assert.ok(source.includes('<StudyAnswerFeedback question={q}'));
- assert.ok(source.includes('<HomeMasteryCoverage questions={questions}'));
+ assert.ok(secondary.includes('<HomeMasteryCoverage {...mastery}/>'));
+ assert.ok(source.includes('<HomeSecondaryPanels'))
  assert.ok(optionsView.includes('className="answer-instructions"'));
  assert.ok(launcher.includes('aria-label="出題分野"'));
  assert.ok(launcher.includes('aria-label="出題数"'));
@@ -76,10 +79,11 @@ test('unique learning information and safeguards are still visible or available 
 });
 
 test('learning timeline sits on dashboard and records answers in the existing progress store',()=>{
- const timeline=source.indexOf('<ActivityTimeline ');
- const stat=source.indexOf('<HomeProgressSummary ');
- const mastery=source.indexOf('<HomeMasteryCoverage ');
- assert.ok(stat>=0&&timeline>stat&&mastery>timeline);
+ const timeline=secondary.indexOf('<ActivityTimeline ');
+ const stat=daily.indexOf('<HomeProgressSummary ');
+ const mastery=secondary.indexOf('<HomeMasteryCoverage ');
+ assert.ok(stat>=0&&timeline>=0&&mastery>timeline);
+ assert.ok(source.indexOf('<HomeDailyOverview ')<source.indexOf('<HomeSecondaryPanels'))
  assert.ok(homeSummary.includes('className="stats"'));
  assert.ok(reducer.includes('recordDailyAnswer(source.activity??migrateActivity(source),date,event.correct)'));
  assert.ok(source.includes('activity:migrateActivity(old)'));
