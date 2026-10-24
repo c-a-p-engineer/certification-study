@@ -72,14 +72,21 @@
 
 | 受入条件 | 主な実装・検証 |
 | --- | --- |
-| 日々の主要学習導線がすぐ見つかる | `src/main.tsx` / `src/DailyFiveBoard.tsx` / `scripts/home-hub.test.mjs` |
+| 日々の主要学習導線がすぐ見つかる | `src/main.tsx` / `src/HomeProgressSummary.tsx` / `src/DailyFiveBoard.tsx` / `scripts/home-hub.test.mjs` |
 | 初期画面は二次情報を折りたたみ、展開すれば全て利用可能 | `src/homeHub.css` / `scripts/home-hub.test.mjs` |
-| 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `scripts/study-attempt.test.mjs` |
+| 解答・XP・復習・模試は互いに正しく分離 | `src/studyAttempt.ts` / `src/StudyQuestionIntro.tsx` / `scripts/study-attempt.test.mjs` |
 | 途中保存、バックアップ、複数タブの衝突で進捗を黙って消さない | `src/missionSave.ts`, `src/backup.ts`, `src/progressSync.ts`, 各対応テスト |
 | 問題の参照元と監査状態を正直に示す | `certifications/aws-saa/` / `scripts/audit-question-bank.mjs` / `scripts/audit-review-signoff.mjs` |
 | 型チェック・単体回帰・静的PWA生成・Pages公開 | `npm run build` / `.github/workflows/verify.yml` / `.github/workflows/deploy.yml` |
 
 **検証の境界:** CI成功は静的テスト・ビルドの成功であり、物理Android端末や実ブラウザE2Eでの操作を証明しない。これらは現在保留中。
+
+### コンポーネント境界（2026-10-24）
+
+- `src/main.tsx` は画面遷移・解答状態と保存処理のオーケストレーションを保持する。
+- `src/StudyQuestionIntro.tsx` は問題本文、選出理由、読み付き用語ガイドの表示のみを担当し、採点や保存を実行しない。
+- `src/HomeProgressSummary.tsx` は既存のXP・累積正答率・復習期限・コンボ数を受け取り表示するだけで、学習状態を更新しない。
+- 模試の解答レビューは引き続き `src/ExamReviewPanel.tsx` で読み取り専用とする。
 
 ## 8. 将来の変更
 
