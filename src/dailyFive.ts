@@ -60,8 +60,8 @@ export function planDailyFive<T extends DailyQuestion>(bank:readonly T[],reviews
   advice:eligibleDue>0?'期限到来の復習から始め、残りは苦手・新しい問題で補います。':'期限到来の復習はありません。今日は新規学習を優先し、実際の翌日復習は次回に確認します。'};
 }
 export type DailyFiveSummary={answered:number;correct:number;missed:string[];uniqueDomains:number;observedDue:number;newConcepts:number;suggestedDay:string;canStop:true};
-export function summarizeDailyFive<T extends DailyQuestion>(pool:readonly T[],responses:Record<string,readonly number[]>,reviewsAtStart:ReviewMap,now=Date.now()):DailyFiveSummary{
- const seen=new Set<string>(),missed:string[];let answered=0,correct=0,observedDue=0,newConcepts=0;
+export function summarizeDailyFive<T extends DailyQuestion>(pool:readonly T[],responses:Record<string,readonly number[]>,categoriesAtStart:Readonly<Record<string,DailyFocusType>>,now=Date.now()):DailyFiveSummary{
+ const seen=new Set<string>(),missed:string[]=[];let answered=0,correct=0,observedDue=0,newConcepts=0;
  const domains=new Set<string>();
  for(const q of pool){
   if(seen.has(q.id))continue;seen.add(q.id);domains.add(q.domain);
@@ -71,8 +71,8 @@ export function summarizeDailyFive<T extends DailyQuestion>(pool:readonly T[],re
   answered++;
   if(selected.length===expected.length&&new Set(selected).size===selected.length&&selected.every(x=>expected.includes(x)))correct++;
   else missed.push(q.id);
-  if(eligibleForDelayedRecall(reviewsAtStart?.[q.id],now))observedDue++;
-  if(!reviewsAtStart?.[q.id])newConcepts++;
+  if(categoriesAtStart?.[q.id]==='due')observedDue++;
+  if(categoriesAtStart?.[q.id]==='fresh')newConcepts++;
  }
  return {answered,correct,missed,uniqueDomains:domains.size,observedDue,newConcepts,suggestedDay:shiftLocalDate(localDateKey(new Date(now)),1),canStop:true};
 }
