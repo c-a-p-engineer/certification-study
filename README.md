@@ -33,7 +33,7 @@ The [6.6 code and engagement audit](reports/overdrive-6-6-code-engagement-audit.
 ## OVERDRIVE 7.3 — Eight architecture cases and next-day mistake review
 
 - Architect Lab now offers **8 original 3-step AWS decision cases**: the existing multi-AZ web, private S3, RDS and DynamoDB recovery, plus cross-Region DR RTO/RPO, S3 storage class cost/size, Organizations SCP/IAM guardrails and SQS/Lambda failure handling. Each decision includes three options, choice-specific feedback and an AWS documentation reference. References are not independent reviewer sign-off.
-- Wrong design concepts add optional, bounded `designLab.reviewDue` entries keyed by `caseId:stepId`. From the next local calendar day onward, Architect Lab lists due decisions for deliberate case-level re-practice. A correct attempt on that specific step clears the due entry; no multiple-choice progress, mock-exam result or XP is altered. Old saves without design history are not backfilled.
+- Wrong design concepts add optional, bounded `designLab.reviewDue` entries keyed by `caseId:stepId`. From the next local calendar day onward, Architect Lab lists **one-decision micro-reviews** with the exact missed step, without completing the entire case or changing best score, medals or practice XP. A correct attempt on that specific step clears the due entry; no multiple-choice progress, mock-exam result or XP is altered. Old saves without design history are not backfilled.
 - `npm run test:simulator` and portable v1/v2 backup validation cover the new case IDs and recall provenance. Browser E2E and actual Android testing remain deferred by request.
 
 ## OVERDRIVE 7.4 (first tranche) — Stale-tab progress protection
