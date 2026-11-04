@@ -1,0 +1,38 @@
+
+/* Original targeting feedback inspired by game HUD/lock-on conventions.
+   Pure CSS presentation. Grading & navigation remain immediate. */
+.app .od-target-console{position:relative;isolation:isolate;overflow:hidden;margin:2px 0 14px;padding:10px 13px 13px;border:1px solid #5e92ae;border-left:3px solid #6bdafa;border-radius:10px;background:linear-gradient(110deg,#142e43,#182440 70%,#26274b);box-shadow:inset 0 0 24px #60dafa12,0 0 17px #6dc6e421;pointer-events:none}
+.app .od-target-console::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 14px,#aad5ff21 15px 16px)}
+.app .od-target-head,.app .od-target-gauge{position:relative;display:flex;align-items:center;justify-content:space-between;gap:9px}
+.app .od-target-head{font-size:10px;letter-spacing:.13em;font-weight:900;color:#bfeaff}
+.app .od-target-head strong{font:900 clamp(12px,1.6vw,17px)/1.15 'Barlow Condensed',system-ui,sans-serif;letter-spacing:.08em;color:#f0faff;text-align:right}
+.app .od-target-gauge{margin-top:6px;font-size:10px;font-weight:900;color:#c5eaff}
+.app .od-target-gauge>span{letter-spacing:.09em}
+.app .od-target-gauge>strong{min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+.app .od-target-track{flex:1;min-width:0;height:7px;background:#0b1b32;border:1px solid #397a99;border-radius:8px;overflow:hidden}
+.app .od-target-track i{display:block;height:100%;background:linear-gradient(90deg,#37a2ec,#7affd9);box-shadow:0 0 13px #6bffed99;border-radius:8px;transition:width .16s ease-out}
+.app .od-target-pips{position:absolute;bottom:5px;right:12px;display:flex;gap:4px}
+.app .od-target-pips i{width:12px;height:2px;background:#54718b;transform:skew(-18deg)}
+.app .od-target-pips i.charged{background:#88ffe0;box-shadow:0 0 8px #b1ffe3}
+.app .od-target-chain{position:absolute;left:12px;bottom:4px;color:#ffd7aa;font-size:8px;font-weight:900;letter-spacing:.1em}
+.app .od-target-console.od-aiming{border-color:#8bf4ff;box-shadow:0 0 22px #8af2ff53,inset 0 0 20px #64dbfa16}
+.app .od-target-console.od-aiming .od-target-head strong{color:#ffeda6}
+.app .od-target-console.od-shot-fired{border-color:#efbc9d}
+.app .od-target-console.od-shot-fired.od-hit{border-color:#9cffe1}
+.app .od-target-console.od-shot-fired::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 15%,#e8ffef33 44%,#ffffff99 50%,#e8ffef33 56%,transparent 83%);pointer-events:none;animation:od-answer-impact .47s ease-out both}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz .answer:not(:disabled):is(:hover,:focus-visible){border-color:#9eefff;background:linear-gradient(95deg,#234a70,#273555);box-shadow:0 4px 0 #0d152b,0 0 19px #7be3ff80,inset 0 0 22px #9feaff1e}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz .answer:not(:disabled):is(:hover,:focus-visible)::before{content:'';position:absolute;z-index:-1;inset:0;background:linear-gradient(100deg,transparent 9%,#b1ffff22 46%,transparent 61%);pointer-events:none;animation:od-answer-scan .37s ease-out both}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz .answer:not(:disabled):is(:hover,:focus-visible)::after{content:'';position:absolute;top:6px;right:6px;width:17px;height:17px;background:linear-gradient(#b5faff,#b5faff) left top/7px 2px no-repeat,linear-gradient(#b5faff,#b5faff) left top/2px 7px no-repeat,linear-gradient(#b5faff,#b5faff) right bottom/7px 2px no-repeat,linear-gradient(#b5faff,#b5faff) right bottom/2px 7px no-repeat;pointer-events:none;filter:drop-shadow(0 0 6px #b1f8ff)}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz .answer.marked:not(:disabled){box-shadow:0 0 0 3px #ffd85c66,0 6px 0 #4c3422,0 0 20px #ffcf7a77!important}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz .multi-submit:not(:disabled){background:linear-gradient(110deg,#fbc28c,#ffebbb);box-shadow:0 0 17px #ffcf7f75}
+.app .od-fire-label{letter-spacing:.15em;font-size:14px}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz:has(.answer:not(:disabled):is(:hover,:focus-visible),.answer.marked:not(:disabled)) .od4-boss-3d::after{content:'LOCK-ON';position:absolute;z-index:4;top:50%;left:50%;width:114px;height:114px;transform:translate(-50%,-50%);border:2px dashed #b8faff;border-radius:50%;box-shadow:0 0 17px #81edff80,inset 0 0 17px #9af9ff44;display:grid;place-items:end center;padding-bottom:9px;color:#fff;font:bold 9px system-ui;letter-spacing:.15em;pointer-events:none;text-shadow:0 1px 6px #061929;animation:od-boss-aim .22s ease-out both}
+.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz:has(.answer:not(:disabled):is(:hover,:focus-visible),.answer.marked:not(:disabled)) .ec-portrait::after{content:'LOCK';position:absolute;inset:7%;border:2px dashed #b9f8ff;border-radius:50%;box-shadow:0 0 19px #9bedff80;display:grid;place-items:center;color:#fff;font:bold 9px system-ui;letter-spacing:.16em;pointer-events:none}
+@keyframes od-answer-scan{from{transform:translateX(-90%)}to{transform:translateX(130%)}}
+@keyframes od-answer-impact{from{opacity:1;transform:translateX(-90%)}to{opacity:0;transform:translateX(150%)}}
+@keyframes od-boss-aim{from{opacity:0;transform:translate(-50%,-50%) scale(1.2)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media(max-width:600px){.app .od-target-console{padding:8px 9px 13px;margin-bottom:10px}.app .od-target-head{letter-spacing:.04em;font-size:9px}.app .od-target-head strong{font-size:12px}.app .od-target-gauge{font-size:9px;margin-top:5px}.app .od-target-pips{right:8px}.app .od-target-chain{left:9px}}
+@media(max-width:360px){.app .od-target-head{font-size:8px}.app .od-target-head strong{font-size:11px}.app .od-target-track{height:6px}}
+@media(prefers-reduced-motion:reduce){.app .od-target-console{display:none!important}.app .od-target-console *, .app .answer::before,.app .answer::after{animation:none!important;transition:none!important}.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz:has(.answer:not(:disabled):is(:hover,:focus-visible),.answer.marked:not(:disabled)) .od4-boss-3d::after{display:none!important}}
+.app.reduced .od-target-console{display:none!important}
+.app.reduced.visual-overdrive .quiz .answer::before,.app.reduced.visual-overdrive .quiz .answer::after{display:none!important}
