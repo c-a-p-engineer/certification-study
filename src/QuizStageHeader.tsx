@@ -1,5 +1,6 @@
 import React from 'react';
-import {Flame} from 'lucide-react';
+import {Flame,Sparkles} from 'lucide-react';
+import type {VisualPower} from './visualPower.ts';
 import {shiftTextScale,TEXT_SCALES,type TextScale} from './readability';
 import type {QuizLayout} from './quizLayout';
 
@@ -7,12 +8,14 @@ export type QuizStageHeaderProps={
  examMode:boolean;timeLeft:number;bossMode:boolean;expeditionMode:boolean;caseMode:boolean;
  dailyFocus:boolean;retentionMode:boolean;adaptiveMode:boolean;
  index:number;total:number;combo:number;quizLayout:QuizLayout;textScale:TextScale;
+ visualPower?:VisualPower;reduced?:boolean;onVisualPower?:(value:VisualPower)=>void;
  onHome:()=>void;onTextScale:(value:TextScale)=>void;onQuizLayout:(value:QuizLayout)=>void;
 };
 /** Quiz header + accessible reader controls. The parent owns mode transitions and persistence. */
-export default React.memo(function QuizStageHeader({examMode,timeLeft,bossMode,expeditionMode,caseMode,dailyFocus,retentionMode,adaptiveMode,index,total,combo,quizLayout,textScale,onHome,onTextScale,onQuizLayout}:QuizStageHeaderProps){
+export default React.memo(function QuizStageHeader({examMode,timeLeft,bossMode,expeditionMode,caseMode,dailyFocus,retentionMode,adaptiveMode,index,total,combo,quizLayout,textScale,visualPower='balanced',reduced=false,onVisualPower,onHome,onTextScale,onQuizLayout}:QuizStageHeaderProps){
  return <div className="quiz-top"><button className="back" onClick={onHome}>← DASHBOARD</button>{examMode&&<span className={`exam-clock ${timeLeft<=600?"urgent":""}`} role="timer" aria-label="模擬演習の残り時間">{String(Math.floor(timeLeft/3600)).padStart(2,"0")}:{String(Math.floor(timeLeft%3600/60)).padStart(2,"0")}:{String(timeLeft%60).padStart(2,"0")}</span>}<div className="quiz-stage">{examMode?"EXAM TRIAL":bossMode?"BOSS RUSH":expeditionMode?"EXPEDITION":caseMode?"CASE FILES":dailyFocus?"DAILY FIVE":retentionMode?"RECALL MICRO RAID":adaptiveMode?"SMART QUEST":"MISSION"} {String(index+1).padStart(2,'0')} / {String(total).padStart(2,'0')}</div>{quizLayout==='detailed'&&!examMode&&<div className="combo"><Flame size={17}/> {combo} COMBO</div>}
  <div className="cq-controls" role="group" aria-label="文字とクイズ画面の調整">
+ {!examMode&&onVisualPower&&<button type="button" className="cq-fx-toggle" aria-label={visualPower==='overdrive'?'ゲーム演出を控えめにする':'ゲーム演出を強化する'} aria-pressed={visualPower==='overdrive'} title={quizLayout==='focus'?'集中表示では戦闘演出を隠します':'解答中の戦闘演出をON/OFF'} disabled={reduced} onClick={()=>onVisualPower(visualPower==='overdrive'?'balanced':'overdrive')}><Sparkles size={15} aria-hidden="true"/> FX {visualPower==='overdrive'?'ON':'OFF'}</button>}
   <button type="button" title="文字を小さくする" aria-label="文字を一段階小さくする" onClick={()=>onTextScale(shiftTextScale(textScale,-1))} disabled={textScale===TEXT_SCALES[0]}>A−</button>
   <span className="cq-scale-indicator" aria-live="polite">{({'compact':'最小','small':'小さめ','standard':'標準','large':'大きく','extra':'特大'} as const)[textScale]}</span>
   <button type="button" title="文字を大きくする" aria-label="文字を一段階大きくする" onClick={()=>onTextScale(shiftTextScale(textScale,1))} disabled={textScale===TEXT_SCALES[TEXT_SCALES.length-1]}>A＋</button>

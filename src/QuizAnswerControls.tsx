@@ -12,6 +12,7 @@ export type QuizAnswerControlsProps={
  examMode:boolean;
  showChoices:boolean;
  readingGuide?:boolean;
+ showTargetConsole?:boolean;
  cinematic?:boolean;
  combo?:number;
  onReveal:()=>void;
@@ -19,7 +20,7 @@ export type QuizAnswerControlsProps={
  onAnswer:(choices:number[])=>void;
 };
 /** Presentation-only selection controls. All grading, idempotency, XP and persistence stay in App/reducer. */
-export default React.memo(function QuizAnswerControls({question,choiceOrder,selected,multiChoices,examMode,showChoices,readingGuide,cinematic=false,combo=0,onReveal,onToggle,onAnswer}:QuizAnswerControlsProps){
+export default React.memo(function QuizAnswerControls({question,choiceOrder,selected,multiChoices,examMode,showChoices,readingGuide,showTargetConsole=true,cinematic=false,combo=0,onReveal,onToggle,onAnswer}:QuizAnswerControlsProps){
  const expected=question.answers??[question.answer!];
  const [aim,setAim]=React.useState<{questionId:string;choice:number}|null>(null);
  const aiming=aim?.questionId===question.id&&selected===null?aim.choice:null;
@@ -34,7 +35,7 @@ export default React.memo(function QuizAnswerControls({question,choiceOrder,sele
   question.answers?(charged>=required?'FIRE READY':charged?'TARGETS LOCKED':'AWAITING TARGETS'):
   aimLetter?'LOCK '+aimLetter:'SYSTEM READY';
  return <>
-{question.answers&&<div className="answer-instructions" aria-live="polite"><span>複数選択 · {question.answers.length}つ選ぶ</span><strong>{multiChoices.length} / {question.answers.length}</strong></div>}{fx&&<div className={'od-target-console '+(selected!==null?'od-shot-fired ':'')+(hit?'od-hit ':'')+(aiming!==null?'od-aiming ':'')} aria-hidden="true">
+{question.answers&&<div className="answer-instructions" aria-live="polite"><span>複数選択 · {question.answers.length}つ選ぶ</span><strong>{multiChoices.length} / {question.answers.length}</strong></div>}{fx&&showTargetConsole&&<div className={'od-target-console '+(selected!==null?'od-shot-fired ':'')+(hit?'od-hit ':'')+(aiming!==null?'od-aiming ':'')} aria-hidden="true">
  <div className="od-target-head"><span>◈ TARGETING / {question.answers?'MULTI':'SINGLE'} LOCK</span><strong>{fxStatus}</strong></div>
  <div className="od-target-gauge"><span>CHARGE</span><div className="od-target-track"><i style={{width:charge+'%'}}/></div><strong>{charge}%</strong></div>
  <div className="od-target-pips">{Array.from({length:required},(_,i)=><i key={i} className={i<charged||selected!==null?'charged':''}/>)}</div>
