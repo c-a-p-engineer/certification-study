@@ -55,12 +55,12 @@ function diagram() {
     s += '<text x="370" y="398" text-anchor="middle" font-size="12" fill="#b7d0df">Session: '+(state.session?'shared':'local only')+'</text>';
   } else if(state.scenario==='rds') {
     s += '<text x="28" y="35" fill="#b7e6f5" font-size="14">REGION / RDS · Traditional Multi-AZ Instance</text>';
-    s += wire(359,112,205,201,state.primaryUp)+wire(359,112,528,201,state.readReplica);
+    s += wire(359,112,205,201,state.primaryUp)+wire(359,112,528,201,!state.primaryUp&&state.multiAZ&&state.failoverDone);
     s += prism(283,60,154,50,'Application','read / write','warn');
     s += prism(110,207,190,78,'Primary',state.primaryUp?'ACTIVE':'FAILED',state.primaryUp?'good':'bad');
     s += prism(433,207,190,78,'Standby',state.multiAZ?(state.failoverDone?'PROMOTED':'SYNC HA'):'NOT CONFIGURED',state.multiAZ?'good':'bad');
     s += wire(298,265,433,265,state.multiAZ);
-    if(state.readReplica) s+=prism(270,323,186,50,'Read Replica','READ ONLY','warn');
+    if(state.readReplica) { s+=wire(220,305,345,333,true); s+=prism(270,323,186,50,'Read Replica','READ ONLY','warn'); }
     s += '<text x="370" y="396" text-anchor="middle" font-size="12" fill="#bdd6e8">Auto failover is represented as a manually stepped state</text>';
   } else {
     s += '<text x="28" y="35" fill="#b7e6f5" font-size="14">VPC / S3 · Simplified request path</text>';

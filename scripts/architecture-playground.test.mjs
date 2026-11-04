@@ -61,6 +61,8 @@ test('sandbox is isolated from progress and exposes required navigation',()=>{
   assert.match(html,/role="status"/);
   assert.match(app,/aria-selected/);
   assert.match(app,/data-key/);
+  assert.match(app,/!state.primaryUp&&state.multiAZ&&state.failoverDone/);
+  assert.match(readFileSync('public/labs/architecture/lab.css','utf8'),/overflow-x:auto/);
   for(const text of [html,app,readFileSync('public/labs/architecture/engine.mjs','utf8')]){
     assert.doesNotMatch(text,/localStorage|fetch\(|sendBeacon|sessionStorage|applyStudyAttempt|recordDesignCompletion/);
   }
