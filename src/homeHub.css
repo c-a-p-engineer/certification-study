@@ -74,3 +74,11 @@
  .app .exam-official-links a{width:100%}
 }
 @media(prefers-reduced-motion:reduce){.app .exam-official-guide .exam-official-chevron{transition:none}}
+
+/* Optional isolated architecture laboratory: deliberately not part of the daily launch. */
+.app .architecture-playground-entry{margin:20px 0 4px;padding:15px;border:1px solid #6ac7b6;border-radius:11px;background:linear-gradient(115deg,#173843,#19304a)}
+.app .architecture-playground-entry strong{display:block;color:#e6fff6;font-size:16px}
+.app .architecture-playground-entry small{color:#85f0d1;font-size:10px;margin-left:7px}
+.app .architecture-playground-entry p{color:#d4e9f0;font-size:13px;line-height:1.7}
+.app .architecture-playground-entry a{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;min-height:44px;background:#276454;color:#fff;border-radius:9px;font-size:14px;font-weight:800;text-decoration:none}
+.app .architecture-playground-entry a:focus-visible{outline:3px solid #fff1a7;outline-offset:3px}

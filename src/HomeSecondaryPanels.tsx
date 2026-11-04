@@ -35,6 +35,11 @@ export default function HomeSecondaryPanels({campaign,expedition,design,retentio
   <details className="home-hub-drawer" data-section="adventure"><summary><span className="home-drawer-title">冒険・設計チャレンジ</span><span className="home-drawer-description">モンスター討伐・遠征・AWS設計演習</span><ChevronDown size={20}/></summary><div className="home-drawer-content"><EnemyCampaignPanel {...campaign}/>
   <ExpeditionBoard {...expedition}/>
   <DesignSimulator {...design}/>
+  <section className="architecture-playground-entry" aria-label="AWS構成の操作実験">
+    <strong>AWS ARCHITECTURE PLAYGROUND <small>EXPERIMENT</small></strong>
+    <p>AZ障害・DBフェイルオーバー・S3のアクセス制御を自由に操作。XPや学習履歴には影響しません。</p>
+    <a href="/certification-study/labs/architecture/">実験室を開く（別ページ）</a>
+  </section>
   </div></details><details className="home-hub-drawer" data-section="review"><summary><span className="home-drawer-title">もっと学習する</span><span className="home-drawer-description">期限が来た復習・おすすめ問題・ボス戦</span><ChevronDown size={20}/></summary><div className="home-drawer-content"><RetentionQuestBoard {...retention}/>
    <SmartQuestBoard {...smart}/>
   <BossBoard {...boss}/>

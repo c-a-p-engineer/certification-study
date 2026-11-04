@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c1427">
+<meta name="description" content="AWSの構成を壊して直す、無料の操作型アーキテクチャ実験室。">
+<title>AWS ARCHITECTURE PLAYGROUND // OVERDRIVE</title>
+<link rel="stylesheet" href="./lab.css">
+</head>
+<body>
+<main class="shell">
+<header class="top">
+  <div><a class="back" href="../../">← CERTIFICATION // OVERDRIVEへ戻る</a>
+  <div class="eyebrow">EXPERIMENT / INTERACTIVE ARCHITECTURE</div>
+  <h1>AWS ARCHITECTURE <em>PLAYGROUND</em></h1>
+  <p class="lead">構成を変え、障害を起こし、結果を観察する。実際のAWSリソースは作成しません。</p></div>
+  <span class="flag">LAB / NO XP</span>
+</header>
+<nav class="tabs" id="scenarios" aria-label="実験シナリオ"></nav>
+<div class="layout">
+  <section class="visual panel" aria-labelledby="scene-title">
+    <div class="section-top"><div><span class="eyebrow">LIVE TOPOLOGY</span><h2 id="scene-title">シミュレーション構成図</h2></div><button class="ghost" id="reset" type="button">構成をリセット</button></div>
+    <div class="canvas" tabindex="0" role="region" aria-label="構成図（狭い画面では左右にスクロールできます）"><svg id="diagram" viewBox="0 0 740 405" role="img" aria-label="現在のAWS構成。詳細は下部の判定と操作欄を参照"></svg></div>
+    <p class="caption">2.5D概念図。スマートフォンでは図を左右にスクロールできます。実際の通信速度、稼働時間、AWS料金や正確なトポロジーを再現するものではありません。</p>
+    <div class="metrics" id="metrics" aria-label="シミュレーションの計器"></div>
+  </section>
+  <section class="controls panel" aria-labelledby="controls-title">
+    <span class="eyebrow">CHAOS CONTROLS</span><h2 id="controls-title">操作パネル</h2>
+    <p id="prompt" class="prompt"></p>
+    <div id="controls"></div>
+    <div class="presets" id="presets" aria-label="実験ショートカット"></div>
+    <div class="result" id="result" role="status" aria-live="polite"></div>
+    <a id="reference" class="reference" target="_blank" rel="noopener noreferrer" href="https://docs.aws.amazon.com/">AWS公式ドキュメントで仕様を確認 ↗</a>
+  </section>
+</div>
+<section class="bottom panel" aria-label="実験ログと注意">
+  <div><span class="eyebrow">OBSERVATION LOG</span><h2>操作ログ</h2><ol id="events" aria-live="off"></ol></div>
+  <div><span class="eyebrow">SCOPE</span><h2>実験の前提</h2>
+  <p>数値は教材用の仮想値です。障害検知・復旧時間・サービス固有の制限を省略している場合があります。実構成の判断は公式ドキュメントで確認してください。</p>
+  <p>採点・学習履歴・XP・バックアップを変更しません。操作はこの画面内だけで完結し、再読み込みで初期状態に戻ります。</p></div>
+</section>
+<footer>Unofficial independent learning experiment — not affiliated with AWS. <span>Teardown-inspired deterministic visualization, not a physics engine.</span></footer>
+</main>
+<script type="module" src="./app.mjs"></script>
+</body></html>
