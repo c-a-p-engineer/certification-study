@@ -35,7 +35,7 @@ test('bounded transitions, motion accessibility, responsive and pointer isolatio
  assert.ok(css.includes('.app.reduced .od-target-console{display:none!important}'));
  assert.ok(css.includes('pointer-events:none'));
  assert.ok(!css.includes('infinite'));
- assert.ok(css.includes('.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz'));
+ assert.ok(css.includes('.app.visual-overdrive:not(.reduced):not(.quiz-focus):not(.quiz-exam) .quiz'));
  assert.ok(!css.includes('.quiz:not(.quiz-focus)'));
  assert.ok(css.includes('.od4-boss-3d::after'));
 
