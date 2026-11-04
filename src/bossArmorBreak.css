@@ -1,0 +1,49 @@
+/* Opt-in, finite mechanics-inspired combat choreography. Normal/focus/compact UI is unchanged. */
+.app .od4-armor-break{display:none}
+.app.visual-overdrive .od4-armor-break{
+ display:block;position:relative;isolation:isolate;overflow:hidden;
+ margin:13px 0 12px;padding:11px 12px 5px;border:1px solid #596d9e;border-radius:11px;
+ background:radial-gradient(ellipse at 50% 43%,#264962 0%,#161e39 50%,#11172f 100%);
+ --armor-accent:#a0d5ff;--armor-plate:#405b83;--armor-highlight:#8ce5ff;
+}
+.app .od4-armor-security{--armor-accent:#f4abf1!important;--armor-plate:#714867!important;--armor-highlight:#ffd9f1!important}
+.app .od4-armor-resilience{--armor-accent:#ffd19d!important;--armor-plate:#75516c!important;--armor-highlight:#ffe9b2!important}
+.app .od4-armor-performance{--armor-accent:#80f5ff!important;--armor-plate:#425c8c!important;--armor-highlight:#bcffff!important}
+.app .od4-armor-cost{--armor-accent:#9dffe7!important;--armor-plate:#366879!important;--armor-highlight:#caffef!important}
+.app .od4-armor-heading,.app .od4-armor-footer{display:flex;justify-content:space-between;gap:9px;align-items:center;position:relative;z-index:2;font-size:10px;letter-spacing:.075em;font-weight:900;color:#bad3e8}
+.app .od4-armor-heading strong{color:var(--armor-highlight);font-size:11px;text-align:right}
+.app .od4-armor-svg{display:block;width:100%;height:auto;max-height:190px;overflow:visible}
+.app .od4-armor-grid{stroke:#81b9da;stroke-width:1;stroke-opacity:.17}
+.app .od4-armor-halo{stroke:var(--armor-accent);opacity:.46;stroke-dasharray:8 9}
+.app .od4-armor-core-border{fill:#14213d;stroke:var(--armor-highlight);stroke-width:4}
+.app .od4-armor-core-fill{fill:var(--armor-plate);stroke:var(--armor-highlight);stroke-width:2;filter:drop-shadow(0 0 10px var(--armor-accent))}
+.app .od4-armor-core-hex{fill:#213548;stroke:var(--armor-highlight);stroke-width:3}
+.app .od4-armor-iris{fill:var(--armor-highlight);filter:drop-shadow(0 0 12px var(--armor-accent))}
+.app .od4-armor-plate{fill:var(--armor-plate);stroke:var(--armor-highlight);stroke-width:3;stroke-linejoin:round}
+.app .od4-armor-etch{fill:none;stroke:var(--armor-accent);stroke-width:3;stroke-linecap:round;opacity:.8}
+.app .od4-armor-edge{fill:var(--armor-highlight);opacity:.67}
+.app .od4-armor-technical{fill:var(--armor-highlight);font-size:10px;letter-spacing:1.2px;font-weight:900}
+.app .od4-armor-technical path{fill:none;stroke:var(--armor-accent);stroke-width:1.5;stroke-opacity:.65}
+.app .od4-armor-technical circle{fill:var(--armor-accent)}
+.app .od4-armor-part{transform-box:fill-box;transform-origin:center;transition:transform .34s cubic-bezier(.16,1,.3,1),opacity .34s ease;filter:drop-shadow(0 3px 5px #0007)}
+.app .od4-armor-strained .od4-armor-part-left{transform:translate(-8px,2px) rotate(-3deg)}
+.app .od4-armor-strained .od4-armor-part-right{transform:translate(8px,2px) rotate(3deg)}
+.app .od4-armor-strained .od4-armor-part-top{transform:translateY(-6px)}
+.app .od4-armor-strained .od4-armor-part-bottom{transform:translateY(6px)}
+.app .od4-armor-exposed .od4-armor-part-left{transform:translate(-30px,6px) rotate(-11deg)}
+.app .od4-armor-exposed .od4-armor-part-right{transform:translate(30px,6px) rotate(11deg)}
+.app .od4-armor-exposed .od4-armor-part-top{transform:translateY(-18px)}
+.app .od4-armor-exposed .od4-armor-part-bottom{transform:translateY(18px)}
+.app .od4-armor-exposed .od4-armor-core-fill{filter:drop-shadow(0 0 20px var(--armor-accent))}
+.app .od4-armor-broken .od4-armor-iris{fill:#9caeb4;filter:none}
+.app .od4-armor-broken .od4-armor-halo{opacity:.14}
+.app .od4-armor-broken .od4-armor-part-left{transform:translate(-90px,-27px) rotate(-32deg);opacity:.14}
+.app .od4-armor-broken .od4-armor-part-right{transform:translate(90px,-27px) rotate(32deg);opacity:.14}
+.app .od4-armor-broken .od4-armor-part-top{transform:translateY(-48px) rotate(8deg);opacity:.14}
+.app .od4-armor-broken .od4-armor-part-bottom{transform:translateY(48px) rotate(-8deg);opacity:.14}
+.app .od4-armor-strike{stroke:var(--armor-highlight);stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 8px var(--armor-accent));animation:od4-armor-strike .48s ease-out both;transform-origin:360px 101px}
+@keyframes od4-armor-strike{0%{opacity:0;transform:scale(.35)}12%{opacity:1}100%{opacity:0;transform:scale(1.35)}}
+@media(max-width:700px){.app.visual-overdrive .od4-armor-break{padding:8px 9px 5px}.app .od4-armor-svg{max-height:145px}.app .od4-armor-heading,.app .od4-armor-footer{font-size:9px}}
+/* Honor both device and in-app motion reduction, even if an old preference remains OVERDRIVE. */
+@media(prefers-reduced-motion:reduce){.app .od4-armor-break{display:none!important}}
+.app.reduced .od4-armor-break{display:none!important}
