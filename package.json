@@ -72,7 +72,7 @@
     "test:playground": "node --test scripts/architecture-playground.test.mjs",
     "test:armor-fx": "node --experimental-strip-types --test scripts/boss-armor-fx.test.mjs",
     "test:3d-boss": "node --experimental-strip-types --test scripts/boss-3d-stage.test.mjs",
-    "test:targeting": "node --test scripts/answer-targeting-fx.test.mjs"
+    "test:targeting": "node --test scripts/answer-targeting-fx.test.mjs scripts/answer-targeting-render.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
