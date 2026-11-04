@@ -32,6 +32,7 @@ test('3D armor is derived only from read-only boss values, with no reward/storag
  }
  assert.match(css,/pointer-events:none/);
  assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/\.app\.reduced \.od4-boss-3d\{display:none!important\}/);
 });
 test('Three.js is a game-only lazy dependency; not a startup import',()=>{
  assert.doesNotMatch(main,/from 'three'/);

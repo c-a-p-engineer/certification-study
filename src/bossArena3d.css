@@ -12,3 +12,7 @@
 @media(max-width:700px){.app .od4-boss-3d,.app .od4-boss-3d-overlay{min-height:165px}.app .od4-boss-3d-overlay{padding:9px 10px}.app .od4-boss-3d-overlay strong{max-width:85%;font-size:15px}.app .od4-boss-3d-tag,.app .od4-boss-3d-hint{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.app .od4-boss-3d-stage{display:none!important}.app .od4-boss-3d-overlay{display:none!important}.app .od4-boss-3d{min-height:0}}
 .app.reduced .od4-boss-3d-stage,.app.reduced .od4-boss-3d-overlay{display:none!important}
+
+/* No empty decorative arena in reduced-motion mode. Base HUD remains visible. */
+@media(prefers-reduced-motion:reduce){.app .od4-boss-3d{display:none!important}}
+.app.reduced .od4-boss-3d{display:none!important}
