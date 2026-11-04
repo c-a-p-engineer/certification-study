@@ -6,6 +6,9 @@ const controls=readFileSync('src/QuizAnswerControls.tsx','utf8');
 const css=readFileSync('src/answerTargetingFx.css','utf8');
 test('effect is opt-in only outside exams and focus layout',()=>{
  assert.ok(main.includes("cinematic={!examMode&&visualPower==='overdrive'&&!reduced&&quizLayout!=='focus'}"));
+ assert.ok(main.includes("mode==='quiz'&&examMode?'quiz-exam':''"));
+ assert.ok(css.includes(':not(.quiz-exam)'));
+
  assert.ok(controls.includes('const fx=cinematic&&!examMode&&showChoices'));
  assert.ok(controls.includes('aim?.questionId===question.id'));
 });
