@@ -6,6 +6,9 @@ const controls=readFileSync('src/QuizAnswerControls.tsx','utf8');
 const css=readFileSync('src/answerTargetingFx.css','utf8');
 test('effect is opt-in only outside exams and focus layout',()=>{
  assert.ok(main.includes("cinematic={!examMode&&visualPower==='overdrive'&&!reduced&&quizLayout!=='focus'}"));
+ assert.ok(main.includes("mode==='quiz'&&examMode?'quiz-exam':''"));
+ assert.ok(css.includes(':not(.quiz-exam)'));
+
  assert.ok(controls.includes('const fx=cinematic&&!examMode&&showChoices'));
  assert.ok(controls.includes('aim?.questionId===question.id'));
 });
@@ -32,7 +35,7 @@ test('bounded transitions, motion accessibility, responsive and pointer isolatio
  assert.ok(css.includes('.app.reduced .od-target-console{display:none!important}'));
  assert.ok(css.includes('pointer-events:none'));
  assert.ok(!css.includes('infinite'));
- assert.ok(css.includes('.app.visual-overdrive:not(.reduced):not(.quiz-focus) .quiz'));
+ assert.ok(css.includes('.app.visual-overdrive:not(.reduced):not(.quiz-focus):not(.quiz-exam) .quiz'));
  assert.ok(!css.includes('.quiz:not(.quiz-focus)'));
  assert.ok(css.includes('.od4-boss-3d::after'));
 
