@@ -20,11 +20,12 @@ import {readHapticMode,writeHapticMode,triggerHaptic,testHapticDevice,type Hapti
 import {answerCelebration,burstGeometry,type Celebration} from './celebration.ts';
 import MonsterArt from '../MonsterArt.tsx';
 import SoloArcade from './SoloArcade.tsx';
+import DailyCode from './DailyCode.tsx';
 import type {ArcadeKind} from './soloArcadeEngine.ts';
 import {correctIndices,isCorrect,planRound,sessionPercent,shuffled,DOMAINS,type SessionMode,type LearningRound} from './planner.ts';
 
 type Progress=AttemptProgress&{equippedRelic?:string;bossRecords?:unknown;expeditions?:unknown;designLab?:unknown};
-type Screen='home'|'quiz'|'finish'|'insights'|'settings'|'arcade';
+type Screen='home'|'quiz'|'finish'|'insights'|'settings'|'arcade'|'daily-code';
 type Grade={id:string;chosen:number[];correct:boolean;reward:AttemptReward|null};
 const QUESTIONS=bank as StudyQuestion[];
 const EMPTY:Progress={xp:0,best:0,answered:0,correct:0,mistakes:[],domains:{},reviews:{}};
@@ -107,7 +108,7 @@ export default function RebornApp(){
  useEffect(()=>{saveAudioSettings(audioSettings);audioRef.current?.configure(audioSettings)},[audioSettings]);
  useEffect(()=>{writeHapticMode(haptics)},[haptics]);
  useEffect(()=>{saveFxLevel(fxLevel)},[fxLevel]);
- useEffect(()=>{const scene:MusicScene=screen==='quiz'?(activeExam?'exam':'mission'):screen==='arcade'?'mission':screen==='finish'?'result':'home';audioRef.current?.setScene(scene)},[screen,activeExam]);
+ useEffect(()=>{const scene:MusicScene=screen==='quiz'?(activeExam?'exam':'mission'):screen==='arcade'||screen==='daily-code'?'mission':screen==='finish'?'result':'home';audioRef.current?.setScene(scene)},[screen,activeExam]);
  useEffect(()=>{if(screen!=='quiz'||phase!=='answer'||activeExam)return;feedbackRef.current?.scrollIntoView({block:'start',behavior:'auto'});},[screen,phase,index,activeExam]);
  useEffect(()=>{
   if(screen!=='quiz'||!activeExam)return;
@@ -120,14 +121,14 @@ export default function RebornApp(){
   if(!audioSettings.sfxEnabled)return;
   if(!audioRef.current)audioRef.current=new AudioDirector();
   const engine=audioRef.current;engine.configure(audioSettings);
-  const scene:MusicScene=screen==='quiz'?(activeExam?'exam':'mission'):screen==='arcade'?'mission':screen==='finish'?'result':'home';
+  const scene:MusicScene=screen==='quiz'?(activeExam?'exam':'mission'):screen==='arcade'||screen==='daily-code'?'mission':screen==='finish'?'result':'home';
   engine.setScene(scene);
   void engine.unlock().then(()=>engine.play(effect));
  }
  function changeSound(){setAudioSettings(a=>({...a,sfxEnabled:!a.sfxEnabled}))}
  function changeMusic(){
   const enabled=!audioSettings.bgmEnabled;
-  if(enabled){if(!audioRef.current)audioRef.current=new AudioDirector();const engine=audioRef.current;engine.configure({...audioSettings,bgmEnabled:true});engine.setScene(screen==='quiz'?(activeExam?'exam':'mission'):screen==='arcade'?'mission':screen==='finish'?'result':'home');void engine.unlock()}
+  if(enabled){if(!audioRef.current)audioRef.current=new AudioDirector();const engine=audioRef.current;engine.configure({...audioSettings,bgmEnabled:true});engine.setScene(screen==='quiz'?(activeExam?'exam':'mission'):screen==='arcade'||screen==='daily-code'?'mission':screen==='finish'?'result':'home');void engine.unlock()}
   setAudioSettings(a=>({...a,bgmEnabled:enabled}));
  }
  function signal(event:HapticEvent){triggerHaptic(event,haptics,actualReduced,activeExam)}
@@ -151,6 +152,7 @@ export default function RebornApp(){
   // allocating any second learning event or extending the answer phase.
   if(effect.kind==='combo'||effect.kind==='boss-win')sound('correct');
  }
+ function startDailyCode(){setScreen('daily-code');setMenuOpen(false);setError('');sound('start');signal('start')}
  function startArcade(kind:ArcadeKind){
   if(!canWrite){setError('学習記録の保存状態を確認してください。');return}
   setArcadeKind(kind);setRunId(makeAttemptRunId());setScreen('arcade');setMenuOpen(false);setError('');
@@ -220,11 +222,12 @@ export default function RebornApp(){
    {error&&<p className="rb-error" role="alert">{error}</p>}
    {screen==='home'&&<div className="rb-page">
     <section className="rb-welcome"><div className="rb-eyebrow"><span className="rb-dot"/> YOUR NEXT MISSION</div><h1>今日も、<br/><em>ひとつ強くなる。</em></h1><p>問題を解いて、理由を理解する。続きはまた明日でも大丈夫。</p><div className="rb-primary-card"><div className="rb-primary-label"><Clock3 size={17}/> まずは5問 · 約5分</div><h2>今日のクエスト</h2><p>{recallDueText}。{daily.questions.length}問を順に攻略します。</p><div className="rb-quest-metrics"><span><strong>{daily.eligibleDue}</strong> 復習期限</span><span><strong>{progress.mistakes.length}</strong> 苦手</span><span><strong>{QUESTIONS.length}</strong> 総問題</span></div><button className="rb-start" onClick={()=>start('daily')} disabled={!canWrite||daily.questions.length===0}>学習を始める <ArrowRight size={20}/></button></div></section>
-    <section className="sa-home-modes" aria-label="新しいアーケードモード"><div className="rb-section-heading"><span>SOLO ARCADE</span><h2>ひとりで攻略する</h2></div><div className="sa-home-grid"><button className="sa-launch sa-launch-quest" type="button" disabled={!canWrite} onClick={()=>startArcade('quest')}><Swords size={30}/><strong>QUEST RUN</strong><span>ルートを選び、スキルを育て、3ステージのボスへ</span><span className="sa-launch-tag">3 STAGES · 15 QUESTIONS</span><ArrowRight size={21}/></button><button className="sa-launch sa-launch-blitz" type="button" disabled={!canWrite} onClick={()=>startArcade('blitz')}><Clock3 size={30}/><strong>BLITZ</strong><span>90秒の高速クイズで自己ベストを更新</span><span className="sa-launch-tag">90 SECONDS · 1 TAP</span><ArrowRight size={21}/></button></div></section><section className="rb-summary" aria-label="現在の進捗"><div><span>累計XP</span><strong>{fmt(progress.xp)}</strong></div><div><span>解答した回数</span><strong>{fmt(progress.answered)}</strong></div><div><span>正答率（履歴）</span><strong>{sessionPercent(progress.correct,progress.answered)}<small>%</small></strong></div></section>
+    <section className="sa-home-modes" aria-label="新しいアーケードモード"><div className="rb-section-heading"><span>SOLO ARCADE</span><h2>ひとりで攻略する</h2></div><div className="sa-home-grid"><button className="sa-launch sa-launch-quest" type="button" disabled={!canWrite} onClick={()=>startArcade('quest')}><Swords size={30}/><strong>QUEST RUN</strong><span>ルートを選び、スキルを育て、3ステージのボスへ</span><span className="sa-launch-tag">3 STAGES · 15 QUESTIONS</span><ArrowRight size={21}/></button><button className="sa-launch sa-launch-blitz" type="button" disabled={!canWrite} onClick={()=>startArcade('blitz')}><Clock3 size={30}/><strong>BLITZ</strong><span>90秒の高速クイズで自己ベストを更新</span><span className="sa-launch-tag">90 SECONDS · 1 TAP</span><ArrowRight size={21}/></button><button className="sa-launch sa-launch-code" type="button" onClick={startDailyCode}><BookOpen size={30}/><strong>DAILY CODE</strong><span>4つのサービスと役割を結び付ける日替わりパズル</span><span className="sa-launch-tag">DAILY · 4 MATCHES</span><ArrowRight size={21}/></button></div></section><section className="rb-summary" aria-label="現在の進捗"><div><span>累計XP</span><strong>{fmt(progress.xp)}</strong></div><div><span>解答した回数</span><strong>{fmt(progress.answered)}</strong></div><div><span>正答率（履歴）</span><strong>{sessionPercent(progress.correct,progress.answered)}<small>%</small></strong></div></section>
     <section className="rb-modes"><div className="rb-section-heading"><span>CHOOSE YOUR PATH</span><h2>次にやること</h2></div><button className="rb-mode" disabled={!canWrite||progress.mistakes.length===0} onClick={()=>start('weak')}><span className="rb-mode-icon coral"><Target size={25}/></span><span><strong>苦手を攻略する</strong><small>間違えた問題から最大5問</small></span><ChevronRight size={20}/></button><button className="rb-mode" disabled={!canWrite} onClick={()=>start('mix')}><span className="rb-mode-icon blue"><BookOpen size={25}/></span><span><strong>ランダム演習</strong><small>4分野から5問に挑戦</small></span><ChevronRight size={20}/></button><button className="rb-mode" disabled={!canWrite} onClick={()=>start('exam')}><span className="rb-mode-icon amber"><Clock3 size={25}/></span><span><strong>65問の模擬試験</strong><small>130分 · 試験中は正解を表示しない</small></span><ChevronRight size={20}/></button><div className="rb-domain-block"><div className="rb-domain-label">分野を選んで10問</div><div className="rb-domains">{DOMAINS.map(d=><button key={d} className={domain===d?'is-active':''} aria-pressed={domain===d} onClick={()=>setDomain(d)}>{d}</button>)}</div><button className="rb-secondary" onClick={()=>start('domain',domain)} disabled={!canWrite}>この分野を学習する <ArrowRight size={17}/></button></div></section>
     <section className="rb-enemy-card"><div><small>LIVE CAMPAIGN</small><strong>{enemyData.name}</strong><p>現在の敵 · 残りHP {enemy.hp} / {enemyCap}</p></div><div className="rb-enemy-picture"><MonsterArt id={enemyData.id} hpRatio={enemyCap?enemy.hp/enemyCap:0} small/></div></section>
     <section className="rb-bottom-actions"><button onClick={()=>nav('insights')}><Trophy size={20}/> 成長の記録を見る <ChevronRight size={18}/></button><button onClick={()=>nav('settings')}><ShieldCheck size={20}/> バックアップ・詳細 <ChevronRight size={18}/></button></section>
    </div>}
+   {screen==='daily-code'&&<DailyCode onExit={quit} onSound={sound} onHaptic={signal}/>}
    {screen==='arcade'&&<SoloArcade key={arcadeKind+'-'+runId} kind={arcadeKind} bank={QUESTIONS} learnedIds={Object.keys(progress.reviews??{})} onRecord={recordArcade} onSound={sound} onHaptic={signal} onExit={quit}/>}
    {screen==='quiz'&&round&&current&&<div className="rb-quiz">
     <div className="rb-quiz-top"><button className="rb-back" type="button" onClick={quit}><ArrowLeft size={18}/> 終了してホームへ</button>{activeExam&&<span className="rb-clock"><Clock3 size={16}/> {Math.floor(timeLeft/60)}:{String(timeLeft%60).padStart(2,'0')}</span>}</div>
