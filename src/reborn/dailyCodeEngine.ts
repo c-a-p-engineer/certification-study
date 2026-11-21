@@ -111,6 +111,18 @@ export function randomCodePuzzle(
  if(chosen===undefined)throw new Error('No curated puzzle candidates');
  return codePuzzleFromSet(day,chosen,seed);
 }
+export const RANDOM_CODE_RECENT_KEY='cert-overdrive-random-code-recent-sets-v1';
+export function readRecentCodeSets(storage:Pick<Storage,'getItem'>|null):number[]{
+ try{
+  const parsed=JSON.parse(storage?.getItem(RANDOM_CODE_RECENT_KEY)??'[]');
+  return Array.isArray(parsed)?parsed.filter((id):id is number=>Number.isInteger(id)&&id>=0&&id<DAILY_CODE_SETS.length).slice(-12):[];
+ }catch{return []}
+}
+export function rememberRandomCodeSet(setId:number,storage:Pick<Storage,'getItem'|'setItem'>):void{
+ if(!Number.isInteger(setId)||setId<0||setId>=DAILY_CODE_SETS.length)return;
+ const recent=readRecentCodeSets(storage).filter(id=>id!==setId);
+ storage.setItem(RANDOM_CODE_RECENT_KEY,JSON.stringify([...recent,setId].slice(-12)));
+}
 export function dailyMatchResult(clueId:string,answerId:string,completed:readonly string[]):'already'|'correct'|'wrong'{
  if(completed.includes(clueId)||completed.includes(answerId))return 'already';
  return clueId===answerId?'correct':'wrong';
