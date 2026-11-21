@@ -62,7 +62,7 @@ test('solo arcade UI smoke-renders both entry states and preserves source answer
  try{
   const {default:SoloArcade}=await vite.ssrLoadModule('/src/reborn/SoloArcade.tsx');
   for(const kind of ['quest','blitz']){
-   const markup=renderToStaticMarkup(React.createElement(SoloArcade,{kind,bank,learnedIds:[],onRecord:()=>true,onSound:()=>{},onExit:()=>{}}));
+   const markup=renderToStaticMarkup(React.createElement(SoloArcade,{kind,bank,learnedIds:[],onRecord:()=>true,onSound:()=>{},onHaptic:()=>{},onExit:()=>{}}));
    assert.match(markup,/ホームへ/);
    assert.ok(markup.includes(kind==='quest'?'ルートを選ぼう':'BLITZ 90 SEC'));
   }
@@ -71,4 +71,12 @@ test('solo arcade UI smoke-renders both entry states and preserves source answer
   assert.ok(app.includes('startArcade(\'blitz\')'));
   assert.ok(app.includes('applyStudyAttempt(progress,event)'));
  }finally{await vite.close()}
+});
+
+test('one-tap speed mode guards against duplicate commits while a new question renders',()=>{
+ const source=readFileSync('src/reborn/SoloArcade.tsx','utf8');
+ assert.ok(source.includes("if(locked.current===receipt)return"));
+ assert.ok(source.includes("useEffect(()=>{if(isBlitz&&step==='question')locked.current=null},[index,isBlitz,step])"));
+ assert.ok(source.includes("onHaptic(correct?(combo>=3?'combo':'correct'):'wrong')"));
+ assert.ok(source.includes("role=\"status\""));
 });
