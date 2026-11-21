@@ -3,7 +3,7 @@ import {ArrowLeft,BookOpen,Check,ChevronRight,Copy,Grid2X2,Link2,RefreshCw,Spark
 import {localDateKey} from '../studyHistory.ts';
 import {dailyCodePuzzle,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,type CodeTerm} from './dailyCodeEngine.ts';
 
-export type DailyCodeProps={onExit:()=>void;onSound:(effect:'correct'|'wrong'|'finish'|'select')=>void;onHaptic:(effect:'correct'|'wrong'|'finish'|'select')=>void};
+export type DailyCodeProps={onExit:()=>void;onSound:(effect:'correct'|'wrong'|'finish'|'select')=>void;onHaptic:(effect:'correct'|'wrong'|'reward'|'select')=>void};
 export default function DailyCode({onExit,onSound,onHaptic}:DailyCodeProps){
  const [day]=useState(()=>localDateKey(new Date()));
  const puzzle=useMemo(()=>dailyCodePuzzle(day),[day]);
@@ -36,7 +36,7 @@ export default function DailyCode({onExit,onSound,onHaptic}:DailyCodeProps){
   setMatched(next);setLastSolved(term);setSelected(null);setMessage(term.title+' を発見！');onSound('correct');onHaptic('correct');
   if(next.length===puzzle.clues.length){
    try{writeDailyBest(day,dailyCodeScore(mistakes),localStorage)}catch{}
-   onSound('finish');onHaptic('finish');
+   onSound('finish');onHaptic('reward');
   }
  }
  async function shareResult(){
