@@ -91,3 +91,17 @@
 .reborn.is-reduced .rb-fx-stage,.reborn.is-reduced .rb-finish-fireworks{display:none!important}
 
 .rb-volume{display:grid;gap:9px;margin:14px 0}.rb-volume span{display:flex;justify-content:space-between;color:#dce7f9;font-size:13px;font-weight:750}.rb-volume input{width:100%;height:28px;accent-color:#ffca79;cursor:pointer}.rb-volume strong{color:#ffe19b}
+
+.rb-combat-panel{display:flex;align-items:center;gap:16px;background:linear-gradient(120deg,#162c39,#253449);border:1px solid #5d7289;border-radius:15px;padding:13px 17px;margin:12px 0;min-height:115px}
+.rb-combat-monster{width:96px;min-width:96px;max-height:110px;position:relative;filter:drop-shadow(0 0 9px #3eafe180)}
+.rb-combat-monster svg{width:100%;height:105px;object-fit:contain}
+.rb-combat-hit .rb-combat-monster{animation:rb-monster-hit .36s ease-out both}
+.rb-combat-info{display:grid;gap:7px;min-width:0;flex:1}
+.rb-combat-info strong{font-size:14px;overflow-wrap:anywhere;color:#eaf6ff}
+.rb-combat-info span{font-weight:950;color:#ffdb9a;font-size:20px;text-shadow:0 0 8px #ffae63a9}
+.rb-combat-hp-track{height:9px;background:#463342;border-radius:40px;overflow:hidden;border:1px solid #7b4c57}
+.rb-combat-hp-track i{display:block;height:100%;background:linear-gradient(90deg,#fc704f,#ffbc77);border-radius:inherit;transition:width .28s ease-out}
+@keyframes rb-monster-hit{0%,100%{transform:translate(0,0) scale(1);filter:brightness(1)}20%{transform:translate(7px,-3px) scale(1.08);filter:brightness(2)}42%{transform:translate(-6px,3px) scale(.95)}68%{transform:translate(3px,0)}}
+@media(max-width:420px){.rb-combat-panel{padding:12px;gap:8px}.rb-combat-monster{width:72px;min-width:72px}.rb-combat-info strong{font-size:12px}.rb-combat-info span{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.rb-combat-hit .rb-combat-monster{animation:none!important}.rb-combat-hp-track i{transition:none!important}}
+.reborn.is-reduced .rb-combat-hit .rb-combat-monster{animation:none}
