@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createServer} from 'vite';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {reactorCharge} from '../src/reborn/LiveReactor.tsx';
+import {reactorCharge} from '../src/reborn/reactorMath.ts';
 
 const read=path=>readFileSync(path,'utf8');
 const css=read('src/reborn/reborn.css');
