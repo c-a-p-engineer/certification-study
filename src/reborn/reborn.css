@@ -105,3 +105,109 @@
 @media(max-width:420px){.rb-combat-panel{padding:12px;gap:8px}.rb-combat-monster{width:72px;min-width:72px}.rb-combat-info strong{font-size:12px}.rb-combat-info span{font-size:17px}}
 @media(prefers-reduced-motion:reduce){.rb-combat-hit .rb-combat-monster{animation:none!important}.rb-combat-hp-track i{transition:none!important}}
 .reborn.is-reduced .rb-combat-hit .rb-combat-monster{animation:none}
+
+
+/* Compact, quiz-specific terminology: scan meaning first; expand details only on demand. */
+.rb-question-extra .rb-terms{
+ margin:6px 0 16px;
+ padding:0;
+ border:1px solid #456077;
+ border-radius:12px;
+ background:#1d2b40;
+ overflow:hidden;
+ font-size:14px;
+}
+.rb-question-extra .rb-terms-heading{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-height:48px;
+ padding:10px 13px;
+ color:#e4f3fd;
+ cursor:pointer;
+ list-style:none;
+ font-weight:700;
+}
+.rb-question-extra .rb-terms-heading::-webkit-details-marker,
+.rb-question-extra .rb-term-summary::-webkit-details-marker{display:none}
+.rb-question-extra .rb-terms-heading strong{flex:1;font-size:14px;letter-spacing:.015em}
+.rb-question-extra .rb-terms-count{
+ color:#a8dce6;
+ background:#2b4457;
+ padding:3px 9px;
+ font-size:12px;
+ border-radius:99px;
+ white-space:nowrap;
+}
+.rb-question-extra .rb-terms-chevron{flex-shrink:0;transition:transform .15s}
+.rb-question-extra .rb-terms[open]>.rb-terms-heading .rb-terms-chevron{transform:rotate(180deg)}
+.rb-question-extra .rb-term-list{display:grid;gap:0;border-top:1px solid #38526a;padding:0}
+.rb-question-extra .rb-term-item{
+ margin:0;
+ padding:0;
+ border:0;
+ border-bottom:1px solid #34485e;
+ background:transparent;
+ border-radius:0;
+}
+.rb-question-extra .rb-term-item:last-child{border-bottom:0}
+.rb-question-extra .rb-term-summary{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ list-style:none;
+ min-height:53px;
+ padding:10px 13px;
+ cursor:pointer;
+ color:#e5edf8;
+ line-height:1.5;
+}
+.rb-question-extra .rb-term-summary svg{flex-shrink:0;color:#8cacc1;transition:transform .15s}
+.rb-question-extra .rb-term-item[open]>.rb-term-summary svg{transform:rotate(180deg)}
+.rb-question-extra .rb-term-text{
+ min-width:0;
+ flex:1;
+ display:flex;
+ align-items:baseline;
+ flex-wrap:wrap;
+ gap:3px 11px;
+}
+.rb-question-extra .rb-term-text>strong{
+ flex:0 1 auto;
+ font-weight:800;
+ font-size:14px;
+ color:#a7e6f0;
+ overflow-wrap:anywhere;
+}
+.rb-question-extra .rb-term-meaning{
+ font-size:13px;
+ color:#e2eaf5;
+ overflow-wrap:anywhere;
+}
+.rb-question-extra .rb-term-meaning:before{content:"—";color:#7c96ad;margin-right:8px}
+.rb-question-extra .rb-term-detail{
+ padding:1px 14px 13px;
+ color:#d4e2ed;
+ background:#23344a;
+ font-size:13px;
+ line-height:1.75;
+ overflow-wrap:anywhere;
+}
+.rb-question-extra .rb-term-detail p{margin:9px 0;display:flex;gap:9px;flex-wrap:wrap}
+.rb-question-extra .rb-term-detail p>strong{color:#99dadd;white-space:nowrap}
+.rb-question-extra .rb-term-detail .rb-term-note,
+.rb-question-extra .rb-term-detail .rb-term-tip{display:block}
+.rb-question-extra .rb-term-detail .rb-term-tip{border-left:3px solid #e7bc7c;padding-left:9px;color:#ffdfb0}
+.rb-question-extra .rb-terms-heading:focus-visible,
+.rb-question-extra .rb-term-summary:focus-visible{outline:3px solid #ffdc9a;outline-offset:-3px;border-radius:7px}
+@media(max-width:420px){
+ .rb-question-extra .rb-terms-heading{padding:9px 11px}
+ .rb-question-extra .rb-term-summary{padding:9px 11px}
+ .rb-question-extra .rb-term-text>strong{font-size:13px}
+ .rb-question-extra .rb-term-meaning{font-size:12px}
+ .rb-question-extra .rb-term-detail{padding:1px 11px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+ .rb-question-extra .rb-terms-chevron,.rb-question-extra .rb-term-summary svg{transition:none}
+}
