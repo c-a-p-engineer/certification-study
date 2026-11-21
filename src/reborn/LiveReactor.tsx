@@ -22,7 +22,8 @@ const TITLES:Record<ReactorMode,string>={
  * or audio playback: those come from the canonical answer handlers.
  */
 export default function LiveReactor({mode,charge=0,pulse=0,reaction='idle'}:LiveReactorProps){
- const level=reactorCharge(charge);
+ const maximum=mode==='code'?4:5;
+ const level=Math.min(maximum,reactorCharge(charge));
  return <div className={'lrv-reactor lrv-'+mode+' lrv-react-'+reaction} data-reactor-mode={mode} aria-hidden="true">
   <div className="lrv-grid"/>
   <div className="lrv-sweep lrv-sweep-a"/>
@@ -36,8 +37,8 @@ export default function LiveReactor({mode,charge=0,pulse=0,reaction='idle'}:Live
   {pulse>0&&reaction!=='idle'&&<div className={'lrv-impact lrv-impact-'+reaction} key={pulse}><i/><i/><i/></div>}
   <div className="lrv-readout">
    <div className="lrv-title"><Radio size={13}/><span>{TITLES[mode]}</span></div>
-   <div className="lrv-charge"><span>{mode==='code'?'MATCH POWER':mode==='blitz'?'COMBO FLOW':mode==='quest'?'BATTLE FLOW':mode==='exam'?'CONCENTRATE':'STUDY FLOW'}</span><strong>{level}/5</strong></div>
-   <div className="lrv-cells">{Array.from({length:5},(_,i)=><i key={i} className={i<level?'is-lit':''}/>)}</div>
+   <div className="lrv-charge"><span>{mode==='code'?'MATCH POWER':mode==='blitz'?'COMBO FLOW':mode==='quest'?'BATTLE FLOW':mode==='exam'?'CONCENTRATE':'STUDY FLOW'}</span><strong>{mode==='exam'?'ON':level+'/'+maximum}</strong></div>
+   {mode!=='exam'&&<div className="lrv-cells">{Array.from({length:maximum},(_,i)=><i key={i} className={i<level?'is-lit':''}/>)}</div>}
   </div>
   <div className="lrv-mark">{mode==='blitz'?<Zap size={17}/>:mode==='quest'?<Flame size={17}/>:<Radio size={17}/>}</div>
  </div>;
