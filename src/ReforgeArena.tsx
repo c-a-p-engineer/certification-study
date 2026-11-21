@@ -1,9 +1,11 @@
 import React from 'react';
-import {ArrowLeft,ArrowRight,CheckCircle2,Shield,Target,Volume2,VolumeX,Zap} from 'lucide-react';
+import {ArrowLeft,ArrowRight,CheckCircle2,Shield,Volume2,VolumeX,Zap} from 'lucide-react';
 import type {StudyQuestion} from './StudyQuestionIntro';
 import {answerKeys,arenaChoiceOrder,arenaDeck,arenaReport,isExactAnswer,type Confidence,type ArenaOutcome} from './reforgeEngine.ts';
 import {makeAttemptRunId,type AttemptReward,type StudyAttempt} from './studyAttempt.ts';
 import {expandTerms} from './glossary';
+import MonsterArt from './MonsterArt';
+import type {EnemyId} from './enemyCampaign.ts';
 import './reforgeArena.css';
 
 type Phase='predict'|'attack'|'reveal'|'recall'|'complete';
@@ -11,7 +13,7 @@ type Props={
  questions:readonly StudyQuestion[];
  recommended:readonly StudyQuestion[];
  reasons:Readonly<Record<string,string>>;
- enemy:{name:string;hp:number;maxHp:number};
+ enemy:{id:EnemyId;name:string;hp:number;maxHp:number};
  onExit:()=>void;
  onSound:(effect:'select'|'correct'|'wrong'|'finish'|'boss-hit'|'boss-win')=>void;
  onAttempt:(event:StudyAttempt)=>AttemptReward|null;
@@ -102,7 +104,7 @@ export default function ReforgeArena({questions,recommended,reasons,enemy,onExit
    <div className="reforge-stage-meta"><span>ENCOUNTER {index+1} / {deck.length}</span><span>{q.domain}</span></div>
    <div className="reforge-progress" role="progressbar" aria-label="アリーナの進行" aria-valuemin={0} aria-valuemax={deck.length} aria-valuenow={index+(phase==='reveal'||phase==='recall'?1:0)}><span style={{width:(index+(phase==='reveal'||phase==='recall'?1:0))/deck.length*100+'%'}}/></div>
    <div className="reforge-enemy">
-    <div className={'reforge-core '+(impact?'reforge-core-'+impact:'')} aria-hidden="true"><Target size={42}/></div>
+    <div className={'reforge-core '+(impact?'reforge-core-'+impact:'')} aria-hidden="true"><MonsterArt id={enemy.id} hpRatio={enemy.maxHp>0?enemy.hp/enemy.maxHp:0} hit={impact==='win'}/></div>
     <span>LIVE CAMPAIGN · {enemy.name}</span>
     <strong>{enemy.hp} / {enemy.maxHp} HP</strong>
     <div className="reforge-enemy-hp" role="progressbar" aria-label={enemy.name+' の残りHP'} aria-valuemin={0} aria-valuemax={enemy.maxHp} aria-valuenow={enemy.hp}><span style={{width:(enemy.maxHp>0?enemy.hp/enemy.maxHp*100:0)+'%'}}/></div>
