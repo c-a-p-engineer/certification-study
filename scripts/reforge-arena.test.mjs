@@ -117,3 +117,27 @@ test('only first committed choice is graded and recall cannot mint extra rewards
  assert.match(source,/import \{gradeAnswer\} from '\.\/studyAttempt\.ts'/);
  assert.match(main,/recommended=\{dailyFivePlan\.questions\}/);
 });
+
+test('visible choice lettering follows displayed positions, not source indices',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ assert.ok(component.includes('choiceOrder.map((i,pos)'));
+ assert.ok(component.includes('<b>{glyph(pos)}</b><span>{q.choices[i]}</span>'));
+ assert.ok(component.includes('glyph(choiceOrder.indexOf(i))'));
+ assert.ok(component.includes('recallOrder.map((i,pos)'));
+ assert.ok(component.includes('glyph(recallOrder.indexOf(i))'));
+ assert.ok(main.includes('effectsEnabled={!reduced'));
+});
+test('in-stage effects controls use one existing app preference owner',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ const css=readFileSync('src/reforgeArena.css','utf8');
+ const spec=readFileSync('docs/SPECIFICATION.md','utf8');
+ assert.ok(component.includes('onToggleSound'));
+ assert.ok(component.includes('onToggleEffects'));
+ assert.ok(component.includes('disabled={reduced}'));
+ assert.ok(main.includes('onToggleSound={()=>setAudio({sfxEnabled:!audioSettings.sfxEnabled})}'));
+ assert.ok(main.includes('onToggleEffects={()=>changeVisualPower('));
+ assert.ok(css.includes('.reforge-controls button:disabled'));
+ assert.ok(spec.includes('表示位置に応じて連番'));
+});
