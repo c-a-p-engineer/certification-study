@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {answerKeys,arenaDeck,isExactAnswer,arenaReport,ARENA_LENGTH} from '../src/reforgeEngine.ts';
+import {answerKeys,arenaChoiceOrder,arenaDeck,isExactAnswer,arenaReport,ARENA_LENGTH} from '../src/reforgeEngine.ts';
+import {applyStudyAttempt} from '../src/studyAttempt.ts';
 const q=(id,domain,answer=0)=>({id,domain,choices:['A','B','C'],answer});
 test('finite and repeatable deck respects distinct question IDs and balanced domains',()=>{
  const bank=Array.from({length:20},(_,i)=>q('q'+i,['セキュリティ','耐障害性','パフォーマンス','コスト最適化'][i%4]));
@@ -55,4 +56,100 @@ test('arena has voluntary exit, post-answer reveal and no alternate persistent r
  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
  assert.ok(css.includes('min-height:44px'));
  assert.ok(spec.includes('OVERDRIVE REFORGED'));
+});
+
+test('shuffled answer positions preserve original keys and are deterministic',()=>{
+ const item={id:'saa-23',domain:'security',choices:['A','B','C','D','E'],answers:[0,4]};
+ const a=arenaChoiceOrder(item,762),b=arenaChoiceOrder(item,762);
+ assert.deepEqual(a,b);
+ assert.deepEqual([...a].sort((x,y)=>x-y),[0,1,2,3,4]);
+ assert.equal(isExactAnswer(item,[4,0]),true);
+});
+test('duplicate and malformed keys cannot multiply stage opportunities',()=>{
+ const bank=[q('same','x'),q('same','x'),q('another','x'),{id:'invalid',domain:'x',choices:['a','b'],answers:[1,1]}];
+ const deck=arenaDeck(bank,123);
+ assert.deepEqual(new Set(deck.map(x=>x.id)).size,2);
+ assert.equal(deck.some(x=>x.id==='invalid'),false);
+});
+test('immediate reconstruction is a separate observation, not delayed retention',()=>{
+ const result=arenaReport([{questionId:'a',domain:'x',correct:false,confidence:'sure',reconstructed:true},
+ {questionId:'b',domain:'y',correct:true,confidence:'maybe',reconstructed:false}]);
+ assert.equal(result.reconstructed,1);
+ assert.equal(result.correct,1);
+ assert.equal(result.sureWrong.length,1);
+});
+test('arena answer events share canonical idempotent XP, review and battle rules',()=>{
+ const progress={xp:0,best:0,answered:0,correct:0,mistakes:[],domains:{},reviews:{}};
+ const base={attemptId:'reforge-session-1:0:q1',questionId:'q1',domain:'セキュリティ',
+ correct:true,combo:1,mode:'daily',boss:false,at:Date.parse('2026-11-21T12:00:00+09:00')};
+ const first=applyStudyAttempt(progress,base);
+ assert.equal(first.reward.credited,true);
+ assert.ok(first.reward.totalXp>0);
+ assert.equal(first.progress.answered,1);
+ assert.equal(first.progress.reviews.q1.streak,1);
+ const replay=applyStudyAttempt(first.progress,base);
+ assert.equal(replay.reward.credited,false);
+ assert.equal(replay.progress,first.progress);
+ const sameDay=applyStudyAttempt(first.progress,{...base,attemptId:'reforge-session-2:0:q1',at:base.at+30000});
+ assert.equal(sameDay.reward.baseXp,0);
+ assert.equal(sameDay.reward.campaign?.damage??0,0);
+ const newDay=applyStudyAttempt(sameDay.progress,{...base,attemptId:'reforge-session-3:0:q1',at:base.at+86400000});
+ assert.equal(newDay.reward.credited,true);
+ assert.ok(newDay.progress.answerHistory.length>sameDay.progress.answerHistory.length);
+ const exam=applyStudyAttempt(first.progress,{...base,attemptId:'exam-session-1:0:q1',mode:'exam'});
+ assert.equal(exam.progress.xp,first.progress.xp);
+ assert.equal(exam.progress.enemyCampaign,first.progress.enemyCampaign);
+});
+test('only first committed choice is graded and recall cannot mint extra rewards',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ const source=readFileSync('src/reforgeEngine.ts','utf8');
+ assert.match(component,/committingRef\.current=true/);
+ assert.match(component,/const credited=onAttempt\(event\)/);
+ assert.match(component,/attemptId:runId\+'\:'\+index\+'\:'\+q\.id/);
+ assert.match(component,/setPhase\('recall'\)/);
+ assert.match(component,/setRecallResult\(ok\)/);
+ assert.match(component,/setSelectionReasons\(\{\.\.\.reasons\}\)/);
+ assert.match(component,/phase==='recall'&&/);
+ assert.ok(!component.slice(component.indexOf('function checkRecall'),component.indexOf('function advance')).includes('onAttempt('));
+ assert.match(main,/setProgress\(p=>applyStudyAttempt\(p,event\)\.progress\)/);
+ assert.match(main,/if\(syncBlocked\.current\|\|restoreBlocked\)return null/);
+ assert.match(source,/import \{gradeAnswer\} from '\.\/studyAttempt\.ts'/);
+ assert.match(main,/recommended=\{dailyFivePlan\.questions\}/);
+});
+
+test('visible choice lettering follows displayed positions, not source indices',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ assert.ok(component.includes('choiceOrder.map((i,pos)'));
+ assert.ok(component.includes('<b>{glyph(pos)}</b><span>{q.choices[i]}</span>'));
+ assert.ok(component.includes('glyph(choiceOrder.indexOf(i))'));
+ assert.ok(component.includes('recallOrder.map((i,pos)'));
+ assert.ok(component.includes('glyph(recallOrder.indexOf(i))'));
+ assert.ok(main.includes('effectsEnabled={!reduced'));
+});
+test('in-stage effects controls use one existing app preference owner',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ const css=readFileSync('src/reforgeArena.css','utf8');
+ const spec=readFileSync('docs/SPECIFICATION.md','utf8');
+ assert.ok(component.includes('onToggleSound'));
+ assert.ok(component.includes('onToggleEffects'));
+ assert.ok(component.includes('disabled={reduced}'));
+ assert.ok(main.includes('onToggleSound={()=>setAudio({sfxEnabled:!audioSettings.sfxEnabled})}'));
+ assert.ok(main.includes('onToggleEffects={()=>changeVisualPower('));
+ assert.ok(css.includes('.reforge-controls button:disabled'));
+ assert.ok(spec.includes('表示位置に応じて連番'));
+});
+
+test('combat presentation comes from actual campaign state, never a decorative fake enemy',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ const spec=readFileSync('docs/SPECIFICATION.md','utf8');
+ assert.ok(component.includes("import MonsterArt from './MonsterArt'"));
+ assert.ok(component.includes('<MonsterArt id={enemy.id}'));
+ assert.ok(component.includes('enemy.hp'));
+ assert.ok(main.includes('id:currentEnemy(progress.enemyCampaign).id'));
+ assert.ok(main.includes('maxHp:enemyMaxHp(progress.enemyCampaign)'));
+ assert.ok(spec.includes('既存9体のSVG敵'));
 });
