@@ -141,3 +141,15 @@ test('in-stage effects controls use one existing app preference owner',()=>{
  assert.ok(css.includes('.reforge-controls button:disabled'));
  assert.ok(spec.includes('表示位置に応じて連番'));
 });
+
+test('combat presentation comes from actual campaign state, never a decorative fake enemy',()=>{
+ const component=readFileSync('src/ReforgeArena.tsx','utf8');
+ const main=readFileSync('src/main.tsx','utf8');
+ const spec=readFileSync('docs/SPECIFICATION.md','utf8');
+ assert.ok(component.includes("import MonsterArt from './MonsterArt'"));
+ assert.ok(component.includes('<MonsterArt id={enemy.id}'));
+ assert.ok(component.includes('enemy.hp'));
+ assert.ok(main.includes('id:currentEnemy(progress.enemyCampaign).id'));
+ assert.ok(main.includes('maxHp:enemyMaxHp(progress.enemyCampaign)'));
+ assert.ok(spec.includes('既存9体のSVG敵'));
+});
