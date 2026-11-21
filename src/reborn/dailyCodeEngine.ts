@@ -18,6 +18,23 @@ export function dateHash(day:string):number{
  for(let i=0;i<day.length;i++){value=Math.imul(value^day.charCodeAt(i),16777619)}
  return value>>>0;
 }
+/**
+ * Sattolo's shuffle produces one cycle of length N: no item remains
+ * at its original index. This prevents the positional shortcut where
+ * tapping row 1→1, 2→2, etc. solves the matching puzzle without recall.
+ * The seed is date-derived so today's puzzle stays the same on reload.
+ */
+export function derangedDailyAnswers<T>(clues:readonly T[],seed:number):T[]{
+ const result=[...clues];
+ if(result.length<2)throw new Error('Matching game requires at least two cards');
+ let state=((seed>>>0)^0x9e3779b9)>>>0||1;
+ const next=()=>{state^=state<<13;state^=state>>>17;state^=state<<5;return (state>>>0)/4294967296};
+ for(let i=result.length-1;i>0;i--){
+  const j=Math.floor(next()*i);
+  [result[i],result[j]]=[result[j],result[i]];
+ }
+ return result;
+}
 export function dailyCodePuzzle(day:string):CodePuzzle{
  if(!/^\d{4}-\d{2}-\d{2}$/.test(day))throw new Error('Invalid local date');
  const seed=dateHash(day),ids=DAILY_CODE_SETS[seed%DAILY_CODE_SETS.length];
@@ -26,7 +43,8 @@ export function dailyCodePuzzle(day:string):CodePuzzle{
   if(!term||!term.meaning||!term.note)throw new Error('Missing curated term: '+id);
   return {id:term.id,title:term.title,meaning:term.meaning,note:term.note,reading:term.reading};
  });
- return {day,clues:shuffled(selected,seed+1),answers:shuffled(selected,seed+7)};
+ const clues=shuffled(selected,seed+1);
+ return {day,clues,answers:derangedDailyAnswers(clues,seed+7)};
 }
 export function dailyMatchResult(clueId:string,answerId:string,completed:readonly string[]):'already'|'correct'|'wrong'{
  if(completed.includes(clueId)||completed.includes(answerId))return 'already';

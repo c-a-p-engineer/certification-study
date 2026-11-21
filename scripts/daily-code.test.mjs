@@ -5,7 +5,7 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {createServer} from 'vite';
 import {CONCEPTS} from '../src/termGuide.ts';
-import {DAILY_CODE_SETS,dailyCodePuzzle,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,DAILY_CODE_KEY} from '../src/reborn/dailyCodeEngine.ts';
+import {DAILY_CODE_SETS,dailyCodePuzzle,derangedDailyAnswers,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,DAILY_CODE_KEY} from '../src/reborn/dailyCodeEngine.ts';
 
 test('every preset has four distinct, already-curated AWS services and distinct meanings',()=>{
  const catalog=new Map(CONCEPTS.map(c=>[c.id,c]));
@@ -26,6 +26,40 @@ test('local-date daily puzzle has deterministic selection and answer mapping',()
  assert.deepEqual(new Set(a.answers.map(t=>t.id)),new Set(a.clues.map(t=>t.id)));
  assert.equal(new Set(a.answers.map(t=>t.id)).size,4);
  assert.throws(()=>dailyCodePuzzle('tomorrow'));
+});
+test('regression: same-row tapping never solves the 2026-11-21 daily code puzzle',()=>{
+ const puzzle=dailyCodePuzzle('2026-11-21');
+ const positionalMatches=puzzle.clues.filter((clue,i)=>clue.id===puzzle.answers[i].id);
+ assert.equal(positionalMatches.length,0,'no clue may match the answer in the same row');
+ for(let i=0;i<4;i++){
+  assert.equal(dailyMatchResult(puzzle.clues[i].id,puzzle.answers[i].id,[]),'wrong');
+ }
+});
+test('the same-row shortcut is impossible for every calendar day across ten years',()=>{
+ for(let year=2024;year<=2033;year++){
+  for(let month=0;month<12;month++){
+   const days=new Date(Date.UTC(year,month+1,0)).getUTCDate();
+   for(let date=1;date<=days;date++){
+    const day=year+'-'+String(month+1).padStart(2,'0')+'-'+String(date).padStart(2,'0');
+    const puzzle=dailyCodePuzzle(day);
+    assert.equal(new Set(puzzle.answers.map(x=>x.id)).size,4,day);
+    assert.deepEqual(new Set(puzzle.answers.map(x=>x.id)),new Set(puzzle.clues.map(x=>x.id)),day);
+    for(let i=0;i<4;i++)assert.notEqual(puzzle.clues[i].id,puzzle.answers[i].id,day+' row '+i);
+   }
+  }
+ }
+});
+test('derangement preserves every item once, has no fixed point and is seeded',()=>{
+ for(let seed=0;seed<500;seed++){
+  const source=['a','b','c','d'];
+  const result=derangedDailyAnswers(source,seed);
+  assert.deepEqual(new Set(result),new Set(source));
+  assert.equal(result.length,4);
+  for(let i=0;i<4;i++)assert.notEqual(result[i],source[i]);
+  assert.deepEqual(derangedDailyAnswers(source,seed),result);
+  assert.deepEqual(source,['a','b','c','d'],'original list must remain unchanged');
+ }
+ assert.throws(()=>derangedDailyAnswers(['solo'],1));
 });
 test('matching is explicit and answered clues cannot be reused or farmed',()=>{
  assert.equal(dailyMatchResult('ec2','s3',[]),'wrong');
