@@ -40,3 +40,5 @@
 .rb-reading-large .rb-choice-text,.rb-reading-extra .rb-choice-text{line-height:1.85}
 @media(max-width:420px){.rb-question h1{max-inline-size:100%;line-height:1.83}.rb-reading-toolbar button{padding:7px 9px}.rb-options button{padding:13px 10px}.rb-reading-large .rb-question h1{font-size:22px}.rb-reading-extra .rb-question h1{font-size:24px}}
 @media(prefers-reduced-motion:reduce){.rb-feedback .rb-submit{transition:none}}
+
+.rb-explanation-sentences>span{display:block;margin-block-end:.75em;padding-inline-start:.4em;border-inline-start:2px solid #577c9a}.rb-explanation-sentences>span:last-child{margin-bottom:0}
