@@ -74,7 +74,7 @@
     "test:3d-boss": "node --experimental-strip-types --test scripts/boss-3d-stage.test.mjs",
     "test:targeting": "node --test scripts/answer-targeting-fx.test.mjs scripts/answer-targeting-render.test.mjs",
     "test:rhythm": "node --test scripts/combat-rhythm.test.mjs",
-    "test:reforge": "node --experimental-strip-types --test scripts/reforge-arena.test.mjs scripts/reforge-radar.test.mjs"
+    "test:reforge": "node --experimental-strip-types --test scripts/reforge-arena.test.mjs scripts/reforge-radar.test.mjs scripts/reforge-ssr.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
