@@ -18,3 +18,10 @@
 .reforge-controls button{display:flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;padding:.55rem .7rem;border:1px solid #648ca1;border-radius:10px;background:#122d41;color:#e1f6ff;font:inherit;font-size:.84rem;cursor:pointer}
 .reforge-controls button[aria-pressed="true"]{border-color:#75e2ca;background:#144c53}
 .reforge-controls button:disabled{opacity:.55;cursor:not-allowed}
+
+/* The actual campaign enemy replaces the placeholder reticle; no remote assets. */
+.reforge-core,.reforge-core-win,.reforge-core-learn{width:160px;height:142px;transform:none;border:0;border-radius:0;background:transparent;box-shadow:none;display:grid;place-items:center}
+.reforge-core svg.monster-visual{display:block;width:100%;max-width:160px;height:135px;transform:none;filter:drop-shadow(0 8px 20px #071a28)}
+.reforge-core-win{animation:reforge-breach .36s ease-out}
+.reforge-core-learn{opacity:.82}
+@media(max-width:420px){.reforge-core,.reforge-core-win,.reforge-core-learn{height:115px;width:126px}.reforge-core svg.monster-visual{max-width:126px;height:112px}}
