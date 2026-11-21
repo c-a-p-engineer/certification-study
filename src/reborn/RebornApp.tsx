@@ -20,6 +20,7 @@ import {readHapticMode,writeHapticMode,triggerHaptic,testHapticDevice,type Hapti
 import {answerCelebration,burstGeometry,type Celebration} from './celebration.ts';
 import MonsterArt from '../MonsterArt.tsx';
 import SoloArcade from './SoloArcade.tsx';
+import LiveReactor,{type ReactorReaction} from './LiveReactor.tsx';
 import DailyCode from './DailyCode.tsx';
 import type {ArcadeKind} from './soloArcadeEngine.ts';
 import {correctIndices,isCorrect,planRound,sessionPercent,shuffled,DOMAINS,type SessionMode,type LearningRound} from './planner.ts';
@@ -79,6 +80,8 @@ export default function RebornApp(){
  const [fxLevel,setFxLevel]=useState<FxLevel>(readFxLevel);
  const [celebration,setCelebration]=useState<Celebration|null>(null);
  const [fxSequence,setFxSequence]=useState(0);
+ const [livePulse,setLivePulse]=useState(0);
+ const [liveReaction,setLiveReaction]=useState<ReactorReaction>('idle');
  const [hapticMessage,setHapticMessage]=useState('');
  const [restorePreview,setRestorePreview]=useState<ReturnType<typeof backupPreview>|null>(null);
  const [restoreError,setRestoreError]=useState('');
@@ -171,7 +174,7 @@ export default function RebornApp(){
   const seed=Date.now(),plan=planRound(QUESTIONS,{reviews:progress.reviews,mistakes:progress.mistakes,answerHistory:progress.answerHistory},mode,seed,selectedDomain);
   if(!plan.questions.length){setError('この条件で出題できる問題がありません。別のモードを選んでください。');return}
   setError('');setRound(plan);setSessionSeed(seed);setRunId(makeAttemptRunId());setIndex(0);setChosen([]);setGrades([]);
-  setPhase('question');setShowWhy(false);setLastReward(null);setCelebration(null);locked.current=false;setTimeLeft(130*60);
+  setPhase('question');setShowWhy(false);setLastReward(null);setCelebration(null);setLiveReaction('idle');setLivePulse(0);locked.current=false;setTimeLeft(130*60);
   if(mode==='exam')examDeadline.current=Date.now()+130*60*1000;
   setScreen('quiz');setMenuOpen(false);sound('start');signal('start');
  }
@@ -179,6 +182,7 @@ export default function RebornApp(){
   if(phase!=='question'||locked.current||!current||!canWrite)return;
   if(current.answers){
    setChosen(prev=>prev.includes(id)?prev.filter(x=>x!==id):[...prev,id]);
+   setLivePulse(p=>p+1);setLiveReaction('select');
    sound('select');signal('select');
   }else{
    // One tap = one answer. Do not read the still-stale React chosen state.
@@ -196,6 +200,7 @@ export default function RebornApp(){
   setProgress(p=>applyStudyAttempt(p,event).progress);
   setGrades(prev=>[...prev,{id:current.id,chosen:[...answered],correct,reward:preview.reward}]);
   setLastReward(preview.reward);setError('');
+  setLivePulse(p=>p+1);setLiveReaction(activeExam?'select':correct?'correct':'wrong');
   if(activeExam){sound('select');signal('select');advance();return}
   const nextCombo=correct?combo+1:0;
   celebrate(answerCelebration({correct,combo:nextCombo,damage:preview.reward.campaign?.damage??0,defeated:Boolean(preview.reward.campaign?.defeated),rewardedXp:preview.reward.totalXp}));
@@ -204,7 +209,7 @@ export default function RebornApp(){
  function advance(){
   if(!round)return;
   if(index+1>=round.questions.length){setScreen('finish');sound('finish');return}
-  setIndex(v=>v+1);setChosen([]);setPhase('question');setShowWhy(false);setLastReward(null);setCelebration(null);locked.current=false;
+  setIndex(v=>v+1);setChosen([]);setPhase('question');setShowWhy(false);setLastReward(null);setCelebration(null);setLiveReaction('idle');locked.current=false;
  }
  function quit(){setScreen('home');setRound(null);setError('');setCelebration(null);locked.current=false}
  function nav(next:Screen){setScreen(next);setMenuOpen(false);setError('')}
@@ -233,6 +238,7 @@ export default function RebornApp(){
     <div className="rb-quiz-top"><button className="rb-back" type="button" onClick={quit}><ArrowLeft size={18}/> 終了してホームへ</button>{activeExam&&<span className="rb-clock"><Clock3 size={16}/> {Math.floor(timeLeft/60)}:{String(timeLeft%60).padStart(2,'0')}</span>}</div>
     <div className="rb-progress-head"><span>{activeExam?'模擬試験':round.mode==='daily'?'今日のクエスト':round.mode==='weak'?'苦手攻略':round.mode==='domain'?'分野別演習':'ランダム演習'}</span><div className="rb-combo-hud"><span className={combo>=2?'is-hot':''}><Flame size={16}/> {activeExam?'EXAM':combo>=2?combo+' COMBO':'READY'}</span><strong>{index+1} / {round.questions.length}</strong></div></div>
     <div className="rb-track" role="progressbar" aria-label="進行度" aria-valuemin={0} aria-valuemax={round.questions.length} aria-valuenow={index+(phase==='answer'?1:0)}><span style={{width:(index+(phase==='answer'?1:0))/round.questions.length*100+'%'}}/></div>
+    <LiveReactor mode={activeExam?'exam':'study'} charge={activeExam?0:combo} pulse={activeExam?0:livePulse} reaction={activeExam?'idle':liveReaction}/>
     <article className="rb-question" key={current.id}>
      <div className="rb-question-meta"><span>{current.domain}</span><span>問題ID {current.id}</span></div>
      <div className="rb-reading-toolbar" role="group" aria-label="問題文を読みやすくする"><button type="button" className="rb-reading-toggle" aria-pressed={readingGuide} onClick={toggleReading}><BookOpen size={16}/> {readingGuide?'通常表示':'文ごとに読む'}</button><span className="rb-font-controls"><button type="button" aria-label="文字を小さくする" disabled={textScale==='compact'} onClick={()=>resizeText(-1)}>A−</button><button type="button" aria-label="文字を大きくする" disabled={textScale==='extra'} onClick={()=>resizeText(1)}>A＋</button></span></div>
