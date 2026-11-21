@@ -25,3 +25,13 @@
 .reforge-core-win{animation:reforge-breach .36s ease-out}
 .reforge-core-learn{opacity:.82}
 @media(max-width:420px){.reforge-core,.reforge-core-win,.reforge-core-learn{height:115px;width:126px}.reforge-core svg.monster-visual{max-width:126px;height:112px}}
+
+.reforge-intel{text-align:left;margin:1.4rem auto;padding:1rem;border:1px solid #426c80;border-radius:15px;background:#102a3d}
+.reforge-intel h3{margin:0 0 .4rem;font-size:1rem;letter-spacing:.08em;color:#a7f5ef}
+.reforge-intel>p{line-height:1.6;font-size:.85rem;color:#c3dce7}
+.reforge-intel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+.reforge-intel-card{display:flex;flex-direction:column;gap:.35rem;border:1px solid #527386;border-radius:10px;background:#152f43;padding:.8rem;min-width:0}
+.reforge-intel-card strong{font-size:.94rem;color:#e5f4ff}
+.reforge-intel-card span{font-size:.85rem;color:#fff3c0}
+.reforge-intel-card small{font-size:.76rem;color:#c3dde9;line-height:1.5}
+@media(max-width:430px){.reforge-intel{padding:.7rem}.reforge-intel-grid{grid-template-columns:1fr}}
