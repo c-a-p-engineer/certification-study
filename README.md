@@ -1,8 +1,8 @@
 # CERTIFICATION//OVERDRIVE
 
-An original AWS SAA practice app with a rebuilt, learning-first interface. Start with five questions, understand the reasoning, and return for spaced practice. The existing RPG interface is preserved at `?legacy=1`.
+An original AWS SAA practice app with a rebuilt, learning-first interface. Start with five questions, understand the reasoning, and return for spaced practice. The public entry is now the single REBORN OVERDRIVE interface.
 
-**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The **new default home** keeps one prominent daily five-question action, short practice modes, straightforward answer feedback, growth and settings. Advanced legacy RPG modes, resumable mock exams, architect simulations and restore controls are available through [the previous interface](https://c-a-p-engineer.github.io/certification-study/?legacy=1).
+**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The **new default home** keeps one prominent daily five-question action, short practice modes, straightforward answer feedback, growth and settings. The new experience emphasizes immediate answer feedback with optional light, music, synth effects, haptics, and a built-in export/import recovery panel. Historical data remains stored locally; unfinished legacy exam/mission sessions are preserved in storage but not yet resumable in the new interface.
 
 ## Play online
 

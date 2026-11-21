@@ -6,15 +6,15 @@ import {applyStudyAttempt} from '../src/studyAttempt.ts';
 const q=(id,domain,answer=0)=>({id,domain,choices:['A','B','C','D','E'],question:'Question '+id,answer,explanation:'Because',reference:'https://docs.aws.amazon.com/'});
 const bank=Array.from({length:200},(_,i)=>q('q'+i,DOMAINS[i%4]));
 const snapshot={reviews:{},mistakes:['q5','q7','q9'],answerHistory:[]};
-test('single main route is rebuilt by default and old mode is explicit',()=>{
+test('single public entry uses the new REBORN OVERDRIVE and legacy UI is not loaded',()=>{
  const html=readFileSync('index.html','utf8');
  const entry=readFileSync('src/entry.ts','utf8');
  const ui=readFileSync('src/reborn/RebornApp.tsx','utf8');
  const css=readFileSync('src/reborn/reborn.css','utf8');
  assert.match(html,/src\/entry\.ts/);
- assert.match(entry,/get\('legacy'\)==='1'/);
- assert.match(entry,/import\('\.\/main\.tsx'\)/);
- assert.match(entry,/import\('\.\/reborn\/index\.tsx'\)/);
+ assert.match(entry,/import '\.\/reborn\/index\.tsx'/);
+ assert.doesNotMatch(entry,/legacy|main\.tsx/);
+ assert.doesNotMatch(ui,/legacyUrl|旧版/);
  for(const label of ['今日のクエスト','学習を始める','苦手を攻略する','ランダム演習','成長の記録','バックアップ']){
   assert.ok(ui.includes(label),label);
  }

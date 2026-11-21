@@ -17,7 +17,7 @@ test('one tap on a single choice uses the selected index, not stale React state'
  assert.match(handler,/locked\.current=true/);
  assert.match(handler,/applyStudyAttempt\(progress,event\)/);
  assert.match(handler,/setProgress\(p=>applyStudyAttempt\(p,event\)\.progress\)/);
- assert.match(handler,/if\(activeExam\)\{advance\(\);return\}/);
+ assert.ok(handler.includes("if(activeExam){sound('select');signal('select');advance();return}"));
  assert.equal(ui.includes('どのくらい自信がある'),false);
  assert.equal(ui.includes('rb-confidence'),false);
  assert.equal(ui.includes('setConfidence'),false);
