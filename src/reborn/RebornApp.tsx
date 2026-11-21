@@ -142,7 +142,7 @@ export default function RebornApp(){
  }
  function celebrate(effect:Celebration){
   setCelebration(effect);setFxSequence(v=>v+1);
-  if(!actualReduced&&fxLevel!=='off')signal(effect.haptic);
+  if(!actualReduced)signal(effect.haptic);
   sound(effect.sound);
  }
  function start(mode:SessionMode,selectedDomain?:string){
