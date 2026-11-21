@@ -9,7 +9,7 @@ import {makeAttemptRunId} from '../studyAttempt.ts';
 import {isCorrect,shuffled} from './planner.ts';
 import {applyQuestAnswer,blitzAllowed,blitzDeck,blitzPoints,finishQuest,grantQuestSkill,questDeck,QUEST_ROUTES,QUEST_SKILLS,startQuest,BLITZ_SECONDS,QUEST_STAGE_SIZE,type ArcadeKind,type QuestRoute,type QuestSkill} from './soloArcadeEngine.ts';
 
-export type SoloArcadeProps={kind:ArcadeKind;bank:readonly StudyQuestion[];learnedIds:readonly string[];onRecord:(q:StudyQuestion,correct:boolean,combo:number,id:string)=>boolean;onSound:(e:'correct'|'wrong'|'select'|'combo'|'boss-win'|'finish'|'start')=>void;onHaptic:(e:'correct'|'wrong'|'combo'|'boss-win'|'start')=>void;onExit:()=>void};
+export type SoloArcadeProps={kind:ArcadeKind;bank:readonly StudyQuestion[];learnedIds:readonly string[];onRecord:(q:StudyQuestion,correct:boolean,combo:number,id:string)=>boolean;onSound:(e:'correct'|'wrong'|'select'|'combo'|'boss-win'|'finish'|'start')=>void;onHaptic:(e:'select'|'correct'|'wrong'|'combo'|'boss-win'|'start')=>void;onExit:()=>void};
 type Step='route'|'question'|'review'|'skill'|'done';
 type Response={question:StudyQuestion;correct:boolean};
 const BOSS:QuestRoute={id:'boss',title:'ARCHITECT BOSS',description:'4分野の総合決戦'};
