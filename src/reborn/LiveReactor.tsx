@@ -1,5 +1,6 @@
 import React from 'react';
 import {Flame,Radio,Zap} from 'lucide-react';
+import {reactorCharge} from './reactorMath.ts';
 
 export type ReactorMode='study'|'exam'|'quest'|'blitz'|'code';
 export type ReactorReaction='idle'|'select'|'correct'|'wrong';
@@ -9,9 +10,6 @@ export type LiveReactorProps={
  pulse?:number;
  reaction?:ReactorReaction;
 };
-export function reactorCharge(value:number):number{
- return Number.isFinite(value)?Math.max(0,Math.min(5,Math.floor(value))):0;
-}
 const TITLES:Record<ReactorMode,string>={
  study:'STUDY ENGINE',
  exam:'EXAM FOCUS',
