@@ -29,6 +29,7 @@ export default function ReforgeArena({questions,recommended,reasons,enemy,onExit
  const [runId,setRunId]=React.useState(makeAttemptRunId);
  const [seed,setSeed]=React.useState(()=>Date.now());
  const [deck,setDeck]=React.useState(()=>arenaDeck(recommended.length?recommended:questions,Date.now()));
+ const [selectionReasons,setSelectionReasons]=React.useState(()=>({...reasons}));
  const [index,setIndex]=React.useState(0);
  const [phase,setPhase]=React.useState<Phase>('predict');
  const [confidence,setConfidence]=React.useState<Confidence|null>(null);
@@ -83,7 +84,7 @@ export default function ReforgeArena({questions,recommended,reasons,enemy,onExit
  }
  function restart(){
   const next=Date.now()+1;setSeed(next);setRunId(makeAttemptRunId());
-  setDeck(arenaDeck(recommended.length?recommended:questions,next));
+  setDeck(arenaDeck(recommended.length?recommended:questions,next));setSelectionReasons({...reasons});
   setIndex(0);setPhase('predict');setSelected([]);setConfidence(null);setOutcomes([]);
   setShowAlternatives(false);setRecallSelected([]);setRecallResult(null);setReward(null);setError('');clearFx();committingRef.current=false;
  }
@@ -102,7 +103,7 @@ export default function ReforgeArena({questions,recommended,reasons,enemy,onExit
     <strong>{enemy.hp} / {enemy.maxHp} HP</strong>
     <div className="reforge-enemy-hp" role="progressbar" aria-label={enemy.name+' の残りHP'} aria-valuemin={0} aria-valuemax={enemy.maxHp} aria-valuenow={enemy.hp}><span style={{width:(enemy.maxHp>0?enemy.hp/enemy.maxHp*100:0)+'%'}}/></div>
    </div>
-   <div className="reforge-question"><div className="reforge-question-label"><Shield size={17}/> MISSION BRIEF <span>#{q.id}</span></div>{reasons[q.id]&&<p className="reforge-selection-reason">出題理由：{reasons[q.id]}</p>}<h2>{q.question}</h2></div>
+   <div className="reforge-question"><div className="reforge-question-label"><Shield size={17}/> MISSION BRIEF <span>#{q.id}</span></div>{selectionReasons[q.id]&&<p className="reforge-selection-reason">出題理由：{selectionReasons[q.id]}</p>}<h2>{q.question}</h2></div>
    {phase==='predict'&&<div className="reforge-panel"><span className="reforge-step">01 / PREDICT</span><h3>解答前に、自分の確信度を決める</h3><p>間違えても演習の失敗ではありません。自信のあった誤解は、次の攻略ポイントになります。</p><div className="reforge-confidence">{confidenceLabels.map(item=><button type="button" key={item.value} onClick={()=>beginAttack(item.value)}><strong>{item.label}</strong><small>{item.description}</small><ArrowRight size={18}/></button>)}</div></div>}
    {phase==='attack'&&<div className="reforge-panel"><span className="reforge-step">02 / COMMIT</span><h3>{multiple?'該当する選択肢をすべて選ぶ':'最適な構成を1つ選ぶ'}</h3><p>{confidenceLabels.find(c=>c.value===confidence)?.label} · 正解の根拠は確定後に開示します。</p><div className="reforge-options">{choiceOrder.map(i=><button type="button" key={i} className={selected.includes(i)?'is-selected':''} aria-pressed={selected.includes(i)} onClick={()=>toggleAnswer(i)}><b>{glyph(i)}</b><span>{q.choices[i]}</span><span aria-hidden="true">{selected.includes(i)?'●':'○'}</span></button>)}</div>{error&&<p role="alert">{error}</p>}<button className="reforge-commit" type="button" disabled={!selected.length} onClick={commit}><Zap size={19}/> 回答を確定する</button></div>}
    {phase==='reveal'&&<div className="reforge-panel reforge-reveal"><span className="reforge-step">03 / REVEAL</span><h3>{outcomes[outcomes.length-1]?.correct?'BREAK THROUGH!':'KNOWLEDGE UNLOCKED'}</h3><p className="reforge-reveal-caption">{outcomes[outcomes.length-1]?.correct?'判断が一致した。今度は理由を確認。':'間違えた箇所が次の攻略対象。根拠を回収しよう。'}</p>
