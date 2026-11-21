@@ -1,8 +1,8 @@
 # CERTIFICATION//OVERDRIVE
 
-A flashy, arcade-inspired open-source certification learning game. Starting with AWS Solutions Architect Associate.
+An original AWS SAA practice app with a rebuilt, learning-first interface. Start with five questions, understand the reasoning, and return for spaced practice. The existing RPG interface is preserved at `?legacy=1`.
 
-**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The home screen now foregrounds the daily five-question mission and progress; advanced modes, RPG content, charts, and collections expand on demand instead of occupying the initial scroll.
+**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The **new default home** keeps one prominent daily five-question action, short practice modes, straightforward answer feedback, growth and settings. Advanced legacy RPG modes, resumable mock exams, architect simulations and restore controls are available through [the previous interface](https://c-a-p-engineer.github.io/certification-study/?legacy=1).
 
 ## Play online
 
