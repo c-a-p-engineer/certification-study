@@ -31,9 +31,15 @@ test('SSR renders ambient reactor with real progress and input pulse for all gam
    assert.match(html,/lrv-orbit-first/);
    assert.match(html,/lrv-sweep-a/);
    assert.match(html,/lrv-impact-correct/);
-   assert.match(html,/3\/5/);
+   if(mode==='exam'){
+    assert.match(html,/CONCENTRATE/);
+    assert.match(html,/>ON</);
+    assert.doesNotMatch(html,/3\/5|class="lrv-cells"/);
+   }else{
+    assert.match(html,mode==='code'?/3\/4/:/3\/5/);
+    assert.equal((html.match(/class="is-lit"/g)??[]).length,3);
+   }
    assert.equal((html.match(/lrv-spark lrv-spark-/g)??[]).length,6);
-   assert.equal((html.match(/class="is-lit"/g)??[]).length,3);
   }
   const idle=renderToStaticMarkup(React.createElement(LiveReactor,{mode:'exam',charge:0,pulse:0}));
   assert.doesNotMatch(idle,/lrv-impact lrv-impact-/);
