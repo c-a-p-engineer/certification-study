@@ -47,7 +47,7 @@ export default function DailyCode({onExit,onSound,onHaptic}:DailyCodeProps){
   <div className="sa-top"><button className="rb-back" onClick={onExit}><ArrowLeft size={18}/> ホームへ</button><strong>DAILY CODE · {day}</strong></div>
   {!done?<section className="dc-scene">
     <div className="dc-heading"><Grid2X2 size={31}/><div><span>DAILY PUZZLE</span><h1>サービスを結び付けろ</h1></div></div>
-    <p>左の説明を読み、意味が合うAWSサービスを右から選ぼう。左右の同じ段が正解になることはありません。</p>
+    <p>左の説明を読み、意味が合うAWSサービスを右から選ぼう。位置ではなく知識で見つけよう。</p>
     <div className="dc-progress"><strong>{matched.length} / 4 MATCH</strong><span>{score} PTS</span></div>
     <div className="dc-gauge"><span style={{width:matched.length*25+'%'}}/></div>
     <div className="dc-board">
