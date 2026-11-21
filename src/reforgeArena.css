@@ -13,3 +13,8 @@
 .reforge-calm .reforge-core,.reforge-calm .reforge-enemy-hp span,.reforge-calm .reforge-progress span{animation:none!important;transition:none!important}
 .reforge-entry button:disabled{opacity:.48;cursor:not-allowed}
 @media(prefers-reduced-motion:reduce){.reforge-enemy-hp>span{transition:none}}
+
+.reforge-controls{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.reforge-controls button{display:flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;padding:.55rem .7rem;border:1px solid #648ca1;border-radius:10px;background:#122d41;color:#e1f6ff;font:inherit;font-size:.84rem;cursor:pointer}
+.reforge-controls button[aria-pressed="true"]{border-color:#75e2ca;background:#144c53}
+.reforge-controls button:disabled{opacity:.55;cursor:not-allowed}
