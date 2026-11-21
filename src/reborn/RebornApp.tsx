@@ -1,5 +1,5 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
-import {ArrowLeft,ArrowRight,BookOpen,Check,ChevronRight,Clock3,Download,Flame,Headphones,HelpCircle,Home,Menu,RotateCcw,ShieldCheck,Target,Trophy,Volume2,VolumeX,X,Zap} from 'lucide-react';
+import {ArrowLeft,ArrowRight,BookOpen,Check,ChevronRight,Clock3,Download,Flame,Headphones,HelpCircle,Home,Menu,RotateCcw,ShieldCheck,Target,Trophy,Swords,Volume2,VolumeX,X,Zap} from 'lucide-react';
 import bank from '../generated/questions.json';
 import type {StudyQuestion} from '../StudyQuestionIntro.tsx';
 import {TermsPanel} from '../StudyQuestionIntro.tsx';
