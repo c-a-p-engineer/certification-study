@@ -5,11 +5,12 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {createServer} from 'vite';
 import {CONCEPTS} from '../src/termGuide.ts';
-import {DAILY_CODE_SETS,dailyCodePuzzle,derangedDailyAnswers,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,DAILY_CODE_KEY} from '../src/reborn/dailyCodeEngine.ts';
+import {DAILY_CODE_SETS,dailyCodePuzzle,randomCodePuzzle,readRecentCodeSets,rememberRandomCodeSet,RANDOM_CODE_RECENT_KEY,derangedDailyAnswers,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,DAILY_CODE_KEY} from '../src/reborn/dailyCodeEngine.ts';
 
 test('every preset has four distinct, already-curated AWS services and distinct meanings',()=>{
  const catalog=new Map(CONCEPTS.map(c=>[c.id,c]));
- assert.ok(DAILY_CODE_SETS.length>=7);
+ assert.ok(DAILY_CODE_SETS.length>=40,'at least forty reviewed combinations');
+ assert.equal(new Set(DAILY_CODE_SETS.map(ids=>[...ids].sort().join(','))).size,DAILY_CODE_SETS.length,'every combination is distinct');
  for(const ids of DAILY_CODE_SETS){
   assert.equal(ids.length,4);
   assert.equal(new Set(ids).size,4);
@@ -17,6 +18,7 @@ test('every preset has four distinct, already-curated AWS services and distinct 
   assert.ok(terms.every(x=>x?.category==='AWSサービス'));
   assert.equal(new Set(terms.map(x=>x.meaning)).size,4);
   assert.ok(terms.every(x=>x?.note&&x.reading));
+  assert.ok(terms.every(x=>x?.title&&x.meaning));
  }
 });
 test('local-date daily puzzle has deterministic selection and answer mapping',()=>{
@@ -61,6 +63,48 @@ test('derangement preserves every item once, has no fixed point and is seeded',(
  }
  assert.throws(()=>derangedDailyAnswers(['solo'],1));
 });
+test('random challenge draws many different sets and never reuses a set while unseen sets remain',()=>{
+ const day='2026-11-21';
+ const seen=[];
+ const allTerms=[];
+ for(let n=0;n<DAILY_CODE_SETS.length;n++){
+  const puzzle=randomCodePuzzle(day,(n*1009+83)>>>0,seen,allTerms.slice(-20));
+  assert.ok(!seen.includes(puzzle.setId),'duplicate before pool exhaustion at round '+n);
+  seen.push(puzzle.setId);
+  allTerms.push(...puzzle.clues.map(item=>item.id));
+  assert.equal(puzzle.clues.length,4);
+  assert.deepEqual(new Set(puzzle.clues.map(x=>x.id)),new Set(puzzle.answers.map(x=>x.id)));
+  for(let i=0;i<4;i++)assert.notEqual(puzzle.clues[i].id,puzzle.answers[i].id);
+ }
+ assert.equal(new Set(seen).size,DAILY_CODE_SETS.length);
+ const afterExhaustion=randomCodePuzzle(day,999,seen,allTerms.slice(-20));
+ assert.ok(afterExhaustion.clues.length===4,'play can continue after 41 sets');
+});
+test('random selection differs by seed, is deterministic for same inputs, and avoids recent terms when possible',()=>{
+ const day='2026-11-21';
+ const choices=new Set();
+ for(let seed=0;seed<200;seed++)choices.add(randomCodePuzzle(day,seed,[],[]).setId);
+ assert.ok(choices.size>=20,'fresh seeds produce broad coverage');
+ const one=randomCodePuzzle(day,753,[],[]);
+ assert.deepEqual(randomCodePuzzle(day,753,[],[]),one);
+ const next=randomCodePuzzle(day,1024,[one.setId],one.clues.map(x=>x.id));
+ assert.notEqual(next.setId,one.setId);
+ assert.ok(!next.clues.some(x=>one.clues.some(y=>y.id===x.id)),'avoid repeats of recent four terms where another set is available');
+});
+test('recent set records persist locally without touching practice XP and tolerate invalid data',()=>{
+ const data=new Map();
+ const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+ for(let id=0;id<17;id++)rememberRandomCodeSet(id,storage);
+ assert.equal(readRecentCodeSets(storage).length,12);
+ assert.deepEqual(readRecentCodeSets(storage).slice(-2),[15,16]);
+ rememberRandomCodeSet(15,storage);
+ assert.equal(readRecentCodeSets(storage).at(-1),15);
+ assert.equal(new Set(readRecentCodeSets(storage)).size,12);
+ assert.equal(data.has('certification-overdrive-progress-v1'),false);
+ assert.ok(data.has(RANDOM_CODE_RECENT_KEY));
+ data.set(RANDOM_CODE_RECENT_KEY,'{corrupted');
+ assert.deepEqual(readRecentCodeSets(storage),[]);
+});
 test('matching is explicit and answered clues cannot be reused or farmed',()=>{
  assert.equal(dailyMatchResult('ec2','s3',[]),'wrong');
  assert.equal(dailyMatchResult('ec2','ec2',[]),'correct');
@@ -88,12 +132,15 @@ test('React renders mobile daily code without any extra AWS answer writer',async
  try{
   const {default:DailyCode}=await vite.ssrLoadModule('/src/reborn/DailyCode.tsx');
   const markup=renderToStaticMarkup(React.createElement(DailyCode,{onExit:()=>{},onSound:()=>{},onHaptic:()=>{}}));
-  for(const label of ['DAILY CODE','サービスを結び付けろ','説明を選ぶ','サービスを選ぶ','0 / 4 MATCH'])assert.ok(markup.includes(label),label);
+  for(const label of ['DAILY CODE','サービスを結び付けろ','ランダムに遊ぶ','今日の4問（固定）','種類の問題セット'])assert.ok(markup.includes(label),label);
   const app=readFileSync('src/reborn/RebornApp.tsx','utf8');
   const daily=readFileSync('src/reborn/DailyCode.tsx','utf8');
   assert.ok(app.includes('startDailyCode'));
   assert.ok(app.includes("screen==='daily-code'"));
   assert.ok(daily.includes('writeDailyBest'));
+  assert.ok(daily.includes('randomCodePuzzle'));
+  assert.ok(daily.includes('次の4問に挑戦'));
+  assert.ok(daily.includes('20組突破'));
   assert.ok(!daily.includes('applyStudyAttempt'));
   assert.ok(!daily.includes('setProgress('));
  }finally{await vite.close()}
