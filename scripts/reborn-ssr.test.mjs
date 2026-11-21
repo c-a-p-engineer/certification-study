@@ -13,6 +13,13 @@ test('rebuilt default homepage server-renders with the first learning action vis
    assert.ok(html.includes(text),text);
   }
   assert.ok(html.includes('aria-label="メインナビ"'));
+  assert.ok(html.includes('攻略を始める'));
+  assert.ok(html.includes('DAILY CODE'));
+  assert.ok(html.includes('BLITZ'));
+  assert.match(html,/<details class="sa-academy"/);
+  assert.ok(html.indexOf('QUEST RUN')<html.indexOf('BLITZ'),'quest must precede side modes');
+  assert.ok(html.indexOf('BLITZ')<html.indexOf('ACADEMY — 資格学習'),'academy follows arcade');
+
   assert.ok(html.includes('role="alert"'),'corrupt/unknown storage must fail closed during SSR');
   assert.ok(!html.includes('WHY IT WORKS'),'answer must never be leaked into home HTML');
  }finally{await server.close()}
