@@ -9,7 +9,7 @@ import {expandTerms} from '../glossary.ts';
 import {applyStudyAttempt,makeAttemptRunId,normalizeAttemptReceipts,type AttemptProgress,type AttemptReward,type StudyAttempt} from '../studyAttempt.ts';
 import {useProgressConflict} from '../useProgressConflict.ts';
 import {PROGRESS_SAVE_KEY} from '../progressSync.ts';
-import {RESTORE_JOURNAL_KEY,createBackup,validProgress} from '../backup.ts';
+import {RESTORE_JOURNAL_KEY,createBackup,parseBackup,restoreBackup,backupPreview,inspectRestoreJournal,recoverInterruptedRestore,validProgress} from '../backup.ts';
 import {normalizeEnemyCampaign,currentEnemy,enemyMaxHp,type EnemyCampaign} from '../enemyCampaign.ts';
 import {planDailyFive} from '../dailyFive.ts';
 import {dueQuestionIds} from '../studyScheduler.ts';
@@ -41,6 +41,8 @@ const fmt=(n:number)=>new Intl.NumberFormat('ja-JP').format(n);
 const alpha=(n:number)=>String.fromCharCode(65+n);
 const FX_KEY='cert-overdrive-reborn-fx-v1';
 type FxLevel='off'|'high'|'maximum';
+function readRebornAudioSettings():AudioSettings{const value=readAudioSettings();try{return localStorage.getItem('cert-overdrive-audio-v1')===null?{...value,sfxEnabled:true}:value}catch{return value}}
+function readRebornHaptics():HapticMode{const value=readHapticMode();try{return localStorage.getItem('cert-overdrive-haptics-v1')===null?'overdrive':value}catch{return value}}
 function readFxLevel():FxLevel{try{const value=localStorage.getItem(FX_KEY);return value==='off'||value==='high'||value==='maximum'?value:'maximum'}catch{return 'maximum'}}
 function saveFxLevel(value:FxLevel){try{localStorage.setItem(FX_KEY,value)}catch{}}
 function downloadBackup(){
@@ -68,12 +70,16 @@ export default function RebornApp(){
  const [domain,setDomain]=useState<string>(DOMAINS[0]);
  const [error,setError]=useState('');
  const [showWhy,setShowWhy]=useState(false);
- const [audioSettings,setAudioSettings]=useState<AudioSettings>(readAudioSettings);
- const [haptics,setHaptics]=useState<HapticMode>(readHapticMode);
+ const [audioSettings,setAudioSettings]=useState<AudioSettings>(readRebornAudioSettings);
+ const [haptics,setHaptics]=useState<HapticMode>(readRebornHaptics);
  const [fxLevel,setFxLevel]=useState<FxLevel>(readFxLevel);
  const [celebration,setCelebration]=useState<Celebration|null>(null);
  const [fxSequence,setFxSequence]=useState(0);
  const [hapticMessage,setHapticMessage]=useState('');
+ const [restorePreview,setRestorePreview]=useState<ReturnType<typeof backupPreview>|null>(null);
+ const [restoreError,setRestoreError]=useState('');
+ const [restoreRaw,setRestoreRaw]=useState<string|null>(null);
+ const [restoreJournal,setRestoreJournal]=useState(()=>{try{return inspectRestoreJournal(localStorage)}catch{return {state:'unavailable' as const,message:'保存領域を開けません'}}});
  const [timeLeft,setTimeLeft]=useState(130*60);
  const [menuOpen,setMenuOpen]=useState(false);
  const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion:reduce)').matches);
@@ -118,10 +124,22 @@ export default function RebornApp(){
  function changeSound(){setAudioSettings(a=>({...a,sfxEnabled:!a.sfxEnabled}))}
  function changeMusic(){
   const enabled=!audioSettings.bgmEnabled;
-  if(enabled){if(!audioRef.current)audioRef.current=new AudioDirector();const engine=audioRef.current;engine.setScene(screen==='quiz'?(activeExam?'exam':'mission'):screen==='finish'?'result':'home');void engine.unlock()}
+  if(enabled){if(!audioRef.current)audioRef.current=new AudioDirector();const engine=audioRef.current;engine.configure({...audioSettings,bgmEnabled:true});engine.setScene(screen==='quiz'?(activeExam?'exam':'mission'):screen==='finish'?'result':'home');void engine.unlock()}
   setAudioSettings(a=>({...a,bgmEnabled:enabled}));
  }
  function signal(event:HapticEvent){triggerHaptic(event,haptics,actualReduced,activeExam)}
+ async function previewImport(file:File|undefined){
+  setRestorePreview(null);setRestoreRaw(null);setRestoreError('');if(!file)return;
+  try{if(file.size>8*1024*1024)throw new Error('ファイルが大きすぎます');const raw=await file.text();const data=parseBackup(raw);setRestorePreview(backupPreview(data));setRestoreRaw(raw)}catch(err){setRestoreError(err instanceof Error?err.message:'バックアップが不正です')}
+ }
+ function confirmImport(){
+  if(!restoreRaw)return;
+  if(!window.confirm('この端末の学習記録を、選択したバックアップの内容に置き換えます。現在のデータを先にエクスポートしましたか？'))return;
+  try{restoreBackup(parseBackup(restoreRaw),localStorage);window.location.reload()}catch(err){setRestoreError(err instanceof Error?err.message:'復元に失敗しました')}
+ }
+ function recoverRestore(){
+  try{const recovered=recoverInterruptedRestore(localStorage);if(!recovered)throw new Error('復元ジャーナルが見つかりません');window.location.reload()}catch(err){setRestoreError(err instanceof Error?err.message:'復旧に失敗しました')}
+ }
  function celebrate(effect:Celebration){
   setCelebration(effect);setFxSequence(v=>v+1);
   if(!actualReduced&&fxLevel!=='off')signal(effect.haptic);
@@ -203,7 +221,7 @@ export default function RebornApp(){
    </div>}
    {screen==='finish'&&round&&<div className="rb-finish"><div className="rb-finish-fireworks" aria-hidden="true">{burstGeometry(fxLevel==='maximum'?32:16,7).map((part,i)=><span className="rb-fx-particle" key={i} style={{'--dx':part.x+'px','--dy':part.y+'px','--delay':part.delay+'ms','--rot':part.rotation+'deg','--size':part.size+'px'} as React.CSSProperties}/>)}</div><div className="rb-finish-symbol"><Trophy size={40}/></div><span className="rb-eyebrow">MISSION COMPLETE</span><h1>{activeExam?'模擬試験終了':'今日も一歩、前進。'}</h1><p>正解できた問題と、これから覚える問題が分かりました。</p><div className="rb-result-score"><strong>{correctTotal}<small> / {round.questions.length}</small></strong><span>正解 · {sessionPercent(correctTotal,round.questions.length)}%</span></div>{!activeExam&&<div className="rb-finish-stats"><span>獲得XP <strong>+{fmt(grades.reduce((sum,x)=>sum+(x.reward?.totalXp??0),0))}</strong></span><span>復習したい問題 <strong>{grades.filter(g=>!g.correct).length}</strong></span></div>}<div className="rb-finish-review"><h2>復習のポイント</h2>{grades.filter(g=>!g.correct).length===0?<p>全問正解。翌日以降に思い出せるか確かめましょう。</p>:grades.filter(g=>!g.correct).map(g=>{const q=round.questions.find(x=>x.id===g.id)!;return <details key={g.id}><summary>{q.domain} · {q.id} <ChevronRight size={16}/></summary><p>{q.question}</p><p><strong>正解：</strong>{correctIndices(q).map(i=>q.choices[i]).join(' ／ ')}</p><p>{expandTerms(q.explanation)}</p><a href={q.reference} target="_blank" rel="noopener noreferrer">公式資料を見る</a></details>})}</div>{activeExam&&<p className="rb-disclaimer">非公式の練習試験です。正答率はAWS本試験の換算スコア・合格予測ではありません。新画面の模試途中経過は保存されません。</p>}<button className="rb-start" onClick={quit}>今日はここで終了 <Check size={20}/></button><button className="rb-secondary" onClick={()=>start(round.mode,round.mode==='domain'?domain:undefined)}>別の問題にも挑戦</button></div>}
    {screen==='insights'&&<div className="rb-simple-page"><button className="rb-back" onClick={()=>nav('home')}><ArrowLeft size={18}/> ホームへ</button><div className="rb-section-heading"><span>YOUR GROWTH</span><h1>成長の記録</h1><p>保存済みの学習結果から計算しています。XPは習得率を意味しません。</p></div><div className="rb-summary rb-insights-total"><div><span>累計XP</span><strong>{fmt(progress.xp)}</strong></div><div><span>正解した回数</span><strong>{fmt(progress.correct)}</strong></div><div><span>次の復習</span><strong>{fmt(due)}<small>問</small></strong></div></div><h2 className="rb-subtitle">4分野の状況</h2><div className="rb-intel">{intel.map(item=><div key={item.domain} className="rb-intel-item"><div><strong>{item.domain}</strong><small>{item.hasHistory?'履歴内で観測 '+item.observed+' / '+item.available+' 問':'回答ログ未観測'}</small></div><div className="rb-meter"><span style={{width:(item.available?item.observed/item.available*100:0)+'%'}}/></div><p>期限到来 {item.due}問 · 苦手 {item.weak}問 · 別日復習成功 {item.hasHistory?item.delayedRecall+'問':'未観測'}</p></div>)}</div><p className="rb-disclaimer">ログのない過去の学習を推測していません。定着や合格確率を示すものではありません。</p></div>}
-   {screen==='settings'&&<div className="rb-simple-page"><button className="rb-back" onClick={()=>nav('home')}><ArrowLeft size={18}/> ホームへ</button><div className="rb-section-heading"><span>SAFE & SIMPLE</span><h1>設定とデータ</h1></div><section className="rb-setting-card"><h2>学習の快適さ</h2><label className="rb-switch"><span><Headphones size={19}/> 解答時の効果音</span><input type="checkbox" checked={audioSettings.sfxEnabled} onChange={changeSound}/></label><label className="rb-switch"><span><Zap size={19}/> 動きを少なくする</span><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/></label></section><section className="rb-setting-card"><h2>バックアップ</h2><p>学習記録はこの端末内にあります。定期的なJSON保存を推奨します。</p><button className="rb-secondary" onClick={downloadBackup}><Download size={19}/> データを保存する</button><a href={legacyUrl}>旧版でバックアップを復元する <ArrowRight size={16}/></a></section><section className="rb-setting-card"><h2>その他の学習機能</h2><p>従来の模試途中再開、ボス戦、設計シミュレーターなどは旧版から利用できます。</p><a href={legacyUrl}>旧版を開く <ArrowRight size={16}/></a><a href="https://docs.aws.amazon.com/ja_jp/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html" target="_blank" rel="noopener noreferrer">AWS公式SAA試験ガイド <ArrowRight size={16}/></a></section></div>}
+   {screen==='settings'&&<div className="rb-simple-page"><button className="rb-back" onClick={()=>nav('home')}><ArrowLeft size={18}/> ホームへ</button><div className="rb-section-heading"><span>SAFE & SIMPLE</span><h1>設定とデータ</h1></div><section className="rb-setting-card"><h2>ドパガキ演出設定</h2><label className="rb-switch"><span><Headphones size={19}/> 効果音（正解・連続正解・討伐）</span><input type="checkbox" checked={audioSettings.sfxEnabled} onChange={changeSound}/></label><label className="rb-switch"><span><Headphones size={19}/> BGM（ホーム・学習・結果）</span><input type="checkbox" checked={audioSettings.bgmEnabled} onChange={changeMusic}/></label><label className="rb-switch"><span><Zap size={19}/> 動きを少なくする</span><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/></label><p className="rb-setting-label">画面エフェクト</p><div className="rb-option-group" role="group" aria-label="画面エフェクトの強さ">{([['off','OFF'],['high','HIGH'],['maximum','MAXIMUM']] as const).map(([value,label])=><button type="button" key={value} className={fxLevel===value?'active':''} aria-pressed={fxLevel===value} onClick={()=>setFxLevel(value)}>{label}</button>)}</div><p className="rb-setting-label">振動強度</p><div className="rb-option-group" role="group" aria-label="振動の強さ">{([['off','OFF'],['normal','NORMAL'],['overdrive','OVERDRIVE']] as const).map(([value,label])=><button type="button" key={value} className={haptics===value?'active':''} aria-pressed={haptics===value} onClick={()=>setHaptics(value)}>{label}</button>)}</div><button className="rb-secondary rb-test-haptic" onClick={()=>{const result=testHapticDevice(haptics,actualReduced,'pattern');setHapticMessage(result.message)}}>振動を試す</button>{hapticMessage&&<p role="status">{hapticMessage}</p>}<p className="rb-disclaimer">端末やブラウザにより音・振動が再生できない場合があります。動き軽減中は光と振動を抑えます。</p></section><section className="rb-setting-card"><h2>バックアップ</h2><p>学習記録はこの端末内にあります。定期的なJSON保存を推奨します。</p><button className="rb-secondary" onClick={downloadBackup}><Download size={19}/> データを保存する</button><div className="rb-restore"><label htmlFor="rb-backup-import">バックアップJSONを読み込む</label><input id="rb-backup-import" type="file" accept="application/json,.json" onChange={e=>{void previewImport(e.target.files?.[0])}}/>{restorePreview&&<div className="rb-restore-preview"><strong>復元内容を確認</strong><p>保存日：{restorePreview.date}<br/>XP：{restorePreview.xp} ／ 解答：{restorePreview.answered}問 ／ 正解：{restorePreview.correct}問</p><button className="rb-secondary" type="button" onClick={confirmImport}>内容を確認して復元する</button></div>}{restoreJournal.state==='recoverable'&&<button className="rb-secondary" type="button" onClick={recoverRestore}>中断された復元を元に戻す</button>}{restoreJournal.state==='invalid'&&<p role="alert">復元記録が破損しています。上書きせずに記録の退避をしてください。</p>}{restoreError&&<p role="alert">{restoreError}</p>}</div></section><section className="rb-setting-card"><h2>AWS試験情報</h2><p>模擬試験はホームから開始できます。既存の保存済み学習記録は削除されません。</p><a href="https://docs.aws.amazon.com/ja_jp/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html" target="_blank" rel="noopener noreferrer">AWS公式SAA試験ガイド <ArrowRight size={16}/></a></section></div>}
   </main>
   {screen!=='quiz'&&<nav className="rb-bottom-nav" aria-label="メインナビ"><button className={screen==='home'?'active':''} aria-current={screen==='home'?'page':undefined} onClick={()=>nav('home')}><Home size={21}/><span>ホーム</span></button><button className={screen==='insights'?'active':''} aria-current={screen==='insights'?'page':undefined} onClick={()=>nav('insights')}><Trophy size={21}/><span>成長</span></button><button className={screen==='settings'?'active':''} aria-current={screen==='settings'?'page':undefined} onClick={()=>nav('settings')}><ShieldCheck size={21}/><span>設定</span></button></nav>}
  </div>;
