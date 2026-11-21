@@ -89,3 +89,5 @@
 @media(max-width:420px){.rb-impact-title{flex-wrap:wrap}.rb-impact-title strong{font-size:17px}.rb-impact-title span{width:100%;text-align:center}.rb-fx-stage{overflow:hidden;inset:-25px -12px 0}.rb-combo-hud{gap:6px}.rb-combo-hud span{font-size:10px}.rb-option-group button{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.reborn .rb-fx-stage,.reborn .rb-finish-fireworks{display:none!important}.reborn .rb-impact-title,.reborn .rb-verdict,.reborn .rb-combo-hud .is-hot{animation:none!important}}
 .reborn.is-reduced .rb-fx-stage,.reborn.is-reduced .rb-finish-fireworks{display:none!important}
+
+.rb-volume{display:grid;gap:9px;margin:14px 0}.rb-volume span{display:flex;justify-content:space-between;color:#dce7f9;font-size:13px;font-weight:750}.rb-volume input{width:100%;height:28px;accent-color:#ffca79;cursor:pointer}.rb-volume strong{color:#ffe19b}
