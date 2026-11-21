@@ -6,9 +6,21 @@ import {questionInquiryUrl} from './questionReports';
 
 export type StudyQuestion = { id: string; domain: string; question: string; choices: string[]; answer?: number; answers?: number[]; difficulty?:number; tags?:string[]; distractorReasons?:string[]; explanation: string; reference: string;reviewedAt?:string };
 
-export function TermsPanel({question}:{question:StudyQuestion}){
+export function TermsPanel({question,compact=false}:{question:StudyQuestion;compact?:boolean}){
  const terms=findStudyTerms(question);
  if(terms.length===0)return null;
+ if(compact)return <details className="rb-terms" aria-label="問題に登場する用語の一覧">
+  <summary className="rb-terms-heading"><BookOpen size={18} aria-hidden="true"/><strong>用語を確認</strong><span className="rb-terms-count">{terms.length}語</span><ChevronDown size={17} className="rb-terms-chevron" aria-hidden="true"/></summary>
+  <div className="rb-term-list">{terms.map(term=><details className="rb-term-item" key={term.id}>
+   <summary className="rb-term-summary"><span className="rb-term-text"><strong>{term.title}</strong><span className="rb-term-meaning">{term.meaning}</span></span><ChevronDown size={16} aria-hidden="true"/></summary>
+   <div className="rb-term-detail">
+    {term.english&&<p className="rb-term-english"><strong>正式名称</strong><span>{term.english}</span></p>}
+    <p><strong>読み方</strong><span>{term.reading}</span></p>
+    <p className="rb-term-note">{term.note}</p>
+    {(term.title==='RTO'||term.title==='RPO')&&<p className="rb-term-tip">覚え分け：RTO＝復旧時間 ／ RPO＝データを失ってよい時間幅</p>}
+   </div>
+  </details>)}</div>
+ </details>;
  return <details className="term-panel study-terms-panel" aria-label="この問題に出てきた用語とサービスの一覧">
   <summary className="term-panel-heading"><BookOpen size={19}/><strong>用語・サービス図鑑</strong><span>{terms.length}語</span></summary>
   <div className="term-picker">{terms.map(term=><details className="term-card" key={term.id}>
