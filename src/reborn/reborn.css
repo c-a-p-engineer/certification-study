@@ -261,3 +261,10 @@
 .sa-results strong{font-size:clamp(17px,4vw,29px);overflow-wrap:anywhere}
 @media(max-width:600px){.sa-home-grid,.sa-grid{grid-template-columns:1fr}.sa-launch{min-height:150px}.sa-card{min-height:130px}.sa-root{padding-top:10px}.sa-scene{padding:20px 15px}.sa-hud strong{font-size:19px}.sa-results>div{padding:10px 6px}.sa-results small{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.sa-launch,.sa-gauge span{transition:none!important}}
+
+.sa-quick-impact{align-self:start;display:flex;gap:8px;align-items:center;padding:7px 14px;border-radius:10px;color:#1e2a35;background:#ffe29a;font-size:16px;font-weight:950;letter-spacing:.06em;box-shadow:0 0 20px #ffca7a62;animation:sa-hit .36s cubic-bezier(.15,1.4,.4,1) both}
+.sa-quick-impact span{font-size:12px;background:#313b50;color:#fff;padding:4px 8px;border-radius:7px}
+.sa-quick-impact.sa-quick-wrong{background:#e1b9b9;color:#34242a;box-shadow:none}
+@keyframes sa-hit{from{transform:scale(.78) translateY(6px);opacity:.4}65%{transform:scale(1.08);opacity:1}to{transform:scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.sa-quick-impact{animation:none!important}}
+.reborn.is-reduced .sa-quick-impact{animation:none}
