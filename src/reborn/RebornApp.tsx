@@ -3,6 +3,8 @@ import {ArrowLeft,ArrowRight,BookOpen,Check,ChevronRight,Clock3,Download,Flame,H
 import bank from '../generated/questions.json';
 import type {StudyQuestion} from '../StudyQuestionIntro.tsx';
 import {TermsPanel} from '../StudyQuestionIntro.tsx';
+import {readReadingGuide,saveReadingGuide,splitReadingSentences} from '../readingGuide.ts';
+import {readTextScale,saveTextScale,shiftTextScale,type TextScale} from '../readability.ts';
 import {expandTerms} from '../glossary.ts';
 import {applyStudyAttempt,makeAttemptRunId,normalizeAttemptReceipts,type AttemptProgress,type AttemptReward,type StudyAttempt} from '../studyAttempt.ts';
 import {useProgressConflict} from '../useProgressConflict.ts';
@@ -19,7 +21,7 @@ import {correctIndices,isCorrect,planRound,sessionPercent,shuffled,DOMAINS,type 
 
 type Progress=AttemptProgress&{equippedRelic?:string;bossRecords?:unknown;expeditions?:unknown;designLab?:unknown};
 type Screen='home'|'quiz'|'finish'|'insights'|'settings';
-type Grade={id:string;chosen:number[];correct:boolean;confidence:'sure'|'maybe'|'guess';reward:AttemptReward|null};
+type Grade={id:string;chosen:number[];correct:boolean;reward:AttemptReward|null};
 const QUESTIONS=bank as StudyQuestion[];
 const EMPTY:Progress={xp:0,best:0,answered:0,correct:0,mistakes:[],domains:{},reviews:{}};
 function readProgress():{value:Progress;blocked:boolean}{
@@ -51,7 +53,8 @@ export default function RebornApp(){
  const [round,setRound]=useState<LearningRound|null>(null);
  const [index,setIndex]=useState(0);
  const [chosen,setChosen]=useState<number[]>([]);
- const [confidence,setConfidence]=useState<Grade['confidence']>('maybe');
+ const [readingGuide,setReadingGuide]=useState(readReadingGuide);
+ const [textScale,setTextScale]=useState<TextScale>(readTextScale);
  const [phase,setPhase]=useState<'question'|'answer'>('question');
  const [grades,setGrades]=useState<Grade[]>([]);
  const [lastReward,setLastReward]=useState<AttemptReward|null>(null);
@@ -66,6 +69,7 @@ export default function RebornApp(){
  const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion:reduce)').matches);
  const audioRef=useRef<AudioDirector|null>(null);
  const locked=useRef(false);
+ const feedbackRef=useRef<HTMLDivElement|null>(null);
  const due=dueQuestionIds(progress.reviews??{},QUESTIONS.map(q=>q.id)).length;
  const daily=useMemo(()=>planDailyFive(QUESTIONS,progress.reviews,progress.mistakes,progress.answerHistory),[progress.reviews,progress.mistakes,progress.answerHistory]);
  const profile=gameProfile(progress,QUESTIONS.length);
@@ -80,6 +84,7 @@ export default function RebornApp(){
  const canWrite=!initialBlocked&&!readonlyRef.current&&!issue;
  useEffect(()=>()=>{audioRef.current?.dispose()},[]);
  useEffect(()=>{saveAudioSettings(audioSettings);audioRef.current?.configure(audioSettings)},[audioSettings]);
+ useEffect(()=>{if(screen!=='quiz'||phase!=='answer'||activeExam)return;feedbackRef.current?.scrollIntoView({block:'start',behavior:'auto'});},[screen,phase,index,activeExam]);
  useEffect(()=>{
   if(screen!=='quiz'||!activeExam)return;
   if(timeLeft<=0){setScreen('finish');return}
@@ -98,26 +103,31 @@ export default function RebornApp(){
   if(!canWrite){setError('安全のため学習を開始できません。保存状態を確認してください。');return}
   const seed=Date.now(),plan=planRound(QUESTIONS,{reviews:progress.reviews,mistakes:progress.mistakes,answerHistory:progress.answerHistory},mode,seed,selectedDomain);
   if(!plan.questions.length){setError('この条件で出題できる問題がありません。別のモードを選んでください。');return}
-  setError('');setRound(plan);setSessionSeed(seed);setRunId(makeAttemptRunId());setIndex(0);setChosen([]);setConfidence('maybe');setGrades([]);
+  setError('');setRound(plan);setSessionSeed(seed);setRunId(makeAttemptRunId());setIndex(0);setChosen([]);setGrades([]);
   setPhase('question');setShowWhy(false);setLastReward(null);locked.current=false;setTimeLeft(130*60);
   if(mode==='exam')examDeadline.current=Date.now()+130*60*1000;
   setScreen('quiz');setMenuOpen(false);sound('start');
  }
  function selectAnswer(id:number){
-  if(phase!=='question'||locked.current)return;
-  setChosen(prev=>current?.answers?(prev.includes(id)?prev.filter(x=>x!==id):[...prev,id]):[id]);
-  sound('select');
+  if(phase!=='question'||locked.current||!current||!canWrite)return;
+  if(current.answers){
+   setChosen(prev=>prev.includes(id)?prev.filter(x=>x!==id):[...prev,id]);
+   sound('select');
+  }else{
+   // One tap = one answer. Do not read the still-stale React chosen state.
+   commit([id]);
+  }
  }
- function commit(){
-  if(!current||!round||!chosen.length||phase!=='question'||locked.current||!canWrite)return;
+ function commit(answered:readonly number[]=chosen){
+  if(!current||!round||!answered.length||phase!=='question'||locked.current||!canWrite)return;
   locked.current=true;
-  const correct=isCorrect(current,chosen);
+  const correct=isCorrect(current,answered);
   const streak=correct?([...grades].reverse().findIndex(x=>!x.correct)===-1?grades.length+1:Math.max(1,[...grades].reverse().findIndex(x=>!x.correct))):0;
   const event:StudyAttempt={attemptId:runId+':'+index+':'+current.id,questionId:current.id,domain:current.domain,correct,combo:streak,difficulty:current.difficulty,mode:activeExam?'exam':'daily',boss:false,at:Date.now()};
   const preview=applyStudyAttempt(progress,event);
   if(!preview.reward.credited){locked.current=false;setError('回答を保存できませんでした。他のタブとの競合を確認してください。');return}
   setProgress(p=>applyStudyAttempt(p,event).progress);
-  setGrades(prev=>[...prev,{id:current.id,chosen:[...chosen],correct,confidence,reward:preview.reward}]);
+  setGrades(prev=>[...prev,{id:current.id,chosen:[...answered],correct,reward:preview.reward}]);
   setLastReward(preview.reward);setError('');
   sound(activeExam?'select':correct?'correct':'wrong');
   if(activeExam){advance();return}
@@ -126,12 +136,14 @@ export default function RebornApp(){
  function advance(){
   if(!round)return;
   if(index+1>=round.questions.length){setScreen('finish');sound('finish');return}
-  setIndex(v=>v+1);setChosen([]);setConfidence('maybe');setPhase('question');setShowWhy(false);setLastReward(null);locked.current=false;
+  setIndex(v=>v+1);setChosen([]);setPhase('question');setShowWhy(false);setLastReward(null);locked.current=false;
  }
  function quit(){setScreen('home');setRound(null);setError('');locked.current=false}
  function nav(next:Screen){setScreen(next);setMenuOpen(false);setError('')}
+ function toggleReading(){setReadingGuide(value=>{saveReadingGuide(!value);return !value})}
+ function resizeText(direction:-1|1){setTextScale(value=>{const next=shiftTextScale(value,direction);saveTextScale(next);return next})}
  const recallDueText=daily.eligibleDue>0?'復習する問題あり':'新しい問題からスタート';
- return <div className={'reborn '+(reduced?'is-reduced':'')}>
+ return <div className={'reborn rb-reading-'+textScale+' '+(reduced?'is-reduced':'')}>
   <header className="rb-header">
    <button className="rb-logo" type="button" onClick={quit} aria-label="ホームへ"><span className="rb-mark"><Zap size={20} fill="currentColor"/></span><span><strong>OVERDRIVE</strong><small>AWS SAA 学習ゲーム</small></span></button>
    <div className="rb-header-right"><span className="rb-level">LV {profile.level}</span><button className="rb-icon" type="button" onClick={changeSound} aria-label={audioSettings.sfxEnabled?'効果音をオフ':'効果音をオン'}>{audioSettings.sfxEnabled?<Volume2 size={21}/>:<VolumeX size={21}/>}</button><button className="rb-icon rb-hamburger" type="button" onClick={()=>setMenuOpen(v=>!v)} aria-label="メニュー" aria-expanded={menuOpen}>{menuOpen?<X size={22}/>:<Menu size={22}/>}</button></div>
@@ -153,13 +165,14 @@ export default function RebornApp(){
     <div className="rb-track" role="progressbar" aria-label="進行度" aria-valuemin={0} aria-valuemax={round.questions.length} aria-valuenow={index+(phase==='answer'?1:0)}><span style={{width:(index+(phase==='answer'?1:0))/round.questions.length*100+'%'}}/></div>
     <article className="rb-question" key={current.id}>
      <div className="rb-question-meta"><span>{current.domain}</span><span>問題ID {current.id}</span></div>
-     <h1>{current.question}</h1>
+     <div className="rb-reading-toolbar" role="group" aria-label="問題文を読みやすくする"><button type="button" className="rb-reading-toggle" aria-pressed={readingGuide} onClick={toggleReading}><BookOpen size={16}/> {readingGuide?'通常表示':'文ごとに読む'}</button><span className="rb-font-controls"><button type="button" aria-label="文字を小さくする" disabled={textScale==='compact'} onClick={()=>resizeText(-1)}>A−</button><button type="button" aria-label="文字を大きくする" disabled={textScale==='extra'} onClick={()=>resizeText(1)}>A＋</button></span></div>
+     <h1 className={readingGuide?'rb-sentence-mode':undefined}>{readingGuide?<span className="rb-reading-sentences">{splitReadingSentences(current.question).map((part,i)=><span key={i} className="rb-reading-sentence">{part}</span>)}</span>:current.question}</h1>
      <div className="rb-question-extra"><TermsPanel question={current}/></div>
-     {phase==='question'&&<><p className="rb-answer-note">{current.answers?'正しいものをすべて選択してください。':'最も適切なものを1つ選んでください。'}</p><div className="rb-options" role="group" aria-label="解答の選択肢">{answerOrder.map((original,pos)=><button key={original} type="button" className={chosen.includes(original)?'selected':''} aria-pressed={chosen.includes(original)} onClick={()=>selectAnswer(original)}><span className="rb-letter">{alpha(pos)}</span><span className="rb-choice-text">{current.choices[original]}</span><span className="rb-select-sign">{chosen.includes(original)?<Check size={20}/>:<span/>}</span></button>)}</div>{!activeExam&&<div className="rb-confidence"><p>どのくらい自信がある？ <small>（任意）</small></p><div role="group" aria-label="回答前の確信度">{([['sure','自信あり'],['maybe','たぶん'],['guess','勘で選んだ']] as const).map(([value,label])=><button key={value} aria-pressed={confidence===value} onClick={()=>setConfidence(value)}>{label}</button>)}</div></div>}<button className="rb-start rb-submit" disabled={!chosen.length||!canWrite} onClick={commit}>{activeExam?'回答して次へ':'答え合わせ'} <ArrowRight size={18}/></button></>}
-     {phase==='answer'&&!activeExam&&<div className="rb-feedback" role="status"><div className={'rb-verdict '+(grades[grades.length-1]?.correct?'correct':'wrong')}><span>{grades[grades.length-1]?.correct?'正解！':'ここを覚えよう'}</span><strong>{grades[grades.length-1]?.correct?'NICE WORK':'KNOWLEDGE +1'}</strong></div><div className="rb-reward"><span>+{lastReward?.totalXp??0} XP</span><span>敵へのダメージ {lastReward?.campaign?.damage??0}</span></div>{lastReward?.campaign?.defeated&&<p className="rb-defeat"><Flame size={18}/> {lastReward.campaign.defeated.name} を討伐！</p>}<section className="rb-answer-detail"><h2>正解はこちら</h2>{correctIndices(current).map(i=><div className="rb-correct-choice" key={i}><span>{alpha(answerOrder.indexOf(i))}</span><p>{current.choices[i]}</p></div>)}<h2>なぜこれが正解？</h2><p>{expandTerms(current.explanation)}</p>{current.distractorReasons?.length===current.choices.length&&<div className="rb-comparison"><button className="rb-secondary" aria-expanded={showWhy} onClick={()=>setShowWhy(v=>!v)}>{showWhy?'比較を閉じる':'他の選択肢が違う理由を確認する'}</button>{showWhy&&answerOrder.map(i=><div key={i}><strong>{alpha(answerOrder.indexOf(i))}. {current.choices[i]}</strong><p>{expandTerms(current.distractorReasons![i])}</p></div>)}</div>}<a href={current.reference} target="_blank" rel="noopener noreferrer">AWS公式資料で確認する</a></section><button className="rb-start rb-submit" onClick={advance}>{index+1===round.questions.length?'結果を見る':'次の問題へ'} <ArrowRight size={20}/></button></div>}
+     {phase==='question'&&<><p className="rb-answer-note">{current.answers?'複数選択：答えを選んでから確定してください。':activeExam?'答えをタップすると次の問題に進みます。':'答えをタップすると、すぐに正解と解説が出ます。'}</p><div className="rb-options" role="group" aria-label="解答の選択肢">{answerOrder.map((original,pos)=><button key={original} type="button" className={chosen.includes(original)?'selected':''} aria-pressed={chosen.includes(original)} onClick={()=>selectAnswer(original)} disabled={!canWrite}><span className="rb-letter">{alpha(pos)}</span><span className="rb-choice-text">{readingGuide?<span className="rb-choice-sentences">{splitReadingSentences(current.choices[original]).map((part,i)=><span key={i}>{part}</span>)}</span>:current.choices[original]}</span><span className="rb-select-sign">{chosen.includes(original)?<Check size={20}/>:<span/>}</span></button>)}</div>{current.answers&&<button className="rb-start rb-submit" disabled={!chosen.length||!canWrite} onClick={()=>commit()}>{activeExam?'選択した答えを確定して次へ':'選択した答えを確定する'} <ArrowRight size={18}/></button>}</>}
+     {phase==='answer'&&!activeExam&&<div className="rb-feedback" ref={feedbackRef} role="status" tabIndex={-1}><div className={'rb-verdict '+(grades[grades.length-1]?.correct?'correct':'wrong')}><span>{grades[grades.length-1]?.correct?'正解！':'ここを覚えよう'}</span><strong>{grades[grades.length-1]?.correct?'GOOD!':'REVIEW'}</strong></div><div className="rb-reward"><span>+{lastReward?.totalXp??0} XP</span><span>敵へのダメージ {lastReward?.campaign?.damage??0}</span></div>{lastReward?.campaign?.defeated&&<p className="rb-defeat"><Flame size={18}/> {lastReward.campaign.defeated.name} を討伐！</p>}<section className="rb-answer-detail"><h2>正解はこちら</h2>{correctIndices(current).map(i=><div className="rb-correct-choice" key={i}><span>{alpha(answerOrder.indexOf(i))}</span><p>{current.choices[i]}</p></div>)}<h2>なぜこれが正解？</h2><p className={readingGuide?'rb-explanation-sentences':undefined}>{readingGuide?splitReadingSentences(expandTerms(current.explanation)).map((part,i)=><span key={i}>{part}</span>):expandTerms(current.explanation)}</p>{current.distractorReasons?.length===current.choices.length&&<div className="rb-comparison"><button className="rb-secondary" aria-expanded={showWhy} onClick={()=>setShowWhy(v=>!v)}>{showWhy?'比較を閉じる':'他の選択肢が違う理由を確認する'}</button>{showWhy&&answerOrder.map(i=><div key={i}><strong>{alpha(answerOrder.indexOf(i))}. {current.choices[i]}</strong><p>{expandTerms(current.distractorReasons![i])}</p></div>)}</div>}<a href={current.reference} target="_blank" rel="noopener noreferrer">AWS公式資料で確認する</a></section><button className="rb-start rb-submit" onClick={advance}>{index+1===round.questions.length?'結果を見る':'次の問題へ'} <ArrowRight size={20}/></button></div>}
     </article>
    </div>}
-   {screen==='finish'&&round&&<div className="rb-finish"><div className="rb-finish-symbol"><Trophy size={40}/></div><span className="rb-eyebrow">MISSION COMPLETE</span><h1>{activeExam?'模擬試験終了':'今日も一歩、前進。'}</h1><p>正解できた問題と、これから覚える問題が分かりました。</p><div className="rb-result-score"><strong>{correctTotal}<small> / {round.questions.length}</small></strong><span>正解 · {sessionPercent(correctTotal,round.questions.length)}%</span></div>{!activeExam&&<div className="rb-finish-stats"><span>獲得XP <strong>+{fmt(grades.reduce((sum,x)=>sum+(x.reward?.totalXp??0),0))}</strong></span><span>自信があった誤答 <strong>{grades.filter(g=>g.confidence==='sure'&&!g.correct).length}</strong></span></div>}<div className="rb-finish-review"><h2>復習のポイント</h2>{grades.filter(g=>!g.correct).length===0?<p>全問正解。翌日以降に思い出せるか確かめましょう。</p>:grades.filter(g=>!g.correct).map(g=>{const q=round.questions.find(x=>x.id===g.id)!;return <details key={g.id}><summary>{q.domain} · {q.id} <ChevronRight size={16}/></summary><p>{q.question}</p><p><strong>正解：</strong>{correctIndices(q).map(i=>q.choices[i]).join(' ／ ')}</p><p>{expandTerms(q.explanation)}</p><a href={q.reference} target="_blank" rel="noopener noreferrer">公式資料を見る</a></details>})}</div>{activeExam&&<p className="rb-disclaimer">非公式の練習試験です。正答率はAWS本試験の換算スコア・合格予測ではありません。新画面の模試途中経過は保存されません。</p>}<button className="rb-start" onClick={quit}>今日はここで終了 <Check size={20}/></button><button className="rb-secondary" onClick={()=>start(round.mode,round.mode==='domain'?domain:undefined)}>別の問題にも挑戦</button></div>}
+   {screen==='finish'&&round&&<div className="rb-finish"><div className="rb-finish-symbol"><Trophy size={40}/></div><span className="rb-eyebrow">MISSION COMPLETE</span><h1>{activeExam?'模擬試験終了':'今日も一歩、前進。'}</h1><p>正解できた問題と、これから覚える問題が分かりました。</p><div className="rb-result-score"><strong>{correctTotal}<small> / {round.questions.length}</small></strong><span>正解 · {sessionPercent(correctTotal,round.questions.length)}%</span></div>{!activeExam&&<div className="rb-finish-stats"><span>獲得XP <strong>+{fmt(grades.reduce((sum,x)=>sum+(x.reward?.totalXp??0),0))}</strong></span><span>復習したい問題 <strong>{grades.filter(g=>!g.correct).length}</strong></span></div>}<div className="rb-finish-review"><h2>復習のポイント</h2>{grades.filter(g=>!g.correct).length===0?<p>全問正解。翌日以降に思い出せるか確かめましょう。</p>:grades.filter(g=>!g.correct).map(g=>{const q=round.questions.find(x=>x.id===g.id)!;return <details key={g.id}><summary>{q.domain} · {q.id} <ChevronRight size={16}/></summary><p>{q.question}</p><p><strong>正解：</strong>{correctIndices(q).map(i=>q.choices[i]).join(' ／ ')}</p><p>{expandTerms(q.explanation)}</p><a href={q.reference} target="_blank" rel="noopener noreferrer">公式資料を見る</a></details>})}</div>{activeExam&&<p className="rb-disclaimer">非公式の練習試験です。正答率はAWS本試験の換算スコア・合格予測ではありません。新画面の模試途中経過は保存されません。</p>}<button className="rb-start" onClick={quit}>今日はここで終了 <Check size={20}/></button><button className="rb-secondary" onClick={()=>start(round.mode,round.mode==='domain'?domain:undefined)}>別の問題にも挑戦</button></div>}
    {screen==='insights'&&<div className="rb-simple-page"><button className="rb-back" onClick={()=>nav('home')}><ArrowLeft size={18}/> ホームへ</button><div className="rb-section-heading"><span>YOUR GROWTH</span><h1>成長の記録</h1><p>保存済みの学習結果から計算しています。XPは習得率を意味しません。</p></div><div className="rb-summary rb-insights-total"><div><span>累計XP</span><strong>{fmt(progress.xp)}</strong></div><div><span>正解した回数</span><strong>{fmt(progress.correct)}</strong></div><div><span>次の復習</span><strong>{fmt(due)}<small>問</small></strong></div></div><h2 className="rb-subtitle">4分野の状況</h2><div className="rb-intel">{intel.map(item=><div key={item.domain} className="rb-intel-item"><div><strong>{item.domain}</strong><small>{item.hasHistory?'履歴内で観測 '+item.observed+' / '+item.available+' 問':'回答ログ未観測'}</small></div><div className="rb-meter"><span style={{width:(item.available?item.observed/item.available*100:0)+'%'}}/></div><p>期限到来 {item.due}問 · 苦手 {item.weak}問 · 別日復習成功 {item.hasHistory?item.delayedRecall+'問':'未観測'}</p></div>)}</div><p className="rb-disclaimer">ログのない過去の学習を推測していません。定着や合格確率を示すものではありません。</p></div>}
    {screen==='settings'&&<div className="rb-simple-page"><button className="rb-back" onClick={()=>nav('home')}><ArrowLeft size={18}/> ホームへ</button><div className="rb-section-heading"><span>SAFE & SIMPLE</span><h1>設定とデータ</h1></div><section className="rb-setting-card"><h2>学習の快適さ</h2><label className="rb-switch"><span><Headphones size={19}/> 解答時の効果音</span><input type="checkbox" checked={audioSettings.sfxEnabled} onChange={changeSound}/></label><label className="rb-switch"><span><Zap size={19}/> 動きを少なくする</span><input type="checkbox" checked={reduced} onChange={e=>setReduced(e.target.checked)}/></label></section><section className="rb-setting-card"><h2>バックアップ</h2><p>学習記録はこの端末内にあります。定期的なJSON保存を推奨します。</p><button className="rb-secondary" onClick={downloadBackup}><Download size={19}/> データを保存する</button><a href={legacyUrl}>旧版でバックアップを復元する <ArrowRight size={16}/></a></section><section className="rb-setting-card"><h2>その他の学習機能</h2><p>従来の模試途中再開、ボス戦、設計シミュレーターなどは旧版から利用できます。</p><a href={legacyUrl}>旧版を開く <ArrowRight size={16}/></a><a href="https://docs.aws.amazon.com/ja_jp/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html" target="_blank" rel="noopener noreferrer">AWS公式SAA試験ガイド <ArrowRight size={16}/></a></section></div>}
   </main>

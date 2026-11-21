@@ -75,7 +75,7 @@
     "test:targeting": "node --test scripts/answer-targeting-fx.test.mjs scripts/answer-targeting-render.test.mjs",
     "test:rhythm": "node --test scripts/combat-rhythm.test.mjs",
     "test:reforge": "node --experimental-strip-types --test scripts/reforge-arena.test.mjs scripts/reforge-radar.test.mjs scripts/reforge-ssr.test.mjs",
-    "test:reborn": "node --experimental-strip-types --test scripts/reborn.test.mjs scripts/reborn-ssr.test.mjs"
+    "test:reborn": "node --experimental-strip-types --test scripts/reborn.test.mjs scripts/reborn-ssr.test.mjs scripts/reborn-rapid-reading.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
