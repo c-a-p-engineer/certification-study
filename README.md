@@ -1,8 +1,8 @@
 # CERTIFICATION//OVERDRIVE
 
-An original AWS SAA practice app with a rebuilt, learning-first interface. Start with five questions, understand the reasoning, and return for spaced practice. The public entry is now the single REBORN OVERDRIVE interface.
+An original AWS SAA solo quiz game: choose routes and skills in QUEST RUN, race the clock in BLITZ, and solve a daily AWS service-matching puzzle. ACADEMY keeps five-question study, reviews, and mock exams. The public entry is now the single REBORN OVERDRIVE interface.
 
-**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The **new default home** keeps one prominent daily five-question action, short practice modes, straightforward answer feedback, growth and settings. The new experience emphasizes immediate answer feedback with optional light, music, synth effects, haptics, and a built-in export/import recovery panel. Historical data remains stored locally; unfinished legacy exam/mission sessions are preserved in storage but not yet resumable in the new interface.
+**Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The **new default home** centers the three solo arcade experiences (QUEST RUN, BLITZ, DAILY CODE), with standard training and 65-question mock exams in the expandable ACADEMY section. The new experience emphasizes immediate answer feedback with optional light, music, synth effects, haptics, and a built-in export/import recovery panel. Historical data remains stored locally; unfinished legacy exam/mission sessions are preserved in storage but not yet resumable in the new interface.
 
 ## Play online
 
