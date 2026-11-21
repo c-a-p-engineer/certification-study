@@ -225,7 +225,7 @@ export default function RebornApp(){
     <section className="rb-enemy-card"><div><small>LIVE CAMPAIGN</small><strong>{enemyData.name}</strong><p>現在の敵 · 残りHP {enemy.hp} / {enemyCap}</p></div><div className="rb-enemy-picture"><MonsterArt id={enemyData.id} hpRatio={enemyCap?enemy.hp/enemyCap:0} small/></div></section>
     <section className="rb-bottom-actions"><button onClick={()=>nav('insights')}><Trophy size={20}/> 成長の記録を見る <ChevronRight size={18}/></button><button onClick={()=>nav('settings')}><ShieldCheck size={20}/> バックアップ・詳細 <ChevronRight size={18}/></button></section>
    </div>}
-   {screen==='arcade'&&<SoloArcade key={arcadeKind+'-'+runId} kind={arcadeKind} bank={QUESTIONS} learnedIds={Object.keys(progress.reviews??{})} onRecord={recordArcade} onSound={sound} onExit={quit}/>}
+   {screen==='arcade'&&<SoloArcade key={arcadeKind+'-'+runId} kind={arcadeKind} bank={QUESTIONS} learnedIds={Object.keys(progress.reviews??{})} onRecord={recordArcade} onSound={sound} onHaptic={signal} onExit={quit}/>}
    {screen==='quiz'&&round&&current&&<div className="rb-quiz">
     <div className="rb-quiz-top"><button className="rb-back" type="button" onClick={quit}><ArrowLeft size={18}/> 終了してホームへ</button>{activeExam&&<span className="rb-clock"><Clock3 size={16}/> {Math.floor(timeLeft/60)}:{String(timeLeft%60).padStart(2,'0')}</span>}</div>
     <div className="rb-progress-head"><span>{activeExam?'模擬試験':round.mode==='daily'?'今日のクエスト':round.mode==='weak'?'苦手攻略':round.mode==='domain'?'分野別演習':'ランダム演習'}</span><div className="rb-combo-hud"><span className={combo>=2?'is-hot':''}><Flame size={16}/> {activeExam?'EXAM':combo>=2?combo+' COMBO':'READY'}</span><strong>{index+1} / {round.questions.length}</strong></div></div>
