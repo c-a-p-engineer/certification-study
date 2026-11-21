@@ -1,4 +1,4 @@
-import React,{useMemo,useRef,useState} from 'react';
+import React,{useRef,useState} from 'react';
 import {ArrowLeft,BookOpen,Check,ChevronRight,Copy,Grid2X2,Link2,RefreshCw,Sparkles,Trophy,Zap} from 'lucide-react';
 import {localDateKey} from '../studyHistory.ts';
 import {dailyCodePuzzle,randomCodePuzzle,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,readRecentCodeSets,rememberRandomCodeSet,DAILY_CODE_SETS,type CodePuzzle,type CodeTerm} from './dailyCodeEngine.ts';
@@ -49,7 +49,7 @@ export default function DailyCode({onExit,onSound,onHaptic}:DailyCodeProps){
  function nextRound(){
   if(!done||mode!=='random')return;
   setNewPuzzle(selectRandom(rounds));
-  onSound('start' as 'select');
+  onSound('select');
  }
  function pickClue(id:string){
   if(done||!puzzle||matched.includes(id))return;
