@@ -2,21 +2,21 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
-import type {SkeletonVariant} from './questEnemyVariant.ts';
+import {enemy3DAsset,type Enemy3DVariant} from './questEnemyVariant.ts';
 import type {BattleEvent} from './BattleStage.tsx';
 
 type Model=Awaited<ReturnType<GLTFLoader['loadAsync']>>;
 export type Enemy3DDriver={update:(event:BattleEvent,hp:number)=>void;dispose:()=>void};
-const caches=new Map<SkeletonVariant,Promise<Model>>();
-function loadEnemy(variant:SkeletonVariant):Promise<Model>{
+const caches=new Map<Enemy3DVariant,Promise<Model>>();
+function loadEnemy(variant:Enemy3DVariant):Promise<Model>{
  let existing=caches.get(variant);
  if(existing)return existing;
- const path=import.meta.env.BASE_URL+'characters/kaykit/skeleton_'+variant+'.glb';
+ const path=import.meta.env.BASE_URL+enemy3DAsset(variant).path;
  const next=new GLTFLoader().loadAsync(path).catch(error=>{caches.delete(variant);throw error});
  caches.set(variant,next);
  return next;
 }
-export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVariant,onUnavailable:()=>void):Promise<Enemy3DDriver>{
+export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVariant,onUnavailable:()=>void):Promise<Enemy3DDriver>{
  const model=await loadEnemy(variant);
  if(!host.isConnected)throw new Error('Enemy mount detached');
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,powerPreference:'low-power'});
@@ -52,8 +52,15 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
  ground.rotation.x=-Math.PI/2;ground.position.y=-1.2;scene.add(ground);
 
  const mixer=new THREE.AnimationMixer(actor);
+ const isGobkit=enemy3DAsset(variant).isGobkit;
+ const bakedClip=isGobkit?model.animations[0]:undefined;
+ const bakedAction=bakedClip?mixer.clipAction(bakedClip):null;
+ bakedAction?.play();
+ let segment:'idle'|'attack'|'dead'='idle',segmentAt=performance.now();
+ const frameUnit=bakedClip?.duration?bakedClip.duration/(variant.startsWith('gobkit-animal-')?119:89):1/24;
+ const segmentSeconds=30*frameUnit;
  const idleClip=model.animations.find(clip=>/^Idle$/i.test(clip.name))??model.animations.find(clip=>/idle/i.test(clip.name))??model.animations[0];
- const idle=idleClip?mixer.clipAction(idleClip):null;
+ const idle=!isGobkit&&idleClip?mixer.clipAction(idleClip):null;
  idle?.play();
  let event:BattleEvent={seq:0,kind:'idle',damage:0};
  let enemyHp=1,reactedSeq=0,reactedAt=-1e4;
@@ -94,6 +101,12 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
   if(next.seq===0){reactedSeq=0;return}
   if(next.seq===reactedSeq)return;
   reactedSeq=next.seq;reactedAt=performance.now();
+  if(isGobkit){
+   // The author's single baked track uses idle 0-29, attack 30-59, dead 60-89.
+   segment=enemyHp===0?'dead':next.kind==='hurt'?'attack':'idle';
+   segmentAt=reactedAt;
+   return;
+  }
   if(next.kind==='hit'){
    if(enemyHp===0)play(/^Death_A$|^Death_B$|death/i,true);
    else play(/^Hit_A$|^Hit_B$|^Hit$|hurt/i,false);
@@ -104,7 +117,14 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
  function frame(now:number){
   if(disposed)return;
   const dt=Math.max(0,Math.min(.055,(now-lastFrame)/1000));lastFrame=now;
-  mixer.update(dt);
+  if(isGobkit&&bakedAction){
+   const elapsed=Math.max(0,(now-segmentAt)/1000);
+   if(segment==='attack'&&elapsed>=segmentSeconds){segment='idle';segmentAt=now}
+   const advanced=Math.max(0,(now-segmentAt)/1000);
+   const start=segment==='idle'?0:segment==='attack'?30:60;
+   const offset=segment==='dead'?Math.min(29*frameUnit,advanced):advanced%segmentSeconds;
+   mixer.setTime(Math.min(bakedClip!.duration,start*frameUnit+offset));
+  }else mixer.update(dt);
   const impact=Math.max(0,1-(now-reactedAt)/540);
   // No additional particles or GPU ticker; the existing rim and ring react.
   rim.intensity=1.9+impact*1.7;

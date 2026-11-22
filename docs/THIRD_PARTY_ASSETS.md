@@ -36,3 +36,17 @@
 - The validated output is created under `public/characters/kaykit/` and ignored by Git, while the built Pages artifact contains the verified binary.
 - No new GitHub workflow or additional token/credential permission is required.
 - A future change to the creator's pack, commit, license or loader must revalidate this file and the original license.
+
+## Gobkit — Free CC0 characters (QUEST RUN, 18 GLBs)
+
+- **Original creator / licensor:** Gobkit / Alsomind Tech Co., Ltd.
+- **Original source:** https://github.com/Ariescar/gobkit-free-assets
+- **CC0 1.0 license:** https://github.com/Ariescar/gobkit-free-assets/blob/4e73c68fa6e8ca9d948fcc0ce7215c830a022c3b/LICENSE
+- **Immutable source commit:** `4e73c68fa6e8ca9d948fcc0ce7215c830a022c3b`
+- **Assets:** 10 files in `animal/` and 8 in `minion/`. Exact source paths, sizes and Git blob SHA-1 values are pinned in `scripts/vendor-gobkit-models.mjs`.
+- **Verification:** `npm run vendor:3d` fetches the fixed raw files at build time and rejects altered blob hashes, unexpected bytes, GLB container errors, missing authored animations, and external textures. Verified binaries are bundled under `public/characters/gobkit/`; browser never fetches models from GitHub.
+- **Animation:** original model has one baked track; segment idle 0–29 / attack 30–59 / dead 60–89 (24fps nominal), rather than playing all sequences in one loop.
+- **Usage:** CC0 enemy visuals are provisional stand-ins for the original CERT//OVERDRIVE enemy IDs. No change to AWS study grading, logical names, HP or XP.
+- **Credit:** visible in Settings → 使用素材・ライセンス, although not required for CC0. Three.js MIT licensing remains separate.
+- **Performance:** ~2.05 MB combined on disk, only the current enemy is requested; Android GPU utilization is unmeasured.
+
