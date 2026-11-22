@@ -90,7 +90,7 @@ test('SSR can render actual character and boss with HP and hit text',async()=>{
 test('characters appear in quest question, review, blitz and daily screens, without blocking reading',()=>{
  const solo=readFileSync('src/reborn/SoloArcade.tsx','utf8');
  const daily=readFileSync('src/reborn/DailyCode.tsx','utf8');
- assert.ok(solo.includes('<BattleStage enemyId={foe.id}'));
+ assert.ok(solo.includes('<BattleStage appearance={appearance} enemyId={foe.id}'));
  assert.equal((solo.match(/<BattleStage enemyId=/g)||[]).length,2);
  assert.ok(solo.includes('<PlayerAvatar pose={impact?.correct?'));
  assert.ok(daily.includes('<PlayerAvatar pose={fxReaction==='));
