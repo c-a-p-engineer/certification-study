@@ -6,8 +6,8 @@ import {enemy3DAsset,questEnemyVariant} from './questEnemyVariant.ts';
 import type {Enemy3DDriver} from './questEnemy3DScene.ts';
 
 type LoadState={key:string;phase:'loading'|'ready'|'fallback'};
-export default function QuestEnemy3D({enabled,id,boss,hp,maxHp,event,variantSeed=0}:{
- enabled:boolean;id:EnemyId;boss:boolean;hp:number;maxHp:number;event:BattleEvent;variantSeed?:number;
+export default function QuestEnemy3D({enabled,id,boss,hp,maxHp,event,variantSeed=0,view='battle'}:{
+ enabled:boolean;id:EnemyId;boss:boolean;hp:number;maxHp:number;event:BattleEvent;variantSeed?:number;view?:'battle'|'card';
 }){
  const variant=questEnemyVariant(id,boss,variantSeed);
  const host=useRef<HTMLDivElement|null>(null);
@@ -30,19 +30,19 @@ export default function QuestEnemy3D({enabled,id,boss,hp,maxHp,event,variantSeed
    if(cancelled)return;
    driver.current?.dispose();driver.current=null;
    setLoad({key:variant,phase:'fallback'});
-  })).then(instance=>{
+  },view)).then(instance=>{
    if(cancelled){instance.dispose();return}
    driver.current=instance;
    instance.update(latest.current.event,latest.current.hp);
    setLoad({key:variant,phase:'ready'});
   }).catch(()=>{if(!cancelled)setLoad({key:variant,phase:'fallback'})});
   return()=>{cancelled=true;driver.current?.dispose();driver.current=null};
- },[enabled,variant]);
+ },[enabled,variant,view]);
  useEffect(()=>{driver.current?.update(event,hp)},[event.seq,event.kind,event.damage,hp]);
- return <div className="cs-hero-viewport cs-enemy-viewport" data-enemy-variant={variant}>
+ return <div className="cs-hero-viewport cs-enemy-viewport" data-enemy-variant={variant} data-enemy-view={view}>
   {phase==='fallback'&&<div className="cs-hero-2d cs-enemy-2d"><MonsterArt id={id} small hpRatio={maxHp>0?hp/maxHp:0} hit={event.kind==='hit'} defeated={hp===0}/></div>}
   {phase==='loading'&&<span className="cs-model-loading" role="status">敵3D準備中</span>}
   <div className="cs-hero-3d-host" ref={host} aria-hidden="true" style={{opacity:phase==='ready'?1:0}}/>
-  {phase==='ready'&&<span className="cs-3d-label" aria-hidden="true">{enemy3DAsset(variant).label.toUpperCase()} / 3D</span>}
+  {phase==='ready'&&view==='battle'&&<span className="cs-3d-label" aria-hidden="true">{enemy3DAsset(variant).label.toUpperCase()} / 3D</span>}
  </div>;
 }
