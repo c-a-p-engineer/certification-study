@@ -106,6 +106,9 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
   const dt=Math.max(0,Math.min(.055,(now-lastFrame)/1000));lastFrame=now;
   mixer.update(dt);
   const impact=Math.max(0,1-(now-reactedAt)/540);
+  // No additional particles or GPU ticker; the existing rim and ring react.
+  rim.intensity=1.9+impact*1.7;
+  ground.scale.setScalar(1+impact*.22);
   const t=now/1000;
   if(event.kind==='hit'&&impact>0){
    root.position.x=impact*.18;root.rotation.z=impact*.11;
