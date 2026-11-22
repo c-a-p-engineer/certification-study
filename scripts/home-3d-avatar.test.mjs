@@ -23,6 +23,8 @@ test('HOME ignores legacy stored 2D and always shows a real 3D character when ca
   const markup=renderToStaticMarkup(React.createElement(App));
   assert.match(markup,/MY AVATAR · 3D/);
   assert.match(markup,/rb-enemy-picture-3d/);
+  assert.match(markup,/rb-enemy-card-3d/);
+  assert.match(markup,/data-enemy-view="card"/);
   assert.match(markup,/敵3D準備中/);
   assert.doesNotMatch(markup,/マイキャラ・装備アイテム|装備プレビュー（2D）/);
  }finally{await vite.close()}

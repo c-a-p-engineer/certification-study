@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {enemy3DAsset,type Enemy3DVariant} from './questEnemyVariant.ts';
+import {enemyCardFrustumHalfHeight} from './enemyCardFraming.ts';
 import type {BattleEvent} from './BattleStage.tsx';
 
 type Model=Awaited<ReturnType<GLTFLoader['loadAsync']>>;
@@ -16,7 +17,7 @@ function loadEnemy(variant:Enemy3DVariant):Promise<Model>{
  caches.set(variant,next);
  return next;
 }
-export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVariant,onUnavailable:()=>void):Promise<Enemy3DDriver>{
+export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVariant,onUnavailable:()=>void,view:'battle'|'card'='battle'):Promise<Enemy3DDriver>{
  const model=await loadEnemy(variant);
  if(!host.isConnected)throw new Error('Enemy mount detached');
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,powerPreference:'low-power'});
@@ -46,6 +47,16 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
  actor.scale.setScalar(scale);
  actor.position.set(-center.x*scale,-bounds.min.y*scale-1.20,-center.z*scale);
  root.add(actor);
+ // Source meshes have very different aspect ratios (e.g. sharks vs skeletons).
+ // Card framing projects all eight model-bound corners into camera space.
+ // The gameplay camera is intentionally unchanged.
+ const cardBounds=new THREE.Box3().setFromObject(root);
+ const cardCorners:THREE.Vector3[]=[];
+ for(const x of [cardBounds.min.x,cardBounds.max.x]){
+  for(const y of [cardBounds.min.y,cardBounds.max.y]){
+   for(const z of [cardBounds.min.z,cardBounds.max.z])cardCorners.push(new THREE.Vector3(x,y,z));
+  }
+ }
 
  const groundMaterial=new THREE.MeshBasicMaterial({color:0xed88b7,transparent:true,opacity:.31,side:THREE.DoubleSide});
  const ground=new THREE.Mesh(new THREE.RingGeometry(.55,.63,32),groundMaterial);
@@ -72,8 +83,19 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
  function resize(){
   if(disposed)return;
   const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight),aspect=w/h;
-  camera.left=-1.52*aspect;camera.right=1.52*aspect;
-  camera.top=1.52;camera.bottom=-1.52;
+  let halfHeight=1.52;
+  if(view==='card'&&cardCorners.length){
+   camera.updateMatrixWorld();
+   let horizontalExtent=0,verticalExtent=0;
+   for(const corner of cardCorners){
+    const projected=corner.clone().applyMatrix4(camera.matrixWorldInverse);
+    horizontalExtent=Math.max(horizontalExtent,Math.abs(projected.x));
+    verticalExtent=Math.max(verticalExtent,Math.abs(projected.y));
+   }
+   halfHeight=enemyCardFrustumHalfHeight(w,h,horizontalExtent,verticalExtent);
+  }
+  camera.left=-halfHeight*aspect;camera.right=halfHeight*aspect;
+  camera.top=halfHeight;camera.bottom=-halfHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(w,h,false);
  }
