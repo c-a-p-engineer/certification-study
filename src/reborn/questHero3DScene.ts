@@ -7,7 +7,7 @@ export type Hero3DReaction={seq:number;kind:'idle'|'hit'|'hurt'|'victory';damage
 export type Hero3DDriver={update:(event:Hero3DReaction)=>void;dispose:()=>void};
 type Model=Awaited<ReturnType<GLTFLoader['loadAsync']>>;
 
-// One immutable scene load per tab; both QUEST question and review reuse it.
+// One immutable scene load per tab; HOME and QUEST share this asset and the same lazy module.
 let cached:Promise<Model>|null=null;
 function loadMage():Promise<Model>{
  if(!cached){
@@ -17,7 +17,7 @@ function loadMage():Promise<Model>{
  return cached;
 }
 /** Mount a KayKit-authored GLB. Rendering is a presentation sidecar, not a second game engine. */
-export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>void):Promise<Hero3DDriver>{
+export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>void,view:'battle'|'portrait'='battle'):Promise<Hero3DDriver>{
  const model=await loadMage();
  if(!host.isConnected)throw new Error('3D host unmounted');
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,powerPreference:'low-power'});
@@ -32,8 +32,10 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
  host.appendChild(renderer.domElement);
  const scene=new THREE.Scene();
  const camera=new THREE.OrthographicCamera(-1.4,1.4,1.55,-1.55,.1,80);
- // Opposite-side camera: the hero presents a three-quarter pose facing screen-right.
- camera.position.set(-3.35,1.25,4.0);camera.lookAt(0,-.05,0);
+ // The home portrait faces the viewer; battle keeps the original inward-facing camera.
+ if(view==='portrait')camera.position.set(1.15,1.22,4.5);
+ else camera.position.set(-3.35,1.25,4.0);
+ camera.lookAt(0,-.05,0);
  scene.add(new THREE.AmbientLight(0xe9f5ff,2.15));
  const main=new THREE.DirectionalLight(0xfff2d9,3.0);main.position.set(-3,5,5);scene.add(main);
  const rim=new THREE.DirectionalLight(0x8db9ff,2.0);rim.position.set(3,3,-3);scene.add(rim);
@@ -89,7 +91,7 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
    root.rotation.z=0;
    ringMaterial.opacity=.32;
   }
-  root.rotation.y=.22+Math.sin(t*.7)*.035;
+  root.rotation.y=(view==='portrait'?.12:.22)+Math.sin(t*.7)*.035;
   ring.rotation.z=t*.36;
   renderer.render(scene,camera);
  }
