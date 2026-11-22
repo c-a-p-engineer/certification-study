@@ -10,7 +10,7 @@ export const QUEST_STAGE_SIZE=5;
 export const QUEST_STAGES=3;
 export const BLITZ_SECONDS=90;
 export const QUEST_SKILLS:{id:QuestSkill;title:string;description:string}[]=[
- {id:'amplifier',title:'オーバードライブ',description:'正解時のゲームスコアが1.5倍'},
+ {id:'amplifier',title:'オーバードライブ',description:'正解時のランスコアとゲーム内攻撃ダメージが1.5倍'},
  {id:'shield',title:'リカバリープロトコル',description:'ランHPの誤答ダメージが15→8に軽減'},
  {id:'combo',title:'連鎖増幅器',description:'3連続正解以上のランスコアを追加強化'}
 ];

@@ -46,10 +46,10 @@ test('SSR renders ambient reactor with real progress and input pulse for all gam
   assert.match(idle,/EXAM FOCUS/);
  }finally{await vite.close()}
 });
-test('reactor appears while actively reading in study, quest, blitz and daily code',()=>{
+test('reactor stays in study/blitz/daily while QUEST RUN uses a combat stage',()=>{
  assert.match(study,/<LiveReactor mode=\{activeExam\?'exam':'study'\}/);
  assert.match(solo,/<LiveReactor mode=\{isBlitz\?'blitz':'quest'\}/);
- assert.match(solo,/<LiveReactor mode="quest"/);
+ assert.match(solo,/<BattleStage enemyId=\{foe.id\}/,'QUEST RUN now prioritizes visible combatants over decorative reactor');
  assert.match(code,/<LiveReactor mode="code" charge=\{matched.length\} pulse=\{impact\}/);
  assert.match(code,/setFxReaction\('wrong'\)/);
  assert.match(code,/setFxReaction\('correct'\)/);
