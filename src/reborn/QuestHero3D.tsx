@@ -1,0 +1,45 @@
+import React,{useEffect,useRef,useState} from 'react';
+import PlayerAvatar,{type AvatarPose} from './PlayerAvatar.tsx';
+import type {AvatarAppearance} from './avatarCollection.ts';
+import type {BattleEvent} from './BattleStage.tsx';
+import type {Hero3DDriver} from './questHero3DScene.ts';
+
+export default function QuestHero3D({enabled,appearance,pose,event}:{
+ enabled:boolean;appearance?:AvatarAppearance;pose:AvatarPose;event:BattleEvent
+}){
+ const host=useRef<HTMLDivElement|null>(null);
+ const driver=useRef<Hero3DDriver|null>(null);
+ const latest=useRef(event);
+ latest.current=event;
+ const [status,setStatus]=useState<'loading'|'ready'|'fallback'>('loading');
+ useEffect(()=>{
+  let cancelled=false;
+  driver.current?.dispose();driver.current=null;
+  if(!enabled){setStatus('fallback');return}
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced||typeof window.WebGLRenderingContext==='undefined'){setStatus('fallback');return}
+  const mount=host.current;
+  if(!mount)return;
+  setStatus('loading');
+  // This imports a dedicated Three.js chunk *only when QUEST RUN 3D is enabled*.
+  void import('./questHero3DScene.ts').then(({mountQuestHero3D})=>mountQuestHero3D(mount,()=>{
+   if(cancelled)return;
+   driver.current?.dispose();driver.current=null;setStatus('fallback');
+  })).then(instance=>{
+   if(cancelled){instance.dispose();return}
+   driver.current=instance;
+   instance.update(latest.current);
+   setStatus('ready');
+  }).catch(()=>{if(!cancelled)setStatus('fallback')});
+  return()=>{cancelled=true;driver.current?.dispose();driver.current=null};
+ },[enabled]);
+ useEffect(()=>{driver.current?.update(event)},[event.seq,event.kind,event.damage]);
+ const shown=enabled&&status==='ready';
+ return <div className="cs-hero-viewport">
+  <div className="cs-hero-2d" style={{opacity:shown?0:1,visibility:shown?'hidden':'visible'}}>
+   <PlayerAvatar pose={pose} pulse={event.seq} appearance={appearance}/>
+  </div>
+  <div className="cs-hero-3d-host" ref={host} aria-hidden="true" style={{opacity:shown?1:0}}/>
+  {shown&&<span className="cs-3d-label" aria-hidden="true">KAYKIT MAGE / 3D</span>}
+ </div>
+}
