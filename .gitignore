@@ -2,3 +2,6 @@ node_modules/
 dist/
 .env
 .DS_Store
+
+# Generated from the immutable CC0 upstream asset during npm run build.
+public/characters/kaykit/
