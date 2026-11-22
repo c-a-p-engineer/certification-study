@@ -48,7 +48,7 @@ test('3D is lazy, disposable, answer-event-linked and never writes score or XP',
  assert.match(view,/if\(!enabled\)/);
  assert.match(view,/WebGLRenderingContext/);
  assert.match(view,/prefers-reduced-motion/);
- assert.match(view,/setStatus\('fallback'\)/);
+ assert.match(view,/setLoad\(\{forEnabled:enabled,phase:'fallback'\}\)/);
  const pkg=JSON.parse(read('package.json'));
  assert.match(pkg.scripts.build,/npm run vendor:3d/);
  assert.match(pkg.scripts.build,/npm run test:kaykit3d/);
