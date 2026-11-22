@@ -169,3 +169,34 @@
 .cs-hero-3d-host{overflow:hidden}
 .cs-stage-3d-capable .cs-combatant{min-height:0}
 @media(max-width:420px){.sa-quest-persistent{margin-bottom:10px}.cs-hero-viewport .cs-model-loading{font-size:9px}}
+
+/* HOME: actual 3D Mage portrait, not the original 2D-only avatar.
+   The closet deliberately retains an accurate 2D equipment preview. */
+.ac-home-heading{grid-template-columns:minmax(0,1fr) clamp(112px,29vw,144px);align-items:center}
+.ac-home-portrait{
+ width:100%;height:195px;min-width:0;padding:6px;
+ display:flex;flex-direction:column;align-items:stretch;justify-content:stretch;gap:3px;
+ background:radial-gradient(ellipse at 50% 72%,#456993,#1b2b47 76%);
+}
+.ac-home-avatar-view{position:relative;isolation:isolate;flex:1;min-height:0;width:100%;pointer-events:none}
+.ac-home-avatar-view .cs-hero-viewport{width:100%;height:100%}
+.ac-home-avatar-view .cs-hero-2d{align-items:flex-end}
+.ac-home-portrait .cs-avatar{height:100%;max-height:137px;max-width:100%;width:100%}
+.ac-home-portrait .ac-home-avatar-label{display:block;flex:0 0 auto;line-height:1.2;font-size:9px;white-space:nowrap;font-weight:950;letter-spacing:.09em;text-align:center;color:#e4f6ff}
+.ac-home-portrait .ac-home-avatar-switch{
+ display:block;flex:0 0 auto;min-height:44px;width:100%;border:1px solid #73dbea;
+ border-radius:10px;background:#214a64;color:#dffaff;cursor:pointer;
+ font-weight:900;font-size:11px;letter-spacing:.01em;
+}
+.ac-home-portrait .ac-home-avatar-switch:focus-visible{outline:3px solid #ffe0a0;outline-offset:2px}
+.ac-home-portrait .ac-home-avatar-switch:hover{background:#305978}
+.ac-home-portrait .ac-home-avatar-lowfx{display:block;line-height:1.4;font-size:10px;color:#c6dbea;text-align:center;padding:8px 0}
+.ac-home-portrait .cs-3d-label{font-size:8px;bottom:1px;white-space:nowrap}
+.ac-home-portrait .cs-model-loading{font-size:10px;padding:4px}
+.ac-wardrobe-preview .ac-wardrobe-viewnote{color:#d5e4fa}
+@media(max-width:380px){
+ .ac-home-heading{grid-template-columns:minmax(0,1fr) 108px;gap:8px}
+ .ac-home-portrait{height:181px;width:100%;padding:4px}
+ .ac-home-portrait .cs-avatar{max-height:129px;max-width:100%;height:100%}
+ .ac-home-portrait .ac-home-avatar-switch{font-size:10px}
+}
