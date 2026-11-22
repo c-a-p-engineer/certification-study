@@ -29,7 +29,7 @@ test('every Gobkit model can appear in QUEST route variations without touching g
  assert.equal(questEnemyVariant('dragon',true,999),'mage');
  assert.equal(questEnemyVariant('armor',false),'minion');
  const solo=read('src/reborn/SoloArcade.tsx'),scene=read('src/reborn/questEnemy3DScene.ts');
- assert.match(solo,/variantSeed=\{seed\+quest.stage/);
+ assert.match(solo,/<BattleStage appearance=\{appearance\} variantSeed=\{seed\+quest.stage/);
  assert.match(scene,/mixer\.setTime/);
  assert.match(scene,/segment==='dead'/);
  for(const forbidden of ['applyStudyAttempt(', 'setProgress(', 'localStorage','questHitDamage('])assert.ok(!scene.includes(forbidden));
