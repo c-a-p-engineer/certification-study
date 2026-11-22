@@ -21,10 +21,11 @@ export type BattleStageProps={
  allow3d?:boolean;
  threeD?:boolean;
  onToggle3d?:()=>void;
+ variantSeed?:number;
 };
 /** The two characters and their *session-only* HP are always visible during QUEST RUN. */
 export default function BattleStage({
- enemyId,enemyName,enemyHp,enemyMaxHp,playerHp,combo,boss,event,appearance,allow3d=false,threeD=false,onToggle3d
+ enemyId,enemyName,enemyHp,enemyMaxHp,playerHp,combo,boss,event,appearance,allow3d=false,threeD=false,onToggle3d,variantSeed=0
 }:BattleStageProps){
  const enemyDown=enemyHp===0;
  const pose:AvatarPose=event.kind==='hit'?(enemyDown?'victory':'attack'):event.kind==='hurt'?'hurt':'idle';
@@ -43,9 +44,9 @@ export default function BattleStage({
    </div>
    <div className="cs-middle" aria-hidden="true"><span>VS</span>{event.seq>0&&event.kind!=='idle'&&<div key={event.seq} className={'cs-action cs-action-'+event.kind}><b>{event.kind==='hit'?'−'+event.damage: 'HURT'}</b><i/></div>}</div>
    <div className="cs-combatant cs-enemy">
-    <div className={'cs-actor cs-enemy-actor'+(event.kind==='hit'?' cs-enemy-hit':'')}><QuestEnemy3D enabled={allow3d&&threeD} id={enemyId} boss={boss} hp={enemyHp} maxHp={enemyMaxHp} event={event}/></div>
+    <div className={'cs-actor cs-enemy-actor'+(event.kind==='hit'?' cs-enemy-hit':'')}><QuestEnemy3D enabled={allow3d&&threeD} id={enemyId} boss={boss} variantSeed={variantSeed} hp={enemyHp} maxHp={enemyMaxHp} event={event}/></div>
     <strong>{enemyName}</strong>
-    {allow3d&&threeD&&<small className="cs-3d-disclaimer">3D敵：試作用スケルトンモデル</small>}
+    {allow3d&&threeD&&<small className="cs-3d-disclaimer">3D敵：CC0モデル · 敵名と外見は試作上異なる場合があります</small>}
     <div className="cs-hp-label"><span>{boss?'BOSS HP':'敵HP'}</span><b>{enemyHp}/{enemyMaxHp}</b></div>
     <div className="cs-hp cs-enemy-hp" role="progressbar" aria-label={boss?'ボスHP':'敵のラン内HP'} aria-valuemin={0} aria-valuemax={enemyMaxHp} aria-valuenow={enemyHp}><i style={{width:enemyPercent+'%'}}/></div>
    </div>

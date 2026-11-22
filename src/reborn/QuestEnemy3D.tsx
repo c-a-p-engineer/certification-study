@@ -2,14 +2,14 @@ import React,{useEffect,useRef,useState} from 'react';
 import MonsterArt from '../MonsterArt.tsx';
 import type {EnemyId} from '../enemyCampaign.ts';
 import type {BattleEvent} from './BattleStage.tsx';
-import {SKELETON_LABELS,questEnemyVariant} from './questEnemyVariant.ts';
+import {enemy3DAsset,questEnemyVariant} from './questEnemyVariant.ts';
 import type {Enemy3DDriver} from './questEnemy3DScene.ts';
 
 type LoadState={key:string;phase:'loading'|'ready'|'fallback'};
-export default function QuestEnemy3D({enabled,id,boss,hp,maxHp,event}:{
- enabled:boolean;id:EnemyId;boss:boolean;hp:number;maxHp:number;event:BattleEvent;
+export default function QuestEnemy3D({enabled,id,boss,hp,maxHp,event,variantSeed=0}:{
+ enabled:boolean;id:EnemyId;boss:boolean;hp:number;maxHp:number;event:BattleEvent;variantSeed?:number;
 }){
- const variant=questEnemyVariant(id,boss);
+ const variant=questEnemyVariant(id,boss,variantSeed);
  const host=useRef<HTMLDivElement|null>(null);
  const driver=useRef<Enemy3DDriver|null>(null);
  const latest=useRef({hp,event});latest.current={hp,event};
@@ -43,6 +43,6 @@ export default function QuestEnemy3D({enabled,id,boss,hp,maxHp,event}:{
   {phase==='fallback'&&<div className="cs-hero-2d cs-enemy-2d"><MonsterArt id={id} small hpRatio={maxHp>0?hp/maxHp:0} hit={event.kind==='hit'} defeated={hp===0}/></div>}
   {phase==='loading'&&<span className="cs-model-loading" role="status">敵3D準備中</span>}
   <div className="cs-hero-3d-host" ref={host} aria-hidden="true" style={{opacity:phase==='ready'?1:0}}/>
-  {phase==='ready'&&<span className="cs-3d-label" aria-hidden="true">{SKELETON_LABELS[variant].toUpperCase()} / 3D</span>}
+  {phase==='ready'&&<span className="cs-3d-label" aria-hidden="true">{enemy3DAsset(variant).label.toUpperCase()} / 3D</span>}
  </div>;
 }
