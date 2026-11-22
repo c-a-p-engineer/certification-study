@@ -10,7 +10,7 @@ export default function AvatarCloset({appearance,correctUnique,canEquip,onEquip}
  return <details className="ac-wardrobe">
   <summary><Shirt size={22}/><span><strong>マイキャラ・装備アイテム</strong><small>{unlocked}/{AVATAR_ITEMS.length}アイテム獲得 · 外見を自由に変更</small></span><ChevronDown size={19}/></summary>
   <div className="ac-wardrobe-inner">
-   <div className="ac-wardrobe-preview"><div className="ac-wardrobe-avatar"><PlayerAvatar appearance={appearance}/></div><div><strong>MY AVATAR</strong><span>異なる問題への正解：{correctUnique}問</span><small>正解した問題の種類に応じて新しい装備が解放されます。購入・抽選・連続ログインは不要です。</small></div></div>
+   <div className="ac-wardrobe-preview"><div className="ac-wardrobe-avatar"><PlayerAvatar appearance={appearance}/></div><div><strong>装備プレビュー（2D）</strong><span>異なる問題への正解：{correctUnique}問</span><small>着せ替えの色・武器・頭飾りはこちらの2Dで確認できます。ホーム／戦闘の3D試作モデルには装備をまだ反映していません。</small><small>正解した問題の種類に応じて新しい装備が解放されます。購入・抽選・連続ログインは不要です。</small></div></div>
    {AVATAR_SLOTS.map(slot=><section key={slot} className="ac-items-section"><h3>{AVATAR_SLOT_NAMES[slot]}</h3><div className="ac-item-grid">{AVATAR_ITEMS.filter(x=>x.slot===slot).map(item=>{
     const acquired=avatarItemAvailable(item,correctUnique);
     const equipped=appearance[slot]===item.id;
