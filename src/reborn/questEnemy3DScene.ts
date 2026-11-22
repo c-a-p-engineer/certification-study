@@ -32,7 +32,8 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
 
  const scene=new THREE.Scene();
  const camera=new THREE.OrthographicCamera(-1,1,1.55,-1.55,.1,60);
- camera.position.set(2.1,1.05,4.5);camera.lookAt(0,0,0);
+ // The mirrored camera gives the enemy a three-quarter pose facing screen-left.
+ camera.position.set(3.35,1.2,4.0);camera.lookAt(0,0,0);
  scene.add(new THREE.AmbientLight(0xffffff,2.2));
  const key=new THREE.DirectionalLight(0xffe0b7,3.0);
  key.position.set(-3,5,6);scene.add(key);
@@ -117,7 +118,7 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
    root.rotation.z=0;groundMaterial.opacity=.3;
   }
   if(enemyHp===0){root.position.y=-.08;groundMaterial.opacity=.12}
-  root.rotation.y=Math.sin(t*.63)*.055;
+  root.rotation.y=-.22+Math.sin(t*.63)*.035;
   ground.rotation.z=t*.29;
   renderer.render(scene,camera);
  }
