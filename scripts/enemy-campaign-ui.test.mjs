@@ -42,7 +42,8 @@ test('nine distinct SVG monster designs and four original domain bosses now have
 });
 test('reduced motion, readable sizes and no blocking answer overlay',()=>{
  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
- assert.ok(css.includes('.app.reduced .monster-visual'));
+ assert.ok(css.includes(':is(.app,.reborn).reduced .monster-visual'));
+ assert.ok(css.includes('.reborn.is-reduced .monster-visual'));
  assert.ok(css.includes('@media(max-width:580px)'));
  assert.ok(panel.includes('aria-label={enemy.short'));
  assert.ok(!panel.includes('position:fixed'));
