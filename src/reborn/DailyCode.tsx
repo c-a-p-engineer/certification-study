@@ -2,18 +2,18 @@ import React,{useRef,useState} from 'react';
 import {ArrowLeft,BookOpen,Check,ChevronRight,Copy,Grid2X2,Link2,RefreshCw,Sparkles,Trophy,Zap} from 'lucide-react';
 import {localDateKey} from '../studyHistory.ts';
 import LiveReactor,{type ReactorReaction} from './LiveReactor.tsx';
-import PlayerAvatar from './PlayerAvatar.tsx';
+import QuestHero3D from './QuestHero3D.tsx';
 import type {AvatarAppearance} from './avatarCollection.ts';
 import {dailyCodePuzzle,randomCodePuzzle,dailyMatchResult,dailyCodeScore,readDailyBest,writeDailyBest,readRecentCodeSets,rememberRandomCodeSet,DAILY_CODE_SETS,type CodePuzzle,type CodeTerm} from './dailyCodeEngine.ts';
 
-export type DailyCodeProps={appearance?:AvatarAppearance;onExit:()=>void;onSound:(effect:'correct'|'wrong'|'finish'|'select')=>void;onHaptic:(effect:'correct'|'wrong'|'reward'|'select')=>void};
+export type DailyCodeProps={appearance?:AvatarAppearance;allow3d?:boolean;onExit:()=>void;onSound:(effect:'correct'|'wrong'|'finish'|'select')=>void;onHaptic:(effect:'correct'|'wrong'|'reward'|'select')=>void};
 type Mode='daily'|'random';
 type CompletedRound={setId:number;termIds:string[];score:number;mistakes:number};
 function newSeed():number{
  try{if(typeof crypto!=='undefined'&&crypto.getRandomValues){const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);return bytes[0]}}catch{}
  return (Date.now()^(Math.random()*0xffffffff))>>>0;
 }
-export default function DailyCode({onExit,onSound,onHaptic,appearance}:DailyCodeProps){
+export default function DailyCode({onExit,onSound,onHaptic,appearance,allow3d=true}:DailyCodeProps){
  const [day]=useState(()=>localDateKey(new Date()));
  const [mode,setMode]=useState<Mode|null>(null);
  const [puzzle,setPuzzle]=useState<CodePuzzle|null>(null);
@@ -106,7 +106,7 @@ export default function DailyCode({onExit,onSound,onHaptic,appearance}:DailyCode
     <div className="dc-progress"><strong>{matched.length} / 4 MATCH</strong><span>{score} PTS</span></div>
     {mode==='random'&&<div className="dc-round-stats">通算 {rounds.length*4+matched.length} 組正解 · {rounds.length} ラウンド突破</div>}
     <div className="dc-gauge"><span style={{width:matched.length*25+'%'}}/></div>
-    <div className="cs-mini-row"><div className={'cs-mini-avatar cs-mini-code '+(fxReaction==='correct'?'cs-mini-attack':fxReaction==='wrong'?'cs-mini-hurt':'')}><PlayerAvatar appearance={appearance} pose={fxReaction==='correct'?'victory':fxReaction==='wrong'?'hurt':fxReaction==='select'?'charge':'idle'} pulse={impact} compact/></div><LiveReactor mode="code" charge={matched.length} pulse={impact} reaction={fxReaction}/></div>
+    <div className="cs-mini-row"><div className={'cs-mini-avatar cs-mini-avatar-3d cs-mini-code '+(fxReaction==='correct'?'cs-mini-attack':fxReaction==='wrong'?'cs-mini-hurt':'')}><QuestHero3D enabled={allow3d} appearance={appearance} pose={fxReaction==='correct'?'victory':fxReaction==='wrong'?'hurt':fxReaction==='select'?'charge':'idle'} event={{seq:impact,kind:fxReaction==='correct'?'hit':fxReaction==='wrong'?'hurt':'idle',damage:fxReaction==='correct'?1:0}} view="portrait"/></div><LiveReactor mode="code" charge={matched.length} pulse={impact} reaction={fxReaction}/></div>
     <div className="dc-board">
      <div className="dc-column"><h2><BookOpen size={18}/> ① 説明を選ぶ</h2>{puzzle.clues.map((term,i)=><button key={term.id} type="button" className={'dc-tile '+(selected===term.id?'dc-selected ':'')+(matched.includes(term.id)?'dc-matched':'')} disabled={matched.includes(term.id)} aria-pressed={selected===term.id} onClick={()=>pickClue(term.id)}><span className="dc-index">{i+1}</span><span>{term.meaning}</span>{matched.includes(term.id)&&<Check size={20}/>}</button>)}</div>
      <div className="dc-column"><h2><Link2 size={18}/> ② サービスを選ぶ</h2>{puzzle.answers.map((term,i)=><button key={term.id} type="button" className={'dc-tile dc-service '+(matched.includes(term.id)?'dc-matched':'')} disabled={matched.includes(term.id)} onClick={()=>pickAnswer(term.id)}><span className="dc-index">{String.fromCharCode(65+i)}</span><span>{term.title}</span>{matched.includes(term.id)&&<Check size={20}/>}</button>)}</div>

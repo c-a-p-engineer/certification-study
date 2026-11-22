@@ -72,7 +72,7 @@ test('SSR: neutral idle has zero attack effects, true hit and hurt travel in opp
   assert.match(stage,/data-battle-event="hit"/);
   assert.match(stage,/72\/95/);
   assert.match(stage,/100\/100/);
-  assert.match(stage,/3D表示中/);
+  assert.match(stage,/3D ARENA/);
   assert.match(stage,/bfx-strike-hit/);
  }finally{await vite.close()}
 });
