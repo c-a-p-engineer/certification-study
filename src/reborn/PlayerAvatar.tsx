@@ -42,7 +42,7 @@ export default function PlayerAvatar({pose='idle',pulse=0,compact=false,appearan
     {appearance.weapon==='staff'?<><path d="M101 91L101 24" stroke="#b7d8ff" strokeWidth="5" strokeLinecap="round"/><path d="M101 16L110 27 101 39 92 27Z" fill="#d8b8ff" stroke="#fff1d9" strokeWidth="2"/><circle cx="101" cy="27" r="5" fill="#fff"/></>:appearance.weapon==='orb'?<><path d="M87 86L95 79 99 87" stroke="#cae3fd" strokeWidth="4" fill="none"/><circle cx="103" cy="41" r="16" fill="#76c1fb" stroke="#e4f8ff" strokeWidth="3"/><circle cx="103" cy="41" r="7" fill="#f8f5ff"/></>:<><path d="M86 84L92 79 98 85 92 92Z" fill="#f5d888" stroke="#fff1c0" strokeWidth="2"/><path d="M96 84L102 69 106 30 109 69 103 85Z" fill="#71f4ff" stroke="#e0ffff" strokeWidth="2"/><path d="M97 80L107 80" stroke="#ffdb7d" strokeWidth="3" strokeLinecap="round"/></>}
    </g>
    {appearance.head==='visor'&&<g className="cs-accessory"><path d="M36 39Q57 31 78 39L78 49Q56 57 36 49Z" fill="#3ac4dd" opacity=".86" stroke="#ddffff" strokeWidth="2"/><path d="M43 42H70" stroke="#fff" strokeWidth="2"/></g>}
-   {appearance.head==='halo'&&<g className="cs-accessory"><ellipse cx="57" cy="7" rx="30" ry="6" fill="none" stroke="#ffe18f" strokeWidth="5"/><ellipse cx="57" cy="7" rx="24" ry="4" fill="none" stroke="#fff7de" strokeWidth="2"/></g>
+   {appearance.head==='halo'&&<g className="cs-accessory"><ellipse cx="57" cy="7" rx="30" ry="6" fill="none" stroke="#ffe18f" strokeWidth="5"/><ellipse cx="57" cy="7" rx="24" ry="4" fill="none" stroke="#fff7de" strokeWidth="2"/></g>}
   </g>
  </svg>;
 }
