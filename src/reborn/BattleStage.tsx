@@ -1,5 +1,5 @@
 import React from 'react';
-import MonsterArt from '../MonsterArt.tsx';
+import QuestEnemy3D from './QuestEnemy3D.tsx';
 import type {EnemyId} from '../enemyCampaign.ts';
 import type {AvatarPose} from './PlayerAvatar.tsx';
 import QuestHero3D from './QuestHero3D.tsx';
@@ -34,14 +34,15 @@ export default function BattleStage({
    <div className="cs-combatant cs-player">
     <div className="cs-actor"><QuestHero3D enabled={allow3d&&threeD} pose={pose} event={event} appearance={appearance}/></div>
     <strong>PLAYER</strong>
-    {allow3d&&threeD&&<small className="cs-3d-disclaimer">試作3Dは装備未反映 · 2Dなら着せ替え対応</small>}
+    {allow3d&&threeD&&<small className="cs-3d-disclaimer">3D試作：装備未反映 · 2Dは着せ替え対応</small>}
     <div className="cs-hp-label"><span>ランHP</span><b>{playerHp}/100</b></div>
     <div className="cs-hp" role="progressbar" aria-label="プレイヤーのランHP" aria-valuemin={0} aria-valuemax={100} aria-valuenow={playerHp}><i style={{width:playerPercent+'%'}}/></div>
    </div>
    <div className="cs-middle" aria-hidden="true"><span>VS</span>{event.seq>0&&event.kind!=='idle'&&<div key={event.seq} className={'cs-action cs-action-'+event.kind}><b>{event.kind==='hit'?'−'+event.damage: 'HURT'}</b><i/></div>}</div>
    <div className="cs-combatant cs-enemy">
-    <div className={'cs-actor cs-enemy-actor'+(event.kind==='hit'?' cs-enemy-hit':'')} key={event.kind==='hit'?event.seq:'rest'}><MonsterArt id={enemyId} small hpRatio={enemyPercent/100} hit={event.kind==='hit'} defeated={enemyDown}/></div>
+    <div className={'cs-actor cs-enemy-actor'+(event.kind==='hit'?' cs-enemy-hit':'')}><QuestEnemy3D enabled={allow3d&&threeD} id={enemyId} boss={boss} hp={enemyHp} maxHp={enemyMaxHp} event={event}/></div>
     <strong>{enemyName}</strong>
+    {allow3d&&threeD&&<small className="cs-3d-disclaimer">3D敵：試作用スケルトンモデル</small>}
     <div className="cs-hp-label"><span>{boss?'BOSS HP':'敵HP'}</span><b>{enemyHp}/{enemyMaxHp}</b></div>
     <div className="cs-hp cs-enemy-hp" role="progressbar" aria-label={boss?'ボスHP':'敵のラン内HP'} aria-valuemin={0} aria-valuemax={enemyMaxHp} aria-valuenow={enemyHp}><i style={{width:enemyPercent+'%'}}/></div>
    </div>

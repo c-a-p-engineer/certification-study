@@ -71,7 +71,7 @@ test('SSR can render actual character and boss with HP and hit text',async()=>{
    playerHp:85,combo:4,boss:true,event:{seq:4,kind:'hit',damage:45}
   }));
   for(const label of ['QUEST RUNのラン内戦闘','プレイヤーのランHP','ARCHITECT DRAGON','ボスHP','107/190','85/100','cs-action-hit','cs-avatar-attack'])assert.ok(stage.includes(label),label);
-  assert.ok(stage.includes('mv-dragon'));
+  assert.ok(stage.includes('mv-dragon'),'2D fallback keeps original named dragon');
   const idle=renderToStaticMarkup(React.createElement(BattleStage,{
    enemyId:'armor',enemyName:'CACHE ARMOR',enemyHp:95,enemyMaxHp:95,
    playerHp:100,combo:0,boss:false,event:{seq:0,kind:'idle',damage:0}
@@ -91,7 +91,7 @@ test('characters appear in quest question, review, blitz and daily screens, with
  const solo=readFileSync('src/reborn/SoloArcade.tsx','utf8');
  const daily=readFileSync('src/reborn/DailyCode.tsx','utf8');
  assert.ok(solo.includes('<BattleStage appearance={appearance} enemyId={foe.id}'));
- assert.equal((solo.match(/<BattleStage appearance=\{appearance\} enemyId=/g)||[]).length,2);
+ assert.equal((solo.match(/<BattleStage appearance=\{appearance\} enemyId=/g)||[]).length,1,'one stable battle mount across question/review');
  assert.ok(solo.includes('<PlayerAvatar appearance={appearance} pose={impact?.correct?'));
  assert.ok(daily.includes('<PlayerAvatar appearance={appearance} pose={fxReaction==='));
  const css=readFileSync('src/reborn/characterStage.css','utf8');
