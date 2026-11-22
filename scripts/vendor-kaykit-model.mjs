@@ -21,6 +21,8 @@ export function verifyMageGlb(buffer){
  let model;
  try{model=JSON.parse(buffer.toString('utf8',20,20+chunkLength).trimEnd())}catch{throw new Error('GLB JSON invalid')}
  if(model.asset?.version!=='2.0'||!model.meshes?.length||!model.nodes?.length)throw new Error('GLB lacks a valid scene');
+ const external=[...(model.images??[]),...(model.buffers??[])].map(x=>x.uri).filter(uri=>typeof uri==='string'&&!uri.startsWith('data:'));
+ if(external.length)throw new Error('Model references unbundled textures/buffers: '+external.join(', '));
  const gitHash=createHash('sha1').update(`blob ${buffer.length}\0`).update(buffer).digest('hex');
  if(gitHash!==KAYKIT_MAGE.blob)throw new Error(`KayKit Mage source hash mismatch: ${gitHash}`);
  return {bytes:buffer.length,animations:model.animations?.map(x=>x.name)??[],nodes:model.nodes.length,meshes:model.meshes.length,gitHash};
