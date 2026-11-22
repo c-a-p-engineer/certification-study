@@ -84,3 +84,44 @@
 .reborn.is-reduced .cs-hp i,.reborn.rb-fx-off .cs-hp i{transition:none!important}
 .reborn.rb-fx-off .cs-action{display:none}
 .reborn.rb-fx-high .cs-action i{display:none}
+
+/* Player collection stays compact at the top; the QUEST RUN CTA remains above the fold. */
+.ac-home-heading{display:grid;grid-template-columns:minmax(0,1fr) 110px;align-items:center;gap:12px}
+.ac-home-heading h1{font-size:clamp(29px,6vw,50px);font-weight:900;line-height:1.28;margin:13px 0 9px;letter-spacing:-.035em}
+.ac-home-heading h1 em{color:#ffce88;font-style:normal}
+.ac-home-heading p{color:#b3c0d6;font-size:14px;line-height:1.8;margin:0 0 19px}
+.ac-home-portrait{height:142px;width:110px;display:flex;flex-direction:column;justify-content:center;align-items:center;border:1px solid #6e8caf;border-radius:16px;background:radial-gradient(ellipse at 50% 70%,#435b84,#1b2b47);box-shadow:0 0 23px #519ac021;overflow:hidden}
+.ac-home-portrait .cs-avatar{height:119px;max-width:105px;flex-shrink:0}
+.ac-home-portrait span{font-size:9px;font-weight:950;letter-spacing:.12em;color:#e8f8ff;margin-top:-2px}
+.ac-wardrobe{border:1px solid #455b79;border-radius:13px;background:#192a42;margin-top:12px;overflow:hidden}
+.ac-wardrobe>summary{display:flex;align-items:center;gap:10px;min-height:59px;padding:11px 14px;list-style:none;cursor:pointer;color:#f1f7ff}
+.ac-wardrobe>summary::-webkit-details-marker{display:none}
+.ac-wardrobe>summary>svg:first-child{color:#ffd595}
+.ac-wardrobe>summary>svg:last-child{margin-left:auto;color:#afc7d7;transition:transform .2s}
+.ac-wardrobe[open]>summary>svg:last-child{transform:rotate(180deg)}
+.ac-wardrobe>summary>span{display:grid;gap:3px}
+.ac-wardrobe>summary strong{font-size:14px}
+.ac-wardrobe>summary small{font-size:11px;color:#b6cee1}
+.ac-wardrobe-inner{display:grid;gap:15px;border-top:1px solid #415b73;padding:15px}
+.ac-wardrobe-preview{display:grid;grid-template-columns:95px minmax(0,1fr);gap:14px;align-items:center;border:1px solid #4b7081;border-radius:12px;padding:10px;background:#223b4f}
+.ac-wardrobe-avatar{height:116px;display:grid;place-items:center;background:#1b2b45;border-radius:10px}
+.ac-wardrobe-avatar .cs-avatar{height:108px;max-width:94px}
+.ac-wardrobe-preview>div:last-child{display:grid;gap:7px;min-width:0}
+.ac-wardrobe-preview strong{font-size:15px;color:#ffe2ad}
+.ac-wardrobe-preview span{font-size:12px;color:#d4f6f4}
+.ac-wardrobe-preview small{font-size:11px;line-height:1.75;color:#b9d4e0}
+.ac-items-section{display:grid;gap:8px}
+.ac-items-section h3{font-size:14px;margin:0;color:#fbe0ad}
+.ac-item-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.ac-item{display:flex;align-items:center;gap:7px;min-height:59px;padding:10px 8px;border:1px solid #567086;border-radius:10px;background:#26394f;color:#ebf5fc;text-align:left;min-width:0}
+.ac-item:disabled{cursor:default}
+.ac-item.is-locked{opacity:.67}
+.ac-item.is-equipped{background:#295345;border-color:#90eab8}
+.ac-item-icon{flex-shrink:0;color:#ffdd98}
+.ac-item-description{display:grid;gap:5px;min-width:0}
+.ac-item-description strong{font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.ac-item-description small{font-size:10px;line-height:1.5;color:#c0d9e4}
+.ac-item-notice{font-size:11px;line-height:1.75;color:#b4d6e1;margin:0}
+@media(max-width:540px){.ac-item-grid{grid-template-columns:1fr}.ac-item{min-height:49px}.ac-item-description strong{font-size:12px}}
+@media(max-width:380px){.ac-home-heading{grid-template-columns:minmax(0,1fr) 86px;gap:7px}.ac-home-heading h1{font-size:28px}.ac-home-heading p{font-size:12px}.ac-home-portrait{width:86px;height:120px}.ac-home-portrait .cs-avatar{height:97px;max-width:80px}.ac-wardrobe-preview{grid-template-columns:75px minmax(0,1fr);gap:9px}.ac-wardrobe-avatar{height:98px}.ac-wardrobe-avatar .cs-avatar{height:88px}}
+@media(prefers-reduced-motion:reduce){.ac-wardrobe>summary>svg:last-child{transition:none!important}}
