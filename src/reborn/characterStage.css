@@ -157,3 +157,15 @@
 .reborn.is-reduced .cs-hero-3d-host,.reborn.rb-fx-off .cs-hero-3d-host,
 .reborn.is-reduced .cs-3d-label,.reborn.rb-fx-off .cs-3d-label{display:none!important}
 .reborn.is-reduced .cs-hero-2d,.reborn.rb-fx-off .cs-hero-2d{opacity:1!important;visibility:visible!important}
+
+/* The QUEST fight stays mounted across question↔review to prevent WebGL resets. */
+.sa-quest-persistent{margin-bottom:12px}
+.cs-hero-viewport .cs-model-loading{position:absolute;inset:0;display:grid;place-items:center;color:#a5cddb;font-size:10px;font-weight:900;text-align:center;letter-spacing:.06em;pointer-events:none}
+.cs-enemy-viewport .cs-model-loading{color:#f3c6d7}
+.cs-enemy-viewport .cs-hero-2d{align-items:flex-end}
+.cs-enemy-viewport .cs-hero-2d svg{max-width:100%;max-height:100%}
+.cs-enemy-3d-canvas{width:100%!important;height:100%!important;pointer-events:none}
+.cs-enemy-viewport .cs-3d-label{color:#f6d5e5;font-size:8px}
+.cs-hero-3d-host{overflow:hidden}
+.cs-stage-3d-capable .cs-combatant{min-height:0}
+@media(max-width:420px){.sa-quest-persistent{margin-bottom:10px}.cs-hero-viewport .cs-model-loading{font-size:9px}}
