@@ -1,5 +1,7 @@
 import React from 'react';
 import QuestEnemy3D from './QuestEnemy3D.tsx';
+import BattleEnergyFX from './BattleEnergyFX.tsx';
+import './battleEnergy.css';
 import type {EnemyId} from '../enemyCampaign.ts';
 import type {AvatarPose} from './PlayerAvatar.tsx';
 import QuestHero3D from './QuestHero3D.tsx';
@@ -31,6 +33,7 @@ export default function BattleStage({
  return <section className={'cs-stage'+(boss?' cs-boss':'')+(allow3d?' cs-stage-3d-capable':'')} aria-label="QUEST RUNのラン内戦闘">
   <div className="cs-topline"><span>{boss?'BOSS ENCOUNTER':'ENEMY ENCOUNTER'}</span><strong>{combo>=3?combo+' COMBO · POWER UP':'READY TO ATTACK'}</strong>{allow3d&&onToggle3d&&<button type="button" className="cs-3d-switch" onClick={onToggle3d} aria-pressed={threeD}>{threeD?'3D表示中 · 2Dへ':'2D表示中 · 3Dへ'}</button>}</div>
   <div className="cs-arena">
+   <BattleEnergyFX event={event} combo={combo} enemyDown={enemyDown} boss={boss}/>
    <div className="cs-combatant cs-player">
     <div className="cs-actor"><QuestHero3D enabled={allow3d&&threeD} pose={pose} event={event} appearance={appearance}/></div>
     <strong>PLAYER</strong>
