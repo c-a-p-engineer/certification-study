@@ -60,7 +60,7 @@
 .bfx-defeat-mark i,.bfx-defeat-mark b{position:absolute;inset:5%;border-radius:50%;border:1px dashed #ffd8a66d;transform:rotate(-20deg)}
 .bfx-defeat-mark b{inset:16%;border-color:#ffe2c487;transform:rotate(20deg)}
 @keyframes bfx-breathe{from{opacity:.45;transform:scale(.93)}to{opacity:.82;transform:scale(1.08)}}
-@keyframes bfx-ring-breathe{0%,100%{opacity:.52;box-shadow:0 0 8px var(--bfx-haze)}50%{opacity:1;box-shadow:0 0 19px var(--bfx-haze),inset 0 0 12px var(--bfx-haze)}}
+@keyframes bfx-ring-breathe{0%,100%{opacity:.52;transform:perspective(150px) rotateX(49deg) scale(.96)}50%{opacity:1;transform:perspective(150px) rotateX(49deg) scale(1.06)}}
 @keyframes bfx-ring-turn{to{transform:rotate(360deg)}}
 @keyframes bfx-flow{from{transform:translateX(-7%) scaleX(.86);opacity:.34}to{transform:translateX(7%) scaleX(1.1);opacity:.8}}
 @keyframes bfx-mote{0%,100%{transform:translateY(8px) scale(.5);opacity:.15}46%{transform:translateY(-11px) scale(1.2);opacity:.9}}
