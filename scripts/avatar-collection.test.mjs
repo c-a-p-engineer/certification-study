@@ -87,7 +87,7 @@ test('SSR renders visibly different avatar colors and equipped item assets',asyn
   const src=readFileSync('src/reborn/RebornApp.tsx','utf8');
   assert.doesNotMatch(home,/マイキャラ・装備アイテム/);
   assert.ok(src.includes('if(!canWrite)'));
-  assert.ok(src.includes('appearance={avatarAppearance} onExit={quit}'));
+  assert.ok(src.includes('appearance={avatarAppearance} allow3d={!actualReduced} onExit={quit}'));
  }finally{await vite.close()}
 });
 test('quest, blitz and daily character views consume the same appearance',()=>{
