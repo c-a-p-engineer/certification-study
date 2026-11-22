@@ -32,7 +32,8 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
  host.appendChild(renderer.domElement);
  const scene=new THREE.Scene();
  const camera=new THREE.OrthographicCamera(-1.4,1.4,1.55,-1.55,.1,80);
- camera.position.set(2.25,1.2,4.2);camera.lookAt(0,-.05,0);
+ // Opposite-side camera: the hero presents a three-quarter pose facing screen-right.
+ camera.position.set(-3.35,1.25,4.0);camera.lookAt(0,-.05,0);
  scene.add(new THREE.AmbientLight(0xe9f5ff,2.15));
  const main=new THREE.DirectionalLight(0xfff2d9,3.0);main.position.set(-3,5,5);scene.add(main);
  const rim=new THREE.DirectionalLight(0x8db9ff,2.0);rim.position.set(3,3,-3);scene.add(rim);
@@ -70,6 +71,9 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
   mixer.update(delta);
   const t=time*.001;
   const impact=Math.max(0,1-(time-reactedAt)/520);
+  // A brief stage-light surge reinforces only the confirmed impact event.
+  rim.intensity=2.0+impact*1.5;
+  ring.scale.setScalar(1+impact*.23);
   if(reaction.kind==='hit'&&impact>0){
    root.position.x=impact*.35;
    root.rotation.z=-impact*.12;
@@ -85,7 +89,7 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
    root.rotation.z=0;
    ringMaterial.opacity=.32;
   }
-  root.rotation.y=Math.sin(t*.7)*.055;
+  root.rotation.y=.22+Math.sin(t*.7)*.035;
   ring.rotation.z=t*.36;
   renderer.render(scene,camera);
  }

@@ -32,7 +32,8 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
 
  const scene=new THREE.Scene();
  const camera=new THREE.OrthographicCamera(-1,1,1.55,-1.55,.1,60);
- camera.position.set(2.1,1.05,4.5);camera.lookAt(0,0,0);
+ // The mirrored camera gives the enemy a three-quarter pose facing screen-left.
+ camera.position.set(3.35,1.2,4.0);camera.lookAt(0,0,0);
  scene.add(new THREE.AmbientLight(0xffffff,2.2));
  const key=new THREE.DirectionalLight(0xffe0b7,3.0);
  key.position.set(-3,5,6);scene.add(key);
@@ -105,6 +106,9 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
   const dt=Math.max(0,Math.min(.055,(now-lastFrame)/1000));lastFrame=now;
   mixer.update(dt);
   const impact=Math.max(0,1-(now-reactedAt)/540);
+  // No additional particles or GPU ticker; the existing rim and ring react.
+  rim.intensity=1.9+impact*1.7;
+  ground.scale.setScalar(1+impact*.22);
   const t=now/1000;
   if(event.kind==='hit'&&impact>0){
    root.position.x=impact*.18;root.rotation.z=impact*.11;
@@ -117,7 +121,7 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:SkeletonVari
    root.rotation.z=0;groundMaterial.opacity=.3;
   }
   if(enemyHp===0){root.position.y=-.08;groundMaterial.opacity=.12}
-  root.rotation.y=Math.sin(t*.63)*.055;
+  root.rotation.y=-.22+Math.sin(t*.63)*.035;
   ground.rotation.z=t*.29;
   renderer.render(scene,camera);
  }
