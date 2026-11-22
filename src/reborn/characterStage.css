@@ -125,3 +125,35 @@
 @media(max-width:540px){.ac-item-grid{grid-template-columns:1fr}.ac-item{min-height:49px}.ac-item-description strong{font-size:12px}}
 @media(max-width:380px){.ac-home-heading{grid-template-columns:minmax(0,1fr) 86px;gap:7px}.ac-home-heading h1{font-size:28px}.ac-home-heading p{font-size:12px}.ac-home-portrait{width:86px;height:120px}.ac-home-portrait .cs-avatar{height:97px;max-width:80px}.ac-wardrobe-preview{grid-template-columns:75px minmax(0,1fr);gap:9px}.ac-wardrobe-avatar{height:98px}.ac-wardrobe-avatar .cs-avatar{height:88px}}
 @media(prefers-reduced-motion:reduce){.ac-wardrobe>summary>svg:last-child{transition:none!important}}
+
+/* Optional KayKit 3D hero. Canvas lives only inside the existing actor cell. */
+.cs-topline{flex-wrap:wrap}
+.cs-topline>span{flex:1 1 auto}
+.cs-3d-switch{min-height:44px;min-width:115px;border:1px solid #76d0e3;border-radius:10px;background:#1d425a;color:#d9faff;font-size:11px;font-weight:900;padding:7px 12px;cursor:pointer}
+.cs-3d-switch:hover{background:#2a5166}
+.cs-3d-switch:focus-visible{outline:3px solid #ffe1a3;outline-offset:2px}
+.cs-stage:has(.cs-3d-switch) .cs-arena{min-height:183px}
+.cs-stage:has(.cs-3d-switch) .cs-actor{height:126px}
+.cs-stage:has(.cs-3d-switch) .cs-avatar{height:122px;max-width:112px}
+.cs-stage:has(.cs-3d-switch) .cs-enemy-actor svg{height:120px;max-width:130px}
+.cs-hero-viewport{position:relative;isolation:isolate;width:100%;height:100%;overflow:hidden;pointer-events:none}
+.cs-hero-2d,.cs-hero-3d-host{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.cs-hero-3d-host{display:block}
+.cs-hero-3d-host canvas{display:block;width:100%!important;height:100%!important;pointer-events:none}
+.cs-3d-label{position:absolute;bottom:0;left:0;right:0;padding:3px 2px;text-align:center;letter-spacing:.06em;font-size:8px;font-weight:950;color:#c7f7ff;background:linear-gradient(transparent,#061b30c9);pointer-events:none}
+.cs-3d-disclaimer{display:block;color:#b5d5df;font-size:9px;line-height:1.4;text-align:center;max-width:100%;min-height:13px}
+@media(max-width:420px){
+ .cs-stage:has(.cs-3d-switch) .cs-arena{min-height:162px}
+ .cs-stage:has(.cs-3d-switch) .cs-actor{height:108px}
+ .cs-stage:has(.cs-3d-switch) .cs-avatar{height:106px}
+ .cs-stage:has(.cs-3d-switch) .cs-enemy-actor svg{height:105px}
+ .cs-3d-switch{font-size:10px;min-width:108px;padding:6px 8px}
+ .cs-3d-disclaimer{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .cs-hero-3d-host,.cs-3d-label{display:none!important}
+ .cs-hero-2d{opacity:1!important;visibility:visible!important}
+}
+.reborn.is-reduced .cs-hero-3d-host,.reborn.rb-fx-off .cs-hero-3d-host,
+.reborn.is-reduced .cs-3d-label,.reborn.rb-fx-off .cs-3d-label{display:none!important}
+.reborn.is-reduced .cs-hero-2d,.reborn.rb-fx-off .cs-hero-2d{opacity:1!important;visibility:visible!important}
