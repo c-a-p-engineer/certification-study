@@ -41,7 +41,7 @@ test('HOME and practice answer use card camera without changing QUEST RUN battle
  assert.match(scene,/new THREE.Box3\(\)\.setFromObject\(root\)/);
  assert.match(scene,/applyMatrix4\(camera\.matrixWorldInverse\)/);
  assert.match(scene,/enemyCardFrustumHalfHeight\(w,h,horizontalExtent,verticalExtent\)/);
- assert.match(scene,/if\(view==='card'&&cardCorners.length\)/);
+ assert.match(scene,/if\(\(view==='card'\|\|variant==='phoenix'\)&&cardCorners.length\)/);
  assert.match(view,/\[enabled,variant,view\]/);
  assert.equal((app.match(/<QuestEnemy3D view="card"/g)||[]).length,2);
  assert.match(css,/\.rb-enemy-card-3d \.rb-enemy-picture-3d/);
