@@ -20,20 +20,20 @@ export default function QuestHero3D({enabled,appearance,pose,event}:{
   driver.current?.dispose();driver.current=null;
   if(!enabled){setLoad({forEnabled:enabled,phase:'fallback'});return}
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduced||typeof window.WebGLRenderingContext==='undefined'){setStatus('fallback');return}
+  if(reduced||typeof window.WebGLRenderingContext==='undefined'){setLoad({forEnabled:true,phase:'fallback'});return}
   const mount=host.current;
   if(!mount)return;
   setLoad({forEnabled:true,phase:'loading'});
   // This imports a dedicated Three.js chunk *only when QUEST RUN 3D is enabled*.
   void import('./questHero3DScene.ts').then(({mountQuestHero3D})=>mountQuestHero3D(mount,()=>{
    if(cancelled)return;
-   driver.current?.dispose();driver.current=null;setStatus('fallback');
+   driver.current?.dispose();driver.current=null;setLoad({forEnabled:true,phase:'fallback'});
   })).then(instance=>{
    if(cancelled){instance.dispose();return}
    driver.current=instance;
    instance.update(latest.current);
    setLoad({forEnabled:true,phase:'ready'});
-  }).catch(()=>{if(!cancelled)setStatus('fallback')});
+  }).catch(()=>{if(!cancelled)setLoad({forEnabled:true,phase:'fallback'})});
   return()=>{cancelled=true;driver.current?.dispose();driver.current=null};
  },[enabled]);
  useEffect(()=>{driver.current?.update(heroEvent)},[event.seq,event.kind,event.damage,pose]);
