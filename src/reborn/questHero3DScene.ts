@@ -119,8 +119,13 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
       const action=mixer.clipAction(clip);
       action.reset().setLoop(THREE.LoopOnce,1).play();
       action.clampWhenFinished=false;
-      idleAction?.crossFadeTo(action,.1,false);
-      action.addEventListener?.('finished' as never,()=>{}); // no listener is required; idle visual remains available.
+      idleAction?.fadeOut(.1);
+      const onFinished=(finished:{action:THREE.AnimationAction})=>{
+       if(finished.action!==action)return;
+       mixer.removeEventListener('finished',onFinished);
+       action.stop();idleAction?.reset().fadeIn(.12).play();
+      };
+      mixer.addEventListener('finished',onFinished);
      }
     }
    }
