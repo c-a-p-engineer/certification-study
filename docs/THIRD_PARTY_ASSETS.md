@@ -50,3 +50,9 @@
 - **Credit:** visible in Settings → 使用素材・ライセンス, although not required for CC0. Three.js MIT licensing remains separate.
 - **Performance:** ~2.05 MB combined on disk, only the current enemy is requested; Android GPU utilization is unmeasured.
 
+
+### Phoenix firebird rendering (derived from the verified Gobkit Duck GLB)
+
+- The game's `phoenix` visual reuses the pinned **Gobkit `animal/Duck.glb`** (CC0) as its animated body. The flame-colored body material overrides and stylized 3D wings, tail, crest and sparks are created locally in `src/reborn/phoenix3DAccent.ts` with Three.js geometry.
+- There is **no additional external asset, network endpoint, or license**. The original imported GLB mesh/texture cache is never modified; overridden materials and added geometry are clone-local and disposed on unmount.
+- Credits to Gobkit/Alsomind Tech remain available in Settings; this is a derived stylized firebird, **not** an officially authored Gobkit Phoenix model.

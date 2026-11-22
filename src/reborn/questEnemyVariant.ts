@@ -22,30 +22,33 @@ export const GOBKIT_VISUALS={
  'gobkit-minion-d02':{path:'characters/gobkit/minion/minion-d02.glb',label:'Gobkit minion d02'},
 } as const;
 export type GobkitVariant=keyof typeof GOBKIT_VISUALS;
-export type Enemy3DVariant=SkeletonVariant|GobkitVariant;
+export type Enemy3DVariant=SkeletonVariant|GobkitVariant|'phoenix';
 export const SKELETON_LABELS:Record<SkeletonVariant,string>={minion:'Skeleton Minion',warrior:'Skeleton Warrior',mage:'Skeleton Mage'};
 export function enemy3DAsset(variant:Enemy3DVariant):{path:string;label:string;isGobkit:boolean}{
+ // The flamebird is a CC0 Duck base with authored Three.js fire-feather geometry.
+ // Keep a dedicated semantic variant to prevent random raccoons/bats/jellyfish.
+ if(variant==='phoenix')return {path:GOBKIT_VISUALS['gobkit-animal-duck'].path,label:'Phoenix · Flamebird',isGobkit:true};
  if(variant in GOBKIT_VISUALS){
   const model=GOBKIT_VISUALS[variant as GobkitVariant];
   return {path:model.path,label:model.label,isGobkit:true};
  }
  return {path:'characters/kaykit/skeleton_'+variant+'.glb',label:SKELETON_LABELS[variant as SkeletonVariant],isGobkit:false};
 }
-const ROSTERS:Record<'slime'|'zombie'|'armor'|'chimera'|'cerberus'|'phoenix'|'titan'|'leviathan',readonly GobkitVariant[]>={
+const ROSTERS:Record<'slime'|'zombie'|'armor'|'chimera'|'cerberus'|'titan'|'leviathan',readonly GobkitVariant[]>={
  slime:['gobkit-animal-jellyfish','gobkit-minion-a01'],
  zombie:['gobkit-minion-a02','gobkit-minion-b01'],
  chimera:['gobkit-animal-red','gobkit-animal-platypus'],
  cerberus:['gobkit-animal-corgi','gobkit-animal-rhino'],
  armor:['gobkit-minion-a01','gobkit-minion-a02','gobkit-minion-b01','gobkit-minion-b02','gobkit-minion-d01','gobkit-minion-d02'],
- phoenix:['gobkit-animal-bat','gobkit-animal-duck','gobkit-animal-jellyfish','gobkit-animal-red'],
  titan:['gobkit-minion-c01','gobkit-minion-c02','gobkit-animal-rhino','gobkit-animal-hippo'],
  leviathan:['gobkit-animal-shark','gobkit-animal-anglerfish','gobkit-animal-platypus','gobkit-animal-corgi']
 };
-/** Nonzero seed rotates all 18 CC0 models among QUEST stage routes without changing enemy IDs. */
+/** Seeds rotate generic enemy appearances; Phoenix intentionally has one flamebird identity. */
 export function questEnemyVariant(enemyId:EnemyId,boss:boolean,visualSeed=0):Enemy3DVariant{
+ if(enemyId==='phoenix')return 'phoenix';
  if(!Number.isSafeInteger(visualSeed)||visualSeed===0){
   if(boss||enemyId==='dragon')return 'mage';
-  if(enemyId==='armor'||enemyId==='phoenix')return 'minion';
+  if(enemyId==='armor')return 'minion';
   return 'warrior';
  }
  if(boss||enemyId==='dragon')return 'mage';

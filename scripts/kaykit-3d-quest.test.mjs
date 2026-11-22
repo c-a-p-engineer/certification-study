@@ -110,7 +110,7 @@ test('mobile and reduced-motion rules preserve buttons and readable non-canvas f
 test('three actual CC0 Skeleton GLBs are pinned, complete and have authored animations',()=>{
  assert.equal(Object.keys(KAYKIT_ENEMIES).length,3);
  assert.equal(questEnemyVariant('armor',false),'minion');
- assert.equal(questEnemyVariant('phoenix',false),'minion');
+ assert.equal(questEnemyVariant('phoenix',false),'phoenix');
  assert.equal(questEnemyVariant('titan',false),'warrior');
  assert.equal(questEnemyVariant('leviathan',false),'warrior');
  assert.equal(questEnemyVariant('dragon',true),'mage');
