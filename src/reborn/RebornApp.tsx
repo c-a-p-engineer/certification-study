@@ -245,7 +245,7 @@ export default function RebornApp(){
     <section className="rb-bottom-actions"><button onClick={()=>nav('insights')}><Trophy size={20}/> 成長の記録を見る <ChevronRight size={18}/></button><button onClick={()=>nav('settings')}><ShieldCheck size={20}/> バックアップ・詳細 <ChevronRight size={18}/></button></section>
    </div>}
    {screen==='daily-code'&&<DailyCode appearance={avatarAppearance} onExit={quit} onSound={sound} onHaptic={signal}/>}
-   {screen==='arcade'&&<SoloArcade key={arcadeKind+'-'+runId} kind={arcadeKind} bank={QUESTIONS} learnedIds={Object.keys(progress.reviews??{})} onRecord={recordArcade} onSound={sound} onHaptic={signal} appearance={avatarAppearance} onExit={quit}/>}
+   {screen==='arcade'&&<SoloArcade key={arcadeKind+'-'+runId} kind={arcadeKind} bank={QUESTIONS} learnedIds={Object.keys(progress.reviews??{})} onRecord={recordArcade} onSound={sound} onHaptic={signal} appearance={avatarAppearance} allow3d={!actualReduced&&fxLevel!=='off'} onExit={quit}/>}
    {screen==='quiz'&&round&&current&&<div className="rb-quiz">
     <div className="rb-quiz-top"><button className="rb-back" type="button" onClick={quit}><ArrowLeft size={18}/> 終了してホームへ</button>{activeExam&&<span className="rb-clock"><Clock3 size={16}/> {Math.floor(timeLeft/60)}:{String(timeLeft%60).padStart(2,'0')}</span>}</div>
     <div className="rb-progress-head"><span>{activeExam?'模擬試験':round.mode==='daily'?'今日のクエスト':round.mode==='weak'?'苦手攻略':round.mode==='domain'?'分野別演習':'ランダム演習'}</span><div className="rb-combo-hud"><span className={combo>=2?'is-hot':''}><Flame size={16}/> {activeExam?'EXAM':combo>=2?combo+' COMBO':'READY'}</span><strong>{index+1} / {round.questions.length}</strong></div></div>
