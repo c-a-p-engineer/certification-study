@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 
-export type Hero3DReaction={seq:number;kind:'idle'|'hit'|'hurt';damage:number};
+export type Hero3DReaction={seq:number;kind:'idle'|'hit'|'hurt'|'victory';damage:number};
 export type Hero3DDriver={update:(event:Hero3DReaction)=>void;dispose:()=>void};
 type Model=Awaited<ReturnType<GLTFLoader['loadAsync']>>;
 
@@ -74,6 +74,8 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
    root.position.x=impact*.35;
    root.rotation.z=-impact*.12;
    ringMaterial.opacity=.35+impact*.52;
+  }else if(reaction.kind==='victory'&&impact>0){
+   root.position.y=impact*.22;root.rotation.z=-impact*.07;ringMaterial.opacity=.45;
   }else if(reaction.kind==='hurt'&&impact>0){
    root.position.x=-impact*.24;
    root.rotation.z=impact*.17;
@@ -113,7 +115,7 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
     reactedSeq=event.seq;reactedAt=performance.now();
     // Use an authored attack/hurt clip when one exists, otherwise retain
     // the authored idle clip and apply a small grounded model movement.
-    const pattern=event.kind==='hit'?/attack|cast|swing|slash|spell/i:event.kind==='hurt'?/hit|hurt|damage|stagger/i:null;
+    const pattern=event.kind==='victory'?/^Cheer$/i:event.kind==='hit'?/attack|cast|swing|slash|spell/i:event.kind==='hurt'?/^Hit_|hurt|damage|stagger/i:null;
     if(pattern){
      const clip=model.animations.find(x=>pattern.test(x.name));
      if(clip){
