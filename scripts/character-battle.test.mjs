@@ -92,8 +92,8 @@ test('characters appear in quest question, review, blitz and daily screens, with
  const daily=readFileSync('src/reborn/DailyCode.tsx','utf8');
  assert.ok(solo.includes('<BattleStage appearance={appearance} enemyId={foe.id}'));
  assert.equal((solo.match(/<BattleStage appearance=\{appearance\} enemyId=/g)||[]).length,1,'one stable battle mount across question/review');
- assert.ok(solo.includes('<PlayerAvatar appearance={appearance} pose={impact?.correct?'));
- assert.ok(daily.includes('<PlayerAvatar appearance={appearance} pose={fxReaction==='));
+ assert.ok(solo.includes('<QuestHero3D enabled={allow3d} appearance={appearance} pose={impact?.correct?'));
+ assert.ok(daily.includes('<QuestHero3D enabled={allow3d} appearance={appearance} pose={fxReaction==='));
  const css=readFileSync('src/reborn/characterStage.css','utf8');
  for(const marker of ['@media(max-width:420px)','@media(prefers-reduced-motion:reduce)','.reborn.is-reduced','.reborn.rb-fx-off','.cs-hp-label','.cs-mini-row','.cs-avatar-victory'])assert.ok(css.includes(marker),marker);
  assert.ok(css.includes('pointer-events:none'));

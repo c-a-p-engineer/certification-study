@@ -44,7 +44,7 @@ test('3D is lazy, disposable, answer-event-linked and never writes score or XP',
   assert.ok(!driver.includes(phrase),'presentation code must not modify '+phrase);
  }
  assert.doesNotMatch(main,/from 'three'/);
- assert.match(main,/allow3d=\{!actualReduced&&fxLevel!=='off'\}/);
+ assert.match(main,/allow3d=\{!actualReduced\}/);
  assert.match(view,/if\(!enabled\)/);
  assert.match(view,/WebGLRenderingContext/);
  assert.match(view,/prefers-reduced-motion/);
@@ -53,19 +53,14 @@ test('3D is lazy, disposable, answer-event-linked and never writes score or XP',
  assert.match(pkg.scripts.build,/npm run vendor:3d/);
  assert.match(pkg.scripts.build,/npm run test:kaykit3d/);
 });
-test('QUEST RUN manual 3D/2D toggle preserves the existing 2D equipment fallback',()=>{
+test('QUEST RUN only offers 3D mode and preserves scoring',()=>{
  const solo=read('src/reborn/SoloArcade.tsx');
  const battle=read('src/reborn/BattleStage.tsx');
- assert.match(solo,/const \[threeD,setThreeD\]=useState\(true\)/);
- assert.equal((solo.match(/onToggle3d=\{\(\)=>setThreeD\(v=>!v\)\}/g)||[]).length,1,'one stable toggle across question and review');
- assert.match(battle,/aria-pressed=\{threeD\}/);
- assert.match(battle,/3D表示中 · 2Dへ/);
- assert.match(battle,/2D表示中 · 3Dへ/);
- assert.match(battle,/QuestHero3D enabled=\{allow3d&&threeD\}/);
+ assert.doesNotMatch(solo,/setThreeD|onToggle3d/);
+ assert.doesNotMatch(battle,/onToggle3d|2D表示中|3D表示中 · 2Dへ/);
+ assert.match(battle,/QuestHero3D enabled=\{allow3d\}/);
+ assert.match(battle,/QuestEnemy3D enabled=\{allow3d\}/);
  assert.match(battle,/appearance=\{appearance\}/);
- assert.match(battle,/enemyHp\}/);
- assert.match(battle,/playerHp\}/);
- assert.match(battle,/装備未反映/);
  assert.match(solo,/questHitDamage\(correct,quest.stage,combo,quest.skills\)/);
  assert.match(solo,/if\(!onRecord\(current,correct,combo,receipt\)\)/);
 });
@@ -87,7 +82,7 @@ test('SSR always supplies useful SVG fallback, no WebGL or asset fetch required'
    playerHp:75,combo:4,boss:true,event:{seq:2,kind:'hit',damage:39},
    threeD:true,allow3d:true,onToggle3d:()=>{}
   }));
-  assert.match(stage,/cs-3d-switch/);
+  assert.match(stage,/3D ARENA/);
   assert.match(stage,/cs-stage-3d-capable/);
   assert.match(stage,/プレイヤーのランHP/);
   assert.match(stage,/ボスHP/);
@@ -105,7 +100,7 @@ test('SSR always supplies useful SVG fallback, no WebGL or asset fetch required'
 });
 test('mobile and reduced-motion rules preserve buttons and readable non-canvas fallback',()=>{
  const css=read('src/reborn/characterStage.css');
- for(const tag of ['.cs-stage-3d-capable','.cs-hero-viewport','.cs-3d-switch','.cs-hero-2d','.cs-hero-3d-host','pointer-events:none','@media(max-width:420px)','@media(prefers-reduced-motion:reduce)','.reborn.rb-fx-off','.reborn.is-reduced','min-height:44px']){
+ for(const tag of ['.cs-stage-3d-capable','.cs-hero-viewport','.cs-hero-2d','.cs-hero-3d-host','pointer-events:none','@media(max-width:420px)','@media(prefers-reduced-motion:reduce)','.reborn.rb-fx-off','.reborn.is-reduced','min-height:44px']){
   assert.ok(css.includes(tag),tag);
  }
  const sw=read('scripts/build-offline.mjs');
@@ -141,7 +136,7 @@ test('no legacy SVG reappears during 3D loading, and combat stays mounted across
  const solo=read('src/reborn/SoloArcade.tsx');
  assert.match(solo,/!isBlitz&&\(step==='question'\|\|step==='review'\)&&<div className="sa-play sa-quest-persistent"/);
  assert.equal((solo.match(/<BattleStage appearance=\{appearance\}/g)||[]).length,1);
- assert.equal((solo.match(/onToggle3d=\{\(\)=>setThreeD\(v=>!v\)\}/g)||[]).length,1);
+ assert.doesNotMatch(solo,/onToggle3d|setThreeD/);
  assert.ok(solo.indexOf('sa-quest-persistent')<solo.indexOf("{step==='question'"));
  const hero=read('src/reborn/QuestHero3D.tsx');
  const enemy=read('src/reborn/QuestEnemy3D.tsx');
@@ -152,7 +147,7 @@ test('no legacy SVG reappears during 3D loading, and combat stays mounted across
   assert.doesNotMatch(src,/opacity:shown\?0:1,visibility:shown/);
  }
  const stage=read('src/reborn/BattleStage.tsx');
- assert.match(stage,/QuestEnemy3D enabled=\{allow3d&&threeD\}/);
+ assert.match(stage,/QuestEnemy3D enabled=\{allow3d\}/);
  assert.doesNotMatch(stage,/key=\{event\.kind==='hit'\?event\.seq:'rest'\}/);
 });
 test('3D enemy animations reflect persisted combat outcomes and render is disposable',()=>{

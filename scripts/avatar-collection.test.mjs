@@ -85,7 +85,7 @@ test('SSR renders visibly different avatar colors and equipped item assets',asyn
   assert.match(home,/ac-home-portrait/);
   assert.ok(home.indexOf('ac-home-portrait')<home.indexOf('攻略を始める'));
   const src=readFileSync('src/reborn/RebornApp.tsx','utf8');
-  assert.ok(src.includes('avatarAppearance:next'));
+  assert.doesNotMatch(home,/マイキャラ・装備アイテム/);
   assert.ok(src.includes('if(!canWrite)'));
   assert.ok(src.includes('appearance={avatarAppearance} onExit={quit}'));
  }finally{await vite.close()}
@@ -96,6 +96,6 @@ test('quest, blitz and daily character views consume the same appearance',()=>{
  const daily=readFileSync('src/reborn/DailyCode.tsx','utf8');
  assert.ok(battle.includes('appearance={appearance}'));
  assert.ok(solo.includes('<BattleStage appearance={appearance}'));
- assert.ok(solo.includes('<PlayerAvatar appearance={appearance}'));
- assert.ok(daily.includes('<PlayerAvatar appearance={appearance}'));
+ assert.ok(solo.includes('<QuestHero3D enabled={allow3d} appearance={appearance}'));
+ assert.ok(daily.includes('<QuestHero3D enabled={allow3d} appearance={appearance}'));
 });
