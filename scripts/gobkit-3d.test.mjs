@@ -16,7 +16,7 @@ test('18 original creator CC0 GLBs are pinned, valid and animated',()=>{
   assert.equal(verified.bytes,asset.size);
   assert.equal(verified.gitHash,asset.blob);
   assert.ok(verified.animations.length>0,asset.upstreamPath);
-  const key='gobkit-'+asset.upstreamPath.replace('.glb','').replace('/','-').toLowerCase();
+  const key='gobkit-'+asset.upstreamPath.replace('minion/minion-','minion-').replace('.glb','').replace('/','-').toLowerCase();
   assert.equal(enemy3DAsset(key).path,'characters/gobkit/'+asset.upstreamPath);
  }
  const first=GOBKIT_MODELS[0],broken=Buffer.from(readFileSync(first.output));broken[broken.length-1]^=1;

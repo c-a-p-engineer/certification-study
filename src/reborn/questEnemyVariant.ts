@@ -12,14 +12,14 @@ export const GOBKIT_VISUALS={
  'gobkit-animal-red':{path:'characters/gobkit/animal/Red.glb',label:'Gobkit Red'},
  'gobkit-animal-rhino':{path:'characters/gobkit/animal/Rhino.glb',label:'Gobkit Rhino'},
  'gobkit-animal-shark':{path:'characters/gobkit/animal/Shark.glb',label:'Gobkit Shark'},
- 'gobkit-minion-minion-a01':{path:'characters/gobkit/minion/minion-a01.glb',label:'Gobkit minion a01'},
- 'gobkit-minion-minion-a02':{path:'characters/gobkit/minion/minion-a02.glb',label:'Gobkit minion a02'},
- 'gobkit-minion-minion-b01':{path:'characters/gobkit/minion/minion-b01.glb',label:'Gobkit minion b01'},
- 'gobkit-minion-minion-b02':{path:'characters/gobkit/minion/minion-b02.glb',label:'Gobkit minion b02'},
- 'gobkit-minion-minion-c01':{path:'characters/gobkit/minion/minion-c01.glb',label:'Gobkit minion c01'},
- 'gobkit-minion-minion-c02':{path:'characters/gobkit/minion/minion-c02.glb',label:'Gobkit minion c02'},
- 'gobkit-minion-minion-d01':{path:'characters/gobkit/minion/minion-d01.glb',label:'Gobkit minion d01'},
- 'gobkit-minion-minion-d02':{path:'characters/gobkit/minion/minion-d02.glb',label:'Gobkit minion d02'},
+ 'gobkit-minion-a01':{path:'characters/gobkit/minion/minion-a01.glb',label:'Gobkit minion a01'},
+ 'gobkit-minion-a02':{path:'characters/gobkit/minion/minion-a02.glb',label:'Gobkit minion a02'},
+ 'gobkit-minion-b01':{path:'characters/gobkit/minion/minion-b01.glb',label:'Gobkit minion b01'},
+ 'gobkit-minion-b02':{path:'characters/gobkit/minion/minion-b02.glb',label:'Gobkit minion b02'},
+ 'gobkit-minion-c01':{path:'characters/gobkit/minion/minion-c01.glb',label:'Gobkit minion c01'},
+ 'gobkit-minion-c02':{path:'characters/gobkit/minion/minion-c02.glb',label:'Gobkit minion c02'},
+ 'gobkit-minion-d01':{path:'characters/gobkit/minion/minion-d01.glb',label:'Gobkit minion d01'},
+ 'gobkit-minion-d02':{path:'characters/gobkit/minion/minion-d02.glb',label:'Gobkit minion d02'},
 } as const;
 export type GobkitVariant=keyof typeof GOBKIT_VISUALS;
 export type Enemy3DVariant=SkeletonVariant|GobkitVariant;
