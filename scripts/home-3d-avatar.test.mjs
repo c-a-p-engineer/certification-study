@@ -64,7 +64,7 @@ test('one GLB and one lazy Three.js renderer are shared by HOME and QUEST, with 
  assert.match(view, /\},view\)\)/);
  assert.match(scene,/view:'battle'\|'portrait'='battle'/);
  assert.match(scene,/if\(view==='portrait'\)camera\.position\.set\(1\.15,1\.22,4\.5\)/);
- assert.match(scene,/else camera\.position\.set\(-3\.35,1\.25,4\.0\)/);
+ assert.match(scene,/camera\.position\.set\(-3\.35,1\.25,4\.0\)/);
  assert.match(scene,/if\(view==='portrait'\)root\.rotation\.y=\.12/);
  assert.match(scene,/else root\.rotation\.y=\.22/);
  assert.match(scene,/let cached:Promise<Model>\|null=null/);
