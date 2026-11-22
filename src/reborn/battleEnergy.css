@@ -34,7 +34,8 @@
 .bfx-hero-aura i,.bfx-hero-aura b{position:absolute;inset:10%;border-radius:50%;border:1px solid #99eff57a;transform:skew(-10deg) rotate(-16deg)}
 .bfx-hero-aura b{inset:0;border:1px dotted #ffe5a36b;transform:skew(8deg) rotate(18deg)}
 /* Source/destination are always grounded in the event's attacker and defender. */
-.bfx-strike{position:absolute;inset:0;--bfx-source:20%;--bfx-target:78%;--bfx-travel:365%;--bfx-spark:#7ceeff;--bfx-tail:#4caeff}
+.bfx-strike{position:absolute;inset:0}
+.bfx-strike-hit{--bfx-source:20%;--bfx-target:78%;--bfx-travel:365%;--bfx-spark:#7ceeff;--bfx-tail:#4caeff}
 .bfx-strike-hurt{--bfx-source:77%;--bfx-target:23%;--bfx-travel:-360%;--bfx-spark:#ffad9f;--bfx-tail:#f46a7d}
 .bfx-tracer,.bfx-core{position:absolute;top:37%;left:var(--bfx-source);width:15%;height:8px;transform:translate3d(0,0,0);opacity:0;will-change:transform,opacity}
 .bfx-tracer{border-radius:100%;background:linear-gradient(90deg,transparent,var(--bfx-tail),var(--bfx-spark));filter:drop-shadow(0 0 6px var(--bfx-spark));animation:bfx-shot .68s cubic-bezier(.15,.65,.23,1) both}
