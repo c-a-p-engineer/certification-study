@@ -91,7 +91,7 @@ test('characters appear in quest question, review, blitz and daily screens, with
  const solo=readFileSync('src/reborn/SoloArcade.tsx','utf8');
  const daily=readFileSync('src/reborn/DailyCode.tsx','utf8');
  assert.ok(solo.includes('<BattleStage appearance={appearance} enemyId={foe.id}'));
- assert.equal((solo.match(/<BattleStage enemyId=/g)||[]).length,2);
+ assert.equal((solo.match(/<BattleStage appearance=\{appearance\} enemyId=/g)||[]).length,2);
  assert.ok(solo.includes('<PlayerAvatar pose={impact?.correct?'));
  assert.ok(daily.includes('<PlayerAvatar pose={fxReaction==='));
  const css=readFileSync('src/reborn/characterStage.css','utf8');
