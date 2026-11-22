@@ -29,6 +29,12 @@
 - 追加の旧UIへの誘導を撤去し、既存学習キー、問題キー、復元ジャーナル、エクスポートおよび復元機能を**新画面から完結**させる。保存競合時は新規回答を停止し、診断JSONの退避と読み直しを優先する。進行中の旧形式ミッション／模試保存データを削除せず維持するが、途中再開自体は本改修の対象外。
 - 演出の種類・タイミング・妥当性は自動テストとビルドで確認する。実際の音・振動・表示の気持ちよさは実機検証なしに立証したとは記載しない。
 
+### SNS共有・OGP（2026-11-22）
+- GitHub Pagesの正規URLは `https://c-a-p-engineer.github.io/certification-study/`。SSRやJS実行を必要とせずに静的HTMLの `head` へ `og:title` / `og:description` / `og:url` / `og:image` / `og:image:width` / `og:image:height` / `og:image:alt` / `twitter:card=summary_large_image` / Twitter用タイトル・説明・画像、canonical、descriptionを配信する。OGP URLは絶対HTTPSでPageのサブパスを含み、現行ゲームの名称と非公式AWS学習ゲームという位置付けに合わせる。
+- 共有画像はオリジナルの1200×630 PNG。ネオン調のCERT//OVERDRIVEロゴ、炎のフェニックス、QUEST RUN / BLITZ / DAILY CODEのモード情報を示し、AWS公式ブランドの承認・商標や実試験合格を示唆しない。文字を画像の縁へ密着させず、小型サムネイルでも見出しが読める配色にする。
+- PNGは `scripts/generate-ogp.mjs` で追加課金・外部ネットワーク・フォント/画像の外部アセットを用いず再現可能に生成し、`npm run build` の配信成果物 `dist/ogp.png` に必ず含める。PWA precacheへ大きいSNS画像を強制追加しない。
+- ビルドは `test:ogp` で静的メタタグの整合、OGP画像のPNGシグネチャ・1200×630・ファイルサイズを確認する。実際のSNS側のカード再クロールやAndroid実機表示は自動CIの対象外。
+
 ### 3D専用キャラクター体験（2026-11-22・旧2D切替/装備表示仕様を上書き）
 
 - HOME下部「LIVE CAMPAIGN」の3D敵は専用の横長ビューポートへ収める。幅320/360/400pxでは名前・HPを上、モデルを下に配置し、戦闘用の狭い枠や縦方向だけのスケールを流用して頭・手足・横長の動物が切れないようにする。HOME/学習後のカード表示はロードしたモデルの実バウンディングボックスをカメラ座標へ投影し、縦横双方のサイズとビューポート比からカメラ画角を自動調整する。QUEST RUN本来の対峙カメラは変えない。
