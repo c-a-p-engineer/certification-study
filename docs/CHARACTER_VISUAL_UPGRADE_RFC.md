@@ -1,6 +1,6 @@
 # OVERDRIVE Character Visual & Game Feel — Technology RFC
 
-Status: **researched proposal / NOT YET IMPLEMENTED**  
+Status: **research RFC; 2026-11-22 experimental Three.js/KayKit Mage slice shipped, other options NOT YET IMPLEMENTED**  
 Date: 2026-11-22 JST  
 Owner: project-specific technical research; user-visible product behavior remains governed by [SPECIFICATION.md](SPECIFICATION.md).
 
