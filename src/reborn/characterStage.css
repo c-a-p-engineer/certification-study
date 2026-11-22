@@ -200,3 +200,26 @@
  .ac-home-portrait .cs-avatar{max-height:129px;max-width:100%;height:100%}
  .ac-home-portrait .ac-home-avatar-switch{font-size:10px}
 }
+
+/* 3D-first visual mode: FX OFF reduces particles, never the GLB scene. */
+.cs-3d-mode-label{font-size:10px;font-weight:900;letter-spacing:.12em;color:#a8edf6;border:1px solid #406d80;border-radius:7px;padding:6px 8px}
+.cs-mini-avatar-3d{width:98px;min-width:98px;height:110px}
+.cs-mini-avatar-3d .cs-hero-viewport{height:100%;width:100%}
+.cs-mini-avatar-3d .cs-3d-label{font-size:7px;letter-spacing:0;white-space:nowrap}
+.cs-mini-row:has(.cs-mini-avatar-3d)>.lrv-reactor{height:105px;min-height:105px}
+.rb-enemy-picture-3d,.rb-combat-monster-3d{width:118px;height:126px;max-height:none}
+.rb-enemy-picture-3d .cs-hero-viewport,.rb-combat-monster-3d .cs-hero-viewport{height:100%;width:100%}
+.rb-enemy-picture-3d .cs-3d-label,.rb-combat-monster-3d .cs-3d-label{font-size:7px;letter-spacing:0;white-space:normal}
+.ac-home-heading{grid-template-columns:minmax(0,1fr) clamp(130px,32vw,166px)}
+.ac-home-portrait{height:227px}
+.ac-home-portrait .ac-home-avatar-label{padding:5px 2px;color:#ffe3a8}
+@media(max-width:420px){
+ .cs-mini-avatar-3d{width:78px;min-width:78px;height:100px}
+ .cs-mini-row:has(.cs-mini-avatar-3d)>.lrv-reactor{height:96px;min-height:96px}
+ .rb-enemy-picture-3d,.rb-combat-monster-3d{width:96px;height:110px}
+ .ac-home-heading{grid-template-columns:minmax(0,1fr) 119px}
+ .ac-home-portrait{height:196px}
+}
+/* Reduced-motion uses the safe 2D fallback. FX OFF should still render 3D. */
+.reborn.rb-fx-off .cs-hero-3d-host{display:block!important}
+.reborn.rb-fx-off .cs-3d-label{display:block!important}

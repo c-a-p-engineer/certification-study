@@ -31,7 +31,11 @@ export function enemy3DAsset(variant:Enemy3DVariant):{path:string;label:string;i
  }
  return {path:'characters/kaykit/skeleton_'+variant+'.glb',label:SKELETON_LABELS[variant as SkeletonVariant],isGobkit:false};
 }
-const ROSTERS:Record<'armor'|'phoenix'|'titan'|'leviathan',readonly GobkitVariant[]>={
+const ROSTERS:Record<'slime'|'zombie'|'armor'|'chimera'|'cerberus'|'phoenix'|'titan'|'leviathan',readonly GobkitVariant[]>={
+ slime:['gobkit-animal-jellyfish','gobkit-minion-a01'],
+ zombie:['gobkit-minion-a02','gobkit-minion-b01'],
+ chimera:['gobkit-animal-red','gobkit-animal-platypus'],
+ cerberus:['gobkit-animal-corgi','gobkit-animal-rhino'],
  armor:['gobkit-minion-a01','gobkit-minion-a02','gobkit-minion-b01','gobkit-minion-b02','gobkit-minion-d01','gobkit-minion-d02'],
  phoenix:['gobkit-animal-bat','gobkit-animal-duck','gobkit-animal-jellyfish','gobkit-animal-red'],
  titan:['gobkit-minion-c01','gobkit-minion-c02','gobkit-animal-rhino','gobkit-animal-hippo'],
