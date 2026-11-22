@@ -4,7 +4,7 @@ An original AWS SAA solo quiz game: choose routes and skills in QUEST RUN, race 
 
 **Product behavior and acceptance criteria:** [Specification](docs/SPECIFICATION.md). **Contribution/change rules:** [AGENTS.md](AGENTS.md). The **new default home** centers the three solo arcade experiences (QUEST RUN, BLITZ, DAILY CODE), with standard training and 65-question mock exams in the expandable ACADEMY section. The new experience emphasizes immediate answer feedback with optional light, music, synth effects, haptics, and a built-in export/import recovery panel. Historical data remains stored locally; unfinished legacy exam/mission sessions are preserved in storage but not yet resumable in the new interface.
 
-**Character art / animation technology research (2026-11-22):** [Character Visual Upgrade RFC](docs/CHARACTER_VISUAL_UPGRADE_RFC.md). This is a researched proposal, not a shipped renderer migration; it compares layered character artwork, Motion, PixiJS, Rive, Phaser and 3D, official agent skills, licenses and a 32-item gameplay backlog.
+**Character art / animation technology research (2026-11-22):** [Character Visual Upgrade RFC](docs/CHARACTER_VISUAL_UPGRADE_RFC.md). The full renderer migration remains a proposal; a **KayKit Mage 3D QUEST RUN prototype** is now included behind an in-battle 3D/2D toggle with SVG fallback. It compares layered character artwork, Motion, PixiJS, Rive, Phaser and 3D, official agent skills, licenses and a 32-item gameplay backlog. [3D asset provenance and CC0 license](docs/THIRD_PARTY_ASSETS.md).
 
 ## Play online
 
