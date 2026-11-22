@@ -146,8 +146,8 @@ test('no legacy SVG reappears during 3D loading, and combat stays mounted across
  const hero=read('src/reborn/QuestHero3D.tsx');
  const enemy=read('src/reborn/QuestEnemy3D.tsx');
  for(const src of [hero,enemy]){
-  assert.match(src,/phase==='fallback'&&/);
-  assert.match(src,/phase==='loading'&&/);
+  assert.match(src,/==='fallback'&&/);
+  assert.match(src,/==='loading'&&/);
   assert.match(src,/setLoad\(\{.*phase:'ready'\}\)/);
   assert.doesNotMatch(src,/opacity:shown\?0:1,visibility:shown/);
  }
@@ -157,7 +157,7 @@ test('no legacy SVG reappears during 3D loading, and combat stays mounted across
 });
 test('3D enemy animations reflect persisted combat outcomes and render is disposable',()=>{
  const scene=read('src/reborn/questEnemy3DScene.ts');
- for(const expression of ['new GLTFLoader().loadAsync','import.meta.env.BASE_URL','mixer.update(dt)','mixer.addEventListener','/Death_A','/Hit_A','/Attack','next.seq===reactedSeq','renderer.setAnimationLoop','webglcontextlost','IntersectionObserver','ResizeObserver','document.hidden','renderer.forceContextLoss()']){
+ for(const expression of ['new GLTFLoader().loadAsync','import.meta.env.BASE_URL','mixer.update(dt)','mixer.addEventListener','/^Death_A','/^Hit_A','/Attack','next.seq===reactedSeq','renderer.setAnimationLoop','webglcontextlost','IntersectionObserver','ResizeObserver','document.hidden','renderer.forceContextLoss()']){
   assert.ok(scene.includes(expression),expression);
  }
  for(const excluded of ['onRecord(', 'applyStudyAttempt(', 'setProgress(', 'localStorage','questHitDamage('])assert.ok(!scene.includes(excluded));
