@@ -76,9 +76,9 @@ export default function SoloArcade({kind,bank,learnedIds,onRecord,onSound,onHapt
    if(index+1>=deck.length||Date.now()>=deadline.current){setStep('done');onSound('finish')}
    else{setIndex(value=>value+1);setChosen([]);questionStart.current=Date.now()}
   }else{
-   const damage=questHitDamage(correct,quest.stage,combo,quest.skills);
+   const damage=Math.min(foe.hp,questHitDamage(correct,quest.stage,combo,quest.skills));
    setFoe(value=>({...value,hp:enemyHpAfterHit(value.hp,damage)}));
-   setBattleEvent(value=>({seq:value.seq+1,kind:correct?'hit':'hurt',damage}));
+   setBattleEvent(value=>({seq:value.seq+1,kind:correct?(damage>0?'hit':'idle'):'hurt',damage}));
    setQuest(value=>applyQuestAnswer(value,correct));setAnswer(item);setStep('review');
   }
  }
