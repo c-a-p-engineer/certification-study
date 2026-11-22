@@ -2,6 +2,7 @@ import React from 'react';
 import MonsterArt from '../MonsterArt.tsx';
 import type {EnemyId} from '../enemyCampaign.ts';
 import PlayerAvatar,{type AvatarPose} from './PlayerAvatar.tsx';
+import type {AvatarAppearance} from './avatarCollection.ts';
 
 export type BattleEvent={seq:number;kind:'idle'|'hit'|'hurt';damage:number};
 export type BattleStageProps={
@@ -13,10 +14,11 @@ export type BattleStageProps={
  combo:number;
  boss:boolean;
  event:BattleEvent;
+ appearance?:AvatarAppearance;
 };
 /** The two characters and their *session-only* HP are always visible during QUEST RUN. */
 export default function BattleStage({
- enemyId,enemyName,enemyHp,enemyMaxHp,playerHp,combo,boss,event
+ enemyId,enemyName,enemyHp,enemyMaxHp,playerHp,combo,boss,event,appearance
 }:BattleStageProps){
  const enemyDown=enemyHp===0;
  const pose:AvatarPose=event.kind==='hit'?(enemyDown?'victory':'attack'):event.kind==='hurt'?'hurt':'idle';
@@ -26,7 +28,7 @@ export default function BattleStage({
   <div className="cs-topline"><span>{boss?'BOSS ENCOUNTER':'ENEMY ENCOUNTER'}</span><strong>{combo>=3?combo+' COMBO · POWER UP':'READY TO ATTACK'}</strong></div>
   <div className="cs-arena">
    <div className="cs-combatant cs-player">
-    <div className="cs-actor"><PlayerAvatar pose={pose} pulse={event.seq}/></div>
+    <div className="cs-actor"><PlayerAvatar pose={pose} pulse={event.seq} appearance={appearance}/></div>
     <strong>PLAYER</strong>
     <div className="cs-hp-label"><span>ランHP</span><b>{playerHp}/100</b></div>
     <div className="cs-hp" role="progressbar" aria-label="プレイヤーのランHP" aria-valuemin={0} aria-valuemax={100} aria-valuenow={playerHp}><i style={{width:playerPercent+'%'}}/></div>

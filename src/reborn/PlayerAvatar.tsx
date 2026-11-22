@@ -1,20 +1,25 @@
 import React from 'react';
 import './characterStage.css';
+import {STARTER_AVATAR,type AvatarAppearance} from './avatarCollection.ts';
 
 export type AvatarPose='idle'|'charge'|'attack'|'hurt'|'victory';
 /** Original lightweight character sprite for the game, not a canonical assistant portrait. */
-export default function PlayerAvatar({pose='idle',pulse=0,compact=false}:{
- pose?:AvatarPose;pulse?:number;compact?:boolean
+const HAIR:Record<string,[string,string]>={gold:['#fff4a9','#e4a646'],rose:['#ffc0e2','#de5c9c'],mint:['#bbffe1','#4cc0a4']};
+const OUTFIT:Record<string,[string,string]>={azure:['#71d8fa','#3855a7'],crimson:['#ff879b','#aa3154'],midnight:['#b0a2f7','#29274e']};
+export default function PlayerAvatar({pose='idle',pulse=0,compact=false,appearance=STARTER_AVATAR}:{
+ pose?:AvatarPose;pulse?:number;compact?:boolean;appearance?:AvatarAppearance
 }){
+ const hair=HAIR[appearance.hair]??HAIR.gold;
+ const outfit=OUTFIT[appearance.outfit]??OUTFIT.azure;
  return <svg key={pulse} viewBox="0 0 112 124"
   className={'cs-avatar cs-avatar-'+pose+(compact?' cs-avatar-small':'')}
   role="img" aria-label="プレイヤーキャラクター" focusable="false">
   <defs>
-   <linearGradient id="csSuit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#71d8fa"/><stop offset="1" stopColor="#3855a7"/></linearGradient>
-   <linearGradient id="csHair" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff4a9"/><stop offset="1" stopColor="#e4a646"/></linearGradient>
+   <linearGradient id="csSuit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={outfit[0]}/><stop offset="1" stopColor={outfit[1]}/></linearGradient>
+   <linearGradient id="csHair" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={hair[0]}/><stop offset="1" stopColor={hair[1]}/></linearGradient>
   </defs>
   <ellipse cx="55" cy="116" rx="34" ry="5.5" fill="#071d3b" opacity=".5"/>
-  <g className="cs-pose">
+  <g className="cs-pose" data-appearance={appearance.hair+'-'+appearance.outfit+'-'+appearance.weapon+'-'+appearance.head}>
    <path d="M42 91L34 112 43 116 54 97ZM68 91L80 112 70 117 57 99Z" fill="#4e6195" stroke="#9ad7f9" strokeWidth="2"/>
    <path d="M36 63Q20 65 16 89L29 93 47 77Z" fill="#4969a0" stroke="#9bd8ff" strokeWidth="2"/>
    <path d="M75 64Q93 66 99 89L87 93 66 78Z" fill="#4969a0" stroke="#9bd8ff" strokeWidth="2"/>
@@ -34,10 +39,10 @@ export default function PlayerAvatar({pose='idle',pulse=0,compact=false}:{
    </g>
    <path d="M22 85L29 77 38 87 30 97 22 94Z" fill="#344a87" stroke="#abe9ff" strokeWidth="2"/>
    <g className="cs-weapon">
-    <path d="M86 84L92 79 98 85 92 92Z" fill="#f5d888" stroke="#fff1c0" strokeWidth="2"/>
-    <path d="M96 84L102 69 106 30 109 69 103 85Z" fill="#71f4ff" stroke="#e0ffff" strokeWidth="2"/>
-    <path d="M97 80L107 80" stroke="#ffdb7d" strokeWidth="3" strokeLinecap="round"/>
+    {appearance.weapon==='staff'?<><path d="M101 91L101 24" stroke="#b7d8ff" strokeWidth="5" strokeLinecap="round"/><path d="M101 16L110 27 101 39 92 27Z" fill="#d8b8ff" stroke="#fff1d9" strokeWidth="2"/><circle cx="101" cy="27" r="5" fill="#fff"/></>:appearance.weapon==='orb'?<><path d="M87 86L95 79 99 87" stroke="#cae3fd" strokeWidth="4" fill="none"/><circle cx="103" cy="41" r="16" fill="#76c1fb" stroke="#e4f8ff" strokeWidth="3"/><circle cx="103" cy="41" r="7" fill="#f8f5ff"/></>:<><path d="M86 84L92 79 98 85 92 92Z" fill="#f5d888" stroke="#fff1c0" strokeWidth="2"/><path d="M96 84L102 69 106 30 109 69 103 85Z" fill="#71f4ff" stroke="#e0ffff" strokeWidth="2"/><path d="M97 80L107 80" stroke="#ffdb7d" strokeWidth="3" strokeLinecap="round"/></>}
    </g>
+   {appearance.head==='visor'&&<g className="cs-accessory"><path d="M36 39Q57 31 78 39L78 49Q56 57 36 49Z" fill="#3ac4dd" opacity=".86" stroke="#ddffff" strokeWidth="2"/><path d="M43 42H70" stroke="#fff" strokeWidth="2"/></g>}
+   {appearance.head==='halo'&&<g className="cs-accessory"><ellipse cx="57" cy="7" rx="30" ry="6" fill="none" stroke="#ffe18f" strokeWidth="5"/><ellipse cx="57" cy="7" rx="24" ry="4" fill="none" stroke="#fff7de" strokeWidth="2"/></g>}
   </g>
  </svg>;
 }
