@@ -56,7 +56,7 @@ test('QUEST RUN manual 3D/2D toggle preserves the existing 2D equipment fallback
  const solo=read('src/reborn/SoloArcade.tsx');
  const battle=read('src/reborn/BattleStage.tsx');
  assert.match(solo,/const \[threeD,setThreeD\]=useState\(true\)/);
- assert.equal((solo.match(/onToggle3d=\{\(\)=>setThreeD\(v=>!v\)\}/g)||[]).length,2);
+ assert.equal((solo.match(/onToggle3d=\{\(\)=>setThreeD\(v=>!v\)\}/g)||[]).length,1,'one stable toggle across question and review');
  assert.match(battle,/aria-pressed=\{threeD\}/);
  assert.match(battle,/3D表示中 · 2Dへ/);
  assert.match(battle,/2D表示中 · 3Dへ/);
@@ -77,7 +77,8 @@ test('SSR always supplies useful SVG fallback, no WebGL or asset fetch required'
    enabled:true,pose:'idle',event:{seq:0,kind:'idle',damage:0}
   }));
   assert.match(standby,/cs-hero-2d/);
-  assert.match(standby,/cs-avatar-idle/);
+  assert.match(standby,/味方3D準備中/);
+  assert.doesNotMatch(standby,/cs-avatar-idle|class="cs-hero-2d"/,'no flashing legacy SVG during 3D startup');
   assert.match(standby,/cs-hero-3d-host/);
   assert.doesNotMatch(standby,/canvas/);
   const stage=renderToStaticMarkup(React.createElement(BattleStage,{
@@ -90,7 +91,8 @@ test('SSR always supplies useful SVG fallback, no WebGL or asset fetch required'
   assert.match(stage,/プレイヤーのランHP/);
   assert.match(stage,/ボスHP/);
   assert.match(stage,/100\/190/);
-  assert.match(stage,/cs-avatar-attack/);
+  assert.match(stage,/味方3D準備中/);
+  assert.match(stage,/敵3D準備中/);
   const reduced=renderToStaticMarkup(React.createElement(BattleStage,{
    enemyId:'armor',enemyName:'CACHE ARMOR',enemyHp:95,enemyMaxHp:95,
    playerHp:100,combo:0,boss:false,event:{seq:0,kind:'idle',damage:0},
