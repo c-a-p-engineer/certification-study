@@ -22,10 +22,18 @@ test('18 original creator CC0 GLBs are pinned, valid and animated',()=>{
  const first=GOBKIT_MODELS[0],broken=Buffer.from(readFileSync(first.output));broken[broken.length-1]^=1;
  assert.throws(()=>verifyGobkitGlb(broken,first),/hash mismatch/);
 });
-test('every Gobkit model can appear in QUEST route variations without touching grading',()=>{
+test('generic routes use valid CC0 models; Phoenix has a stable bird-based identity',()=>{
  const reachable=new Set();
- for(const id of ['armor','phoenix','titan','leviathan'])for(let seed=1;seed<100;seed++)reachable.add(questEnemyVariant(id,false,seed));
- assert.deepEqual(reachable,new Set(Object.keys(GOBKIT_VISUALS)));
+ for(const id of ['slime','zombie','armor','chimera','cerberus','titan','leviathan']){
+  for(let seed=1;seed<100;seed++)reachable.add(questEnemyVariant(id,false,seed));
+ }
+ assert.ok(reachable.size>=14);
+ for(const variant of reachable)assert.ok(variant in GOBKIT_VISUALS,variant);
+ for(const seed of [-100,0,1,2,3,12345]){
+  assert.equal(questEnemyVariant('phoenix',false,seed),'phoenix');
+  assert.equal(enemy3DAsset(questEnemyVariant('phoenix',false,seed)).path,GOBKIT_VISUALS['gobkit-animal-duck'].path);
+ }
+ assert.equal(enemy3DAsset('phoenix').label,'Phoenix · Flamebird');
  assert.equal(questEnemyVariant('dragon',true,999),'mage');
  assert.equal(questEnemyVariant('armor',false),'minion');
  const solo=read('src/reborn/SoloArcade.tsx'),scene=read('src/reborn/questEnemy3DScene.ts');

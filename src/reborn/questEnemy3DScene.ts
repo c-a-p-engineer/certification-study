@@ -4,6 +4,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {enemy3DAsset,type Enemy3DVariant} from './questEnemyVariant.ts';
 import {enemyCardFrustumHalfHeight} from './enemyCardFraming.ts';
+import {createPhoenixAccent} from './phoenix3DAccent.ts';
 import type {BattleEvent} from './BattleStage.tsx';
 
 type Model=Awaited<ReturnType<GLTFLoader['loadAsync']>>;
@@ -47,6 +48,9 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
  actor.scale.setScalar(scale);
  actor.position.set(-center.x*scale,-bounds.min.y*scale-1.20,-center.z*scale);
  root.add(actor);
+ // A locally authored, disposable feather/ember overlay turns the CC0 bird into a
+ // distinct fiery Phoenix; no external asset or second animation renderer.
+ const phoenixAccent=variant==='phoenix'?createPhoenixAccent(actor,root):null;
  // Source meshes have very different aspect ratios (e.g. sharks vs skeletons).
  // Card framing projects all eight model-bound corners into camera space.
  // The gameplay camera is intentionally unchanged.
@@ -60,6 +64,10 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
 
  const groundMaterial=new THREE.MeshBasicMaterial({color:0xed88b7,transparent:true,opacity:.31,side:THREE.DoubleSide});
  const ground=new THREE.Mesh(new THREE.RingGeometry(.55,.63,32),groundMaterial);
+ if(phoenixAccent){
+  groundMaterial.color.setHex(0xff9426);
+  rim.color.setHex(0xffbb59);
+ }
  ground.rotation.x=-Math.PI/2;ground.position.y=-1.2;scene.add(ground);
 
  const mixer=new THREE.AnimationMixer(actor);
@@ -68,7 +76,7 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
  const bakedAction=bakedClip?mixer.clipAction(bakedClip):null;
  bakedAction?.play();
  let segment:'idle'|'attack'|'dead'='idle',segmentAt=performance.now();
- const frameUnit=bakedClip?.duration?bakedClip.duration/(variant.startsWith('gobkit-animal-')?119:89):1/24;
+ const frameUnit=bakedClip?.duration?bakedClip.duration/((variant==='phoenix'||variant.startsWith('gobkit-animal-'))?119:89):1/24;
  const segmentSeconds=30*frameUnit;
  const idleClip=model.animations.find(clip=>/^Idle$/i.test(clip.name))??model.animations.find(clip=>/idle/i.test(clip.name))??model.animations[0];
  const idle=!isGobkit&&idleClip?mixer.clipAction(idleClip):null;
@@ -84,7 +92,9 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
   if(disposed)return;
   const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight),aspect=w/h;
   let halfHeight=1.52;
-  if(view==='card'&&cardCorners.length){
+  // Phoenix feathers can be wider than the base bird: fit even inside the
+  // compact battle actor slot, without touching other enemies' camera poses.
+  if((view==='card'||variant==='phoenix')&&cardCorners.length){
    camera.updateMatrixWorld();
    let horizontalExtent=0,verticalExtent=0;
    for(const corner of cardCorners){
@@ -165,6 +175,7 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
   if(enemyHp===0){root.position.y=-.08;groundMaterial.opacity=.12}
   root.rotation.y=-.22+Math.sin(t*.63)*.035;
   ground.rotation.z=t*.29;
+  phoenixAccent?.update(t,enemyHp===0);
   renderer.render(scene,camera);
  }
  function setRunning(){
@@ -195,6 +206,7 @@ export async function mountQuestEnemy3D(host:HTMLDivElement,variant:Enemy3DVaria
   mixer.removeEventListener('finished',onFinished);
   mixer.stopAllAction();mixer.uncacheRoot(actor);
   ground.geometry.dispose();groundMaterial.dispose();
+  phoenixAccent?.dispose();
   // GLTF geometry and textures belong to the shared immutable model cache.
   renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();
  }};
