@@ -33,8 +33,8 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
  const scene=new THREE.Scene();
  const camera=new THREE.OrthographicCamera(-1.4,1.4,1.55,-1.55,.1,80);
  // The home portrait faces the viewer; battle keeps the original inward-facing camera.
+ camera.position.set(-3.35,1.25,4.0); // battle 3/4 view remains the invariant default
  if(view==='portrait')camera.position.set(1.15,1.22,4.5);
- else camera.position.set(-3.35,1.25,4.0);
  camera.lookAt(0,-.05,0);
  scene.add(new THREE.AmbientLight(0xe9f5ff,2.15));
  const main=new THREE.DirectionalLight(0xfff2d9,3.0);main.position.set(-3,5,5);scene.add(main);
