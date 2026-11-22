@@ -4,8 +4,8 @@ import type {AvatarAppearance} from './avatarCollection.ts';
 import type {BattleEvent} from './BattleStage.tsx';
 import type {Hero3DDriver,Hero3DReaction} from './questHero3DScene.ts';
 
-export default function QuestHero3D({enabled,appearance,pose,event}:{
- enabled:boolean;appearance?:AvatarAppearance;pose:AvatarPose;event:BattleEvent
+export default function QuestHero3D({enabled,appearance,pose,event,view='battle'}:{
+ enabled:boolean;appearance?:AvatarAppearance;pose:AvatarPose;event:BattleEvent;view?:'battle'|'portrait'
 }){
  const host=useRef<HTMLDivElement|null>(null);
  const driver=useRef<Hero3DDriver|null>(null);
@@ -28,14 +28,14 @@ export default function QuestHero3D({enabled,appearance,pose,event}:{
   void import('./questHero3DScene.ts').then(({mountQuestHero3D})=>mountQuestHero3D(mount,()=>{
    if(cancelled)return;
    driver.current?.dispose();driver.current=null;setLoad({forEnabled:true,phase:'fallback'});
-  })).then(instance=>{
+  },view)).then(instance=>{
    if(cancelled){instance.dispose();return}
    driver.current=instance;
    instance.update(latest.current);
    setLoad({forEnabled:true,phase:'ready'});
   }).catch(()=>{if(!cancelled)setLoad({forEnabled:true,phase:'fallback'})});
   return()=>{cancelled=true;driver.current?.dispose();driver.current=null};
- },[enabled]);
+ },[enabled,view]);
  useEffect(()=>{driver.current?.update(heroEvent)},[event.seq,event.kind,event.damage,pose]);
  const shown=enabled&&status==='ready';
  return <div className="cs-hero-viewport">
