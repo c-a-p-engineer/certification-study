@@ -28,7 +28,7 @@ export default function BattleStage({
  const pose:AvatarPose=event.kind==='hit'?(enemyDown?'victory':'attack'):event.kind==='hurt'?'hurt':'idle';
  const enemyPercent=Math.max(0,Math.min(100,enemyMaxHp>0?enemyHp/enemyMaxHp*100:0));
  const playerPercent=Math.max(0,Math.min(100,playerHp));
- return <section className={'cs-stage'+(boss?' cs-boss':'')} aria-label="QUEST RUNのラン内戦闘">
+ return <section className={'cs-stage'+(boss?' cs-boss':'')+(allow3d?' cs-stage-3d-capable':'')} aria-label="QUEST RUNのラン内戦闘">
   <div className="cs-topline"><span>{boss?'BOSS ENCOUNTER':'ENEMY ENCOUNTER'}</span><strong>{combo>=3?combo+' COMBO · POWER UP':'READY TO ATTACK'}</strong>{allow3d&&onToggle3d&&<button type="button" className="cs-3d-switch" onClick={onToggle3d} aria-pressed={threeD}>{threeD?'3D表示中 · 2Dへ':'2D表示中 · 3Dへ'}</button>}</div>
   <div className="cs-arena">
    <div className="cs-combatant cs-player">
