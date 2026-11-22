@@ -91,7 +91,8 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
    root.rotation.z=0;
    ringMaterial.opacity=.32;
   }
-  root.rotation.y=(view==='portrait'?.12:.22)+Math.sin(t*.7)*.035;
+  if(view==='portrait')root.rotation.y=.12+Math.sin(t*.7)*.035;
+  else root.rotation.y=.22+Math.sin(t*.7)*.035;
   ring.rotation.z=t*.36;
   renderer.render(scene,camera);
  }
