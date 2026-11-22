@@ -1,0 +1,86 @@
+/* Character battle. The original character art is self-contained SVG and never blocks quiz input. */
+.cs-stage{
+ position:relative;isolation:isolate;overflow:hidden;
+ padding:10px 13px 11px;border:1px solid #6d6b96;border-radius:15px;
+ background:radial-gradient(ellipse at 50% 92%,#383e75 0%,transparent 64%),
+            linear-gradient(145deg,#1b2947,#19243b);
+ box-shadow:inset 0 -12px 25px #11152f55;
+ color:#eef7ff;
+}
+.cs-stage:after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(90deg,#78b5e51c 1px,transparent 1px),linear-gradient(0deg,#78b5e51c 1px,transparent 1px);
+ background-size:24px 24px;mask-image:linear-gradient(to top,#0005,transparent 85%)}
+.cs-boss{border-color:#c38d67;background:radial-gradient(ellipse at 50% 92%,#643752 0%,transparent 65%),linear-gradient(145deg,#302036,#2b3048)}
+.cs-topline{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:10px;font-weight:900;letter-spacing:.08em;color:#b9dff1}
+.cs-topline strong{color:#ffe2a1;font-size:10px}
+.cs-arena{display:grid;grid-template-columns:minmax(0,1fr) 49px minmax(0,1fr);align-items:end;min-height:151px;gap:1px}
+.cs-combatant{display:grid;justify-items:center;gap:3px;min-width:0}
+.cs-combatant>strong{display:block;max-width:100%;min-height:13px;font-size:10px;text-align:center;line-height:1.3;letter-spacing:.025em;overflow-wrap:anywhere;color:#e6f4ff}
+.cs-actor{width:100%;height:91px;display:flex;justify-content:center;align-items:flex-end;position:relative}
+.cs-avatar{height:94px;max-width:105px;width:100%;overflow:visible;filter:drop-shadow(0 0 6px #9de6f570)}
+.cs-avatar .cs-pose{transform-origin:56px 103px;animation:cs-idle 3.2s ease-in-out infinite}
+.cs-avatar .cs-cape{transform-origin:44px 62px;animation:cs-cape 2.7s ease-in-out infinite alternate}
+.cs-avatar-attack .cs-pose{animation:cs-strike .47s cubic-bezier(.2,.65,.3,1) both}
+.cs-avatar-charge .cs-pose{animation:cs-charge .35s ease-in-out both}
+.cs-avatar-hurt .cs-pose{animation:cs-hurt .5s ease-out both}
+.cs-avatar-victory .cs-pose{animation:cs-victory .6s ease-out both}
+.cs-enemy-actor svg{width:100%;max-width:114px;height:94px;filter:drop-shadow(0 0 8px #f0ab8c75)}
+.cs-enemy-actor:not(.cs-enemy-hit) svg{animation:cs-enemy-idle 3.1s ease-in-out infinite}
+.cs-enemy-hit svg{animation:cs-enemy-damage .42s ease-out both}
+.cs-hp-label{display:flex;justify-content:space-between;align-items:center;width:100%;gap:5px;font-size:10px;color:#d0e1ed}
+.cs-hp-label b{font-size:11px;font-variant-numeric:tabular-nums;color:#e9f7ff}
+.cs-hp{height:8px;overflow:hidden;width:100%;border:1px solid #436e83;background:#112234;border-radius:30px}
+.cs-hp i{display:block;height:100%;background:linear-gradient(90deg,#66c5ca,#8ef8dc);transition:width .28s ease-out}
+.cs-enemy-hp{border-color:#905a62;background:#321e34}
+.cs-enemy-hp i{background:linear-gradient(90deg,#ff7b80,#ffd080)}
+.cs-middle{height:130px;align-self:center;position:relative;display:flex;justify-content:center;align-items:center}
+.cs-middle>span{font-size:16px;font-weight:1000;font-style:italic;color:#fff0ba;text-shadow:0 0 11px #e7b75caa}
+.cs-action{position:absolute;z-index:1;top:24px;left:0;right:0;text-align:center;pointer-events:none;animation:cs-damage-text .64s ease-out both}
+.cs-action b{font-size:14px;color:#ffdc80;text-shadow:0 2px 7px #080e2b,0 0 12px #ffd884;white-space:nowrap}
+.cs-action-hurt b{color:#f4aeba}
+.cs-action i{display:block;position:absolute;top:18px;left:15px;width:22px;height:22px;border-radius:50%;border:2px solid #f6ddac;animation:cs-impact-ring .55s ease-out both}
+.cs-action-hurt i{border-color:#e9a4be}
+.cs-victory-note{margin-top:7px;text-align:center;font-size:10px;line-height:1.5;font-weight:900;color:#fff0b4}
+.cs-mini-row{display:flex;align-items:center;gap:9px;min-width:0;margin:5px 0 12px}
+.cs-mini-row>.lrv-reactor{min-width:0;flex:1;margin:0;height:81px;min-height:81px}
+.cs-mini-avatar{width:70px;min-width:70px;height:83px;position:relative;border:1px solid #617e98;border-radius:11px;background:radial-gradient(ellipse at 50% 70%,#3e587d,#202b43);overflow:hidden;display:flex;justify-content:center;align-items:center}
+.cs-mini-avatar .cs-avatar{height:81px;max-width:66px}
+.cs-mini-avatar:after{content:'PLAYER';position:absolute;bottom:2px;right:2px;left:2px;font-size:8px;letter-spacing:.08em;text-align:center;color:#d6eeff;font-weight:900;text-shadow:0 1px 4px #0e1b34}
+.cs-mini-code{background:radial-gradient(ellipse at 50% 70%,#265a4c,#193b47)}
+.cs-mini-code:after{content:'GUIDE'}
+.cs-mini-attack{border-color:#e3b98b}
+.cs-mini-hurt{border-color:#ed9cad}
+@keyframes cs-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes cs-cape{0%{transform:rotate(-3deg)}100%{transform:rotate(5deg)}}
+@keyframes cs-strike{0%{transform:translateX(0) rotate(0)}40%{transform:translateX(17px) rotate(12deg)}60%{transform:translateX(21px) rotate(8deg)}100%{transform:translateX(0) rotate(0)}}
+@keyframes cs-charge{0%{transform:scale(1)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes cs-hurt{0%{transform:translateX(0)}33%{transform:translateX(-11px) rotate(-12deg)}100%{transform:translateX(0)}}
+@keyframes cs-victory{0%{transform:translateY(0)}45%{transform:translateY(-13px) rotate(-6deg)}100%{transform:translateY(0)}}
+@keyframes cs-enemy-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes cs-enemy-damage{0%{transform:translateX(0);filter:brightness(1)}38%{transform:translateX(8px);filter:brightness(2)}100%{transform:translateX(0);filter:brightness(1)}}
+@keyframes cs-damage-text{0%{transform:translateY(13px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translateY(-17px) scale(1.12);opacity:0}}
+@keyframes cs-impact-ring{0%{transform:scale(.3);opacity:.95}100%{transform:scale(2.8);opacity:0}}
+@media(max-width:420px){
+ .cs-stage{padding:8px 10px}
+ .cs-topline{font-size:9px;letter-spacing:0}
+ .cs-arena{grid-template-columns:minmax(0,1fr) 37px minmax(0,1fr);min-height:142px}
+ .cs-actor{height:82px}
+ .cs-avatar,.cs-enemy-actor svg{height:82px;max-width:90px}
+ .cs-combatant>strong,.cs-hp-label{font-size:9px}
+ .cs-hp-label b{font-size:10px}
+ .cs-middle{height:112px}
+ .cs-mini-avatar{width:61px;min-width:61px;height:74px}
+ .cs-mini-avatar .cs-avatar{height:74px}
+ .cs-mini-row>.lrv-reactor{height:73px;min-height:73px}
+}
+@media(prefers-reduced-motion:reduce){
+ .cs-avatar *, .cs-enemy-actor svg, .cs-action, .cs-action i{animation:none!important;transition:none!important}
+ .cs-hp i{transition:none!important}
+}
+.reborn.is-reduced .cs-avatar *, .reborn.is-reduced .cs-enemy-actor svg,
+.reborn.is-reduced .cs-action, .reborn.is-reduced .cs-action i,
+.reborn.rb-fx-off .cs-avatar *, .reborn.rb-fx-off .cs-enemy-actor svg,
+.reborn.rb-fx-off .cs-action, .reborn.rb-fx-off .cs-action i{animation:none!important;transition:none!important}
+.reborn.is-reduced .cs-hp i,.reborn.rb-fx-off .cs-hp i{transition:none!important}
+.reborn.rb-fx-off .cs-action{display:none}
+.reborn.rb-fx-high .cs-action i{display:none}
