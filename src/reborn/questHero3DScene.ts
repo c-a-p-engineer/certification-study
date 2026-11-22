@@ -71,6 +71,9 @@ export async function mountQuestHero3D(host:HTMLDivElement,onUnavailable:()=>voi
   mixer.update(delta);
   const t=time*.001;
   const impact=Math.max(0,1-(time-reactedAt)/520);
+  // A brief stage-light surge reinforces only the confirmed impact event.
+  rim.intensity=2.0+impact*1.5;
+  ring.scale.setScalar(1+impact*.23);
   if(reaction.kind==='hit'&&impact>0){
    root.position.x=impact*.35;
    root.rotation.z=-impact*.12;
